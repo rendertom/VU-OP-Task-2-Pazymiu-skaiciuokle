@@ -15,10 +15,15 @@ struct Student {
   int examGrade;
   double meanGrade;
   double finalGrade;
+  double medianGrade;
 };
 
 bool isGradeInRange(int grade) {
   return grade >= GRADE_MIN && grade <= GRADE_MAX;
+}
+
+bool isOddNumber(int value) {
+  return value % 2 != 0;
 }
 
 void ClearLine() {
@@ -34,12 +39,22 @@ double findMean(int *array, int length) {
   return (double)sum / length;
 }
 
+double findMedian(int *array, int arrayLength) {
+  sort(array, array + arrayLength);
+
+  if (isOddNumber(arrayLength)) {
+    return (double)array[arrayLength / 2];
+  }
+
+  return (double)(array[(arrayLength - 1) / 2] + array[arrayLength / 2]) / 2.0;
+}
+
 void PrintResult(Student *student) {
   cout << left
        << setw(10) << student->firstName
        << setw(15) << student->lastName
        << setw(12) << fixed << setprecision(2)
-       << student->finalGrade
+       << student->finalGrade << student->medianGrade
        << endl;
 }
 
@@ -47,8 +62,8 @@ void PrintResults(Student *student) {
   cout << left
        << setw(10) << "Vardas"
        << setw(16) << "Pavardė"
-       << "Galutinis" << endl;
-  cout << "----------------------------------" << endl;
+       << "Galutinis / Medianas" << endl;
+  cout << "-----------------------------------------------------------" << endl;
 
   PrintResult(student);
 }
@@ -67,14 +82,17 @@ void PrintStudent(Student *student) {
   cout << "Exam grade: " << student->examGrade << endl;
   cout << "Mean grade: " << student->meanGrade << endl;
   cout << "Final grade: " << student->finalGrade << endl;
+  cout << "Median grade: " << student->medianGrade << endl;
 }
 
 void ProcessStudent(Student *student) {
   student->finalGrade = 0;
   student->meanGrade = 0;
+  student->medianGrade = 0;
   if (student->numGrades > 0) {
     student->meanGrade = findMean(student->grades, student->numGrades);
     student->finalGrade = 0.4 * student->meanGrade + 0.6 * student->examGrade;
+    student->medianGrade = findMedian(student->grades, student->numGrades);
   }
 }
 
