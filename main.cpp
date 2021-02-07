@@ -79,6 +79,21 @@ double findMedian(int *array, int arrayLength) {
   return (double)(array[(arrayLength - 1) / 2] + array[arrayLength / 2]) / 2.0;
 }
 
+int getNumberOfGrades() {
+  cout << "Enter number of grades: ";
+  int numGrades;
+  cin >> numGrades;
+  clearLine();
+
+  while (numGrades < 0) {
+    cout << "Value cannot be negative. Please enter new value: ";
+    cin >> numGrades;
+    clearLine();
+  }
+
+  return numGrades;
+}
+
 int getRandomIntegerInRange(int min, int max) {
   static bool first = true;
   if (first) {
@@ -156,14 +171,7 @@ int main() {
 
   if (shouldGenerateRandomGrades) {
     if (numberOfGradesIsKnown) {
-      cout << "Enter number of grades: ";
-      cin >> student.numGrades;
-      clearLine();
-      while (student.numGrades < 0) {
-        cout << "Value cannot be negative. Please enter new value: ";
-        cin >> student.numGrades;
-        clearLine();
-      }
+      student.numGrades = getNumberOfGrades();
       student.grades = new int[student.numGrades];
       for (int i = 0; i < student.numGrades; i++) {
         student.grades[i] = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
@@ -192,14 +200,7 @@ int main() {
     cout << "Generated random exam grade: " << student.examGrade << endl;
   } else {
     if (numberOfGradesIsKnown) {
-      cout << "Enter number of grades: ";
-      cin >> student.numGrades;
-      clearLine();
-      while (student.numGrades < 0) {
-        cout << "Value cannot be negative. Please enter new value: ";
-        cin >> student.numGrades;
-        clearLine();
-      }
+      student.numGrades = getNumberOfGrades();
       student.grades = new int[student.numGrades];
 
       if (student.numGrades > 0) {
