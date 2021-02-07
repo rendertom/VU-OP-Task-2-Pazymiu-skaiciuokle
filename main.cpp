@@ -6,7 +6,17 @@
 #define GRADE_MIN 1
 #define GRADE_MAX 10
 
-using namespace std;
+using std::cin;
+using std::cout;
+using std::endl;
+using std::fixed;
+using std::left;
+using std::numeric_limits;
+using std::setprecision;
+using std::setw;
+using std::sort;
+using std::streamsize;
+using std::string;
 
 struct Student {
   string firstName;
