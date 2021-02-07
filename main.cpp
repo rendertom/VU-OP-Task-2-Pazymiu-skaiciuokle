@@ -12,6 +12,8 @@ struct Student {
   int numGrades;
   int *grades;
   int examGrade;
+  double meanGrade;
+  double finalGrade;
 };
 
 bool isGradeInRange(int grade) {
@@ -20,6 +22,15 @@ bool isGradeInRange(int grade) {
 
 void ClearLine() {
   cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
+
+double findMean(int *array, int length) {
+  int sum = 0;
+  for (int i = 0; i < length; i++) {
+    sum += array[i];
+  }
+
+  return (double)sum / length;
 }
 
 void PrintStudent(Student *student) {
@@ -34,6 +45,17 @@ void PrintStudent(Student *student) {
   cout << endl;
 
   cout << "Exam grade: " << student->examGrade << endl;
+  cout << "Mean grade: " << student->meanGrade << endl;
+  cout << "Final grade: " << student->finalGrade << endl;
+}
+
+void ProcessStudent(Student *student) {
+  student->finalGrade = 0;
+  student->meanGrade = 0;
+  if (student->numGrades > 0) {
+    student->meanGrade = findMean(student->grades, student->numGrades);
+    student->finalGrade = 0.4 * student->meanGrade + 0.6 * student->examGrade;
+  }
 }
 
 int main() {
@@ -90,6 +112,8 @@ int main() {
 
   cin.clear();
   ClearLine();
+
+  ProcessStudent(&student);
 
   cout << "--------------" << endl;
   PrintStudent(&student);
