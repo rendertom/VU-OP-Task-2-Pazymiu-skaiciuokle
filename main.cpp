@@ -40,6 +40,7 @@ int main() {
 
   cout << "Enter number of grades: ";
   cin >> student.numGrades;
+  student.grades = new int[student.numGrades];
   cin.clear();
   ClearLine();
 
