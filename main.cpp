@@ -19,7 +19,7 @@ struct Student {
   double medianGrade;
 };
 
-bool isGradeInRange(int grade) {
+bool isValidGrade(int grade) {
   return grade >= GRADE_MIN && grade <= GRADE_MAX;
 }
 
@@ -179,7 +179,7 @@ int main() {
       int grade = -1;
       while (grade != 0) {
         grade = getRandomIntegerInRange(0, GRADE_MAX);
-        if (isGradeInRange(grade)) {
+        if (isValidGrade(grade)) {
           arrayPush(student.grades, student.numGrades, grade);
         }
       }
@@ -214,7 +214,7 @@ int main() {
         while (gradeIndex != student.numGrades) {
           int grade;
           cin >> grade;
-          if (!isGradeInRange(grade)) {
+          if (!isValidGrade(grade)) {
             cout << "Grade " << grade << " at index " << gradeIndex << " is out of range ("
                  << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
             cin.clear();
@@ -239,7 +239,7 @@ int main() {
         cin.clear();
         ClearLine();
         if (grade != -1) {
-          if (!isGradeInRange(grade)) {
+          if (!isValidGrade(grade)) {
             cout << "Grade " << grade << " is out of range ("
                  << GRADE_MIN << "-" << GRADE_MAX << ")." << endl;
           } else {
@@ -251,7 +251,7 @@ int main() {
 
     cout << "Enter exam grade: ";
     cin >> student.examGrade;
-    while (!isGradeInRange(student.examGrade)) {
+    while (!isValidGrade(student.examGrade)) {
       cout << "Grade " << student.examGrade << " is out of range ("
            << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
       cin.clear();
