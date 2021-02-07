@@ -169,17 +169,15 @@ int main() {
   bool shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
   bool numberOfGradesIsKnown = confirm("Do you know the number of grades?");
 
+  student.numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
+  student.grades = new int[student.numGrades];
+
   if (shouldGenerateRandomGrades) {
     if (numberOfGradesIsKnown) {
-      student.numGrades = getNumberOfGrades();
-      student.grades = new int[student.numGrades];
       for (int i = 0; i < student.numGrades; i++) {
         student.grades[i] = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
       }
     } else {
-      student.numGrades = 0;
-      student.grades = new int[student.numGrades];
-
       int grade = -1;
       while (grade != 0) {
         grade = getRandomIntegerInRange(0, GRADE_MAX);
@@ -193,16 +191,12 @@ int main() {
     for (int i = 0; i < student.numGrades; i++) {
       cout << student.grades[i] << " ";
     }
-
     cout << endl;
 
     student.examGrade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
     cout << "Generated random exam grade: " << student.examGrade << endl;
   } else {
     if (numberOfGradesIsKnown) {
-      student.numGrades = getNumberOfGrades();
-      student.grades = new int[student.numGrades];
-
       if (student.numGrades > 0) {
         cout << "Enter grades: ";
         int gradeIndex = 0;
@@ -222,9 +216,6 @@ int main() {
         clearLine();
       }
     } else {
-      student.numGrades = 0;
-      student.grades = new int[student.numGrades];
-
       int grade;
       while (grade != -1) {
         cout << "Enter grade [" << student.numGrades << "] (type -1 to quit): ";
