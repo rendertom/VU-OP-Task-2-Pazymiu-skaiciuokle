@@ -19,18 +19,6 @@ struct Student {
   double medianGrade;
 };
 
-bool isValidGrade(int grade) {
-  return grade >= GRADE_MIN && grade <= GRADE_MAX;
-}
-
-bool isOddNumber(int value) {
-  return value % 2 != 0;
-}
-
-void clearLine() {
-  cin.ignore(numeric_limits<streamsize>::max(), '\n');
-}
-
 void arrayCopy(int *targetArray, int *sourceArray, int size) {
   for (int i = 0; i < size; i++) {
     // cout << "Copying: " << sourceArray[i] << endl;
@@ -48,6 +36,28 @@ void arrayPush(int *&array, int &size, int value) {
   size++;
 }
 
+void clearLine() {
+  cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
+
+bool confirm(const string &message, char yes = 'y', char no = 'n') {
+  while (true) {
+    cout << message << " (" << yes << "/" << no << "): ";
+
+    char response;
+    cin >> response;
+    cin.clear();
+    clearLine();
+    if (response == yes) {
+      return true;
+    } else if (response == no) {
+      return false;
+    } else {
+      cout << "Unknown character. ";
+    }
+  }
+}
+
 double findMean(int *array, int length) {
   int sum = 0;
   for (int i = 0; i < length; i++) {
@@ -60,11 +70,26 @@ double findMean(int *array, int length) {
 double findMedian(int *array, int arrayLength) {
   sort(array, array + arrayLength);
 
-  if (isOddNumber(arrayLength)) {
+  bool isOddNumber = arrayLength % 2 != 0;
+
+  if (isOddNumber) {
     return (double)array[arrayLength / 2];
   }
 
   return (double)(array[(arrayLength - 1) / 2] + array[arrayLength / 2]) / 2.0;
+}
+
+int getRandomIntegerInRange(int min, int max) {
+  static bool first = true;
+  if (first) {
+    srand(time(NULL));  //seeding for the first time only!
+    first = false;
+  }
+  return min + rand() % ((max + 1) - min);
+}
+
+bool isValidGrade(int grade) {
+  return grade >= GRADE_MIN && grade <= GRADE_MAX;
 }
 
 void printResult(Student *student, bool showMedianGrade = false) {
@@ -115,33 +140,6 @@ void processStudent(Student *student, bool shouldCalculateMedian = false) {
       student->finalGrade = 0.4 * student->meanGrade + 0.6 * student->examGrade;
     }
   }
-}
-
-bool confirm(const string &message, char yes = 'y', char no = 'n') {
-  while (true) {
-    cout << message << " (" << yes << "/" << no << "): ";
-
-    char response;
-    cin >> response;
-    cin.clear();
-    clearLine();
-    if (response == yes) {
-      return true;
-    } else if (response == no) {
-      return false;
-    } else {
-      cout << "Unknown character. ";
-    }
-  }
-}
-
-int getRandomIntegerInRange(int min, int max) {
-  static bool first = true;
-  if (first) {
-    srand(time(NULL));  //seeding for the first time only!
-    first = false;
-  }
-  return min + rand() % ((max + 1) - min);
 }
 
 int main() {
