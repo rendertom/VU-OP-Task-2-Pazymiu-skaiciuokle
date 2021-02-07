@@ -14,6 +14,10 @@ struct Student {
   int examGrade;
 };
 
+bool isGradeInRange(int grade) {
+  return grade >= GRADE_MIN && grade <= GRADE_MAX;
+}
+
 void ClearLine() {
   cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
@@ -52,7 +56,7 @@ int main() {
   while (gradeIndex != student.numGrades) {
     int grade;
     cin >> grade;
-    if (grade < GRADE_MIN || grade > GRADE_MAX) {
+    if (!isGradeInRange(grade)) {
       cout << "Grade " << grade << " at index " << gradeIndex << " is out of range ("
            << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
       cin.clear();
@@ -68,7 +72,7 @@ int main() {
 
   cout << "Enter exam grade: ";
   cin >> student.examGrade;
-  while (student.examGrade < GRADE_MIN || student.examGrade > GRADE_MAX) {
+  while (!isGradeInRange(student.examGrade)) {
     cout << "Grade " << student.examGrade << " is out of range ("
          << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
     cin.clear();
@@ -78,6 +82,9 @@ int main() {
 
   cin.clear();
   ClearLine();
+
+  cout << "--------------" << endl;
+  PrintStudent(&student);
 
   return 0;
 }
