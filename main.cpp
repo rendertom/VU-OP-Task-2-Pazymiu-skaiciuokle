@@ -30,6 +30,23 @@ void ClearLine() {
   cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
+void arrayCopy(int *targetArray, int *sourceArray, int size) {
+  for (int i = 0; i < size; i++) {
+    // cout << "Copying: " << sourceArray[i] << endl;
+    targetArray[i] = sourceArray[i];
+  }
+}
+
+void arrayPush(int *&array, int &size, int value) {
+  int *tempArray = new int[size + 1];
+  arrayCopy(tempArray, array, size);
+  tempArray[size] = value;
+
+  delete[] array;
+  array = tempArray;
+  size++;
+}
+
 double findMean(int *array, int length) {
   int sum = 0;
   for (int i = 0; i < length; i++) {
@@ -126,37 +143,59 @@ int main() {
   cout << "Please enter last name: ";
   getline(cin, student.lastName);
 
-  cout << "Enter number of grades: ";
-  cin >> student.numGrades;
-  cin.clear();
-  ClearLine();
-  while (student.numGrades < 0) {
-    cout << "Value cannot be negative. Please enter new value: ";
+  bool numberOfGradesIsKnown = getConfirmation("Do you know the number of grades? (y/n): ");
+  if (numberOfGradesIsKnown) {
+    cout << "Enter number of grades: ";
     cin >> student.numGrades;
     cin.clear();
     ClearLine();
-  }
-  student.grades = new int[student.numGrades];
+    while (student.numGrades < 0) {
+      cout << "Value cannot be negative. Please enter new value: ";
+      cin >> student.numGrades;
+      cin.clear();
+      ClearLine();
+    }
+    student.grades = new int[student.numGrades];
 
-  if (student.numGrades > 0) {
-    cout << "Enter grades: ";
-    int gradeIndex = 0;
-    while (gradeIndex != student.numGrades) {
-      int grade;
+    if (student.numGrades > 0) {
+      cout << "Enter grades: ";
+      int gradeIndex = 0;
+      while (gradeIndex != student.numGrades) {
+        int grade;
+        cin >> grade;
+        if (!isGradeInRange(grade)) {
+          cout << "Grade " << grade << " at index " << gradeIndex << " is out of range ("
+               << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
+          cin.clear();
+          ClearLine();
+        } else {
+          student.grades[gradeIndex] = grade;
+          gradeIndex++;
+        }
+      }
+
+      cin.clear();
+      ClearLine();
+    }
+  } else {
+    student.numGrades = 0;
+    student.grades = new int[student.numGrades];
+
+    int grade;
+    while (grade != -1) {
+      cout << "Enter grade [" << student.numGrades << "] (type -1 to quit): ";
       cin >> grade;
-      if (!isGradeInRange(grade)) {
-        cout << "Grade " << grade << " at index " << gradeIndex << " is out of range ("
-             << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
-        cin.clear();
-        ClearLine();
-      } else {
-        student.grades[gradeIndex] = grade;
-        gradeIndex++;
+      cin.clear();
+      ClearLine();
+      if (grade != -1) {
+        if (!isGradeInRange(grade)) {
+          cout << "Grade " << grade << " is out of range ("
+               << GRADE_MIN << "-" << GRADE_MAX << ")." << endl;
+        } else {
+          arrayPush(student.grades, student.numGrades, grade);
+        }
       }
     }
-
-    cin.clear();
-    ClearLine();
   }
 
   cout << "Enter exam grade: ";
