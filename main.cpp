@@ -49,23 +49,23 @@ double findMedian(int *array, int arrayLength) {
   return (double)(array[(arrayLength - 1) / 2] + array[arrayLength / 2]) / 2.0;
 }
 
-void PrintResult(Student *student) {
+void PrintResult(Student *student, bool showMedianGrade = false) {
   cout << left
        << setw(10) << student->firstName
        << setw(15) << student->lastName
        << setw(12) << fixed << setprecision(2)
-       << student->finalGrade << student->medianGrade
+       << (showMedianGrade ? student->medianGrade : student->finalGrade)
        << endl;
 }
 
-void PrintResults(Student *student) {
+void PrintResults(Student *student, bool showMedianGrade = false) {
   cout << left
        << setw(10) << "Vardas"
        << setw(16) << "Pavardė"
-       << "Galutinis / Medianas" << endl;
+       << "Galutinis " << (showMedianGrade ? "Med." : "Vid.") << endl;
   cout << "-----------------------------------------------------------" << endl;
 
-  PrintResult(student);
+  PrintResult(student, showMedianGrade);
 }
 
 void PrintStudent(Student *student) {
@@ -85,14 +85,35 @@ void PrintStudent(Student *student) {
   cout << "Median grade: " << student->medianGrade << endl;
 }
 
-void ProcessStudent(Student *student) {
+void ProcessStudent(Student *student, bool shouldCalculateMedian = false) {
   student->finalGrade = 0;
   student->meanGrade = 0;
   student->medianGrade = 0;
   if (student->numGrades > 0) {
-    student->meanGrade = findMean(student->grades, student->numGrades);
-    student->finalGrade = 0.4 * student->meanGrade + 0.6 * student->examGrade;
-    student->medianGrade = findMedian(student->grades, student->numGrades);
+    if (shouldCalculateMedian) {
+      student->medianGrade = findMedian(student->grades, student->numGrades);
+    } else {
+      student->meanGrade = findMean(student->grades, student->numGrades);
+      student->finalGrade = 0.4 * student->meanGrade + 0.6 * student->examGrade;
+    }
+  }
+}
+
+bool getConfirmation(const string &message) {
+  while (true) {
+    cout << message;
+
+    char response;
+    cin >> response;
+    cin.clear();
+    ClearLine();
+    if (response == 'y') {
+      return true;
+    } else if (response == 'n') {
+      return false;
+    } else {
+      cout << "Unknown character. ";
+    }
   }
 }
 
@@ -151,8 +172,9 @@ int main() {
   cin.clear();
   ClearLine();
 
-  ProcessStudent(&student);
-  PrintResults(&student);
+  bool shouldCalculateMedian = getConfirmation("Calculate Median instead of Mean value? (y/n): ");
+  ProcessStudent(&student, shouldCalculateMedian);
+  PrintResults(&student, shouldCalculateMedian);
 
   cout << "--------------" << endl;
   PrintStudent(&student);
