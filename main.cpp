@@ -47,28 +47,36 @@ int main() {
 
   cout << "Enter number of grades: ";
   cin >> student.numGrades;
-  student.grades = new int[student.numGrades];
   cin.clear();
   ClearLine();
-
-  cout << "Enter grades: ";
-  int gradeIndex = 0;
-  while (gradeIndex != student.numGrades) {
-    int grade;
-    cin >> grade;
-    if (!isGradeInRange(grade)) {
-      cout << "Grade " << grade << " at index " << gradeIndex << " is out of range ("
-           << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
-      cin.clear();
-      ClearLine();
-    } else {
-      student.grades[gradeIndex] = grade;
-      gradeIndex++;
-    }
+  while (student.numGrades < 0) {
+    cout << "Value cannot be negative. Please enter new value: ";
+    cin >> student.numGrades;
+    cin.clear();
+    ClearLine();
   }
+  student.grades = new int[student.numGrades];
 
-  cin.clear();
-  ClearLine();
+  if (student.numGrades > 0) {
+    cout << "Enter grades: ";
+    int gradeIndex = 0;
+    while (gradeIndex != student.numGrades) {
+      int grade;
+      cin >> grade;
+      if (!isGradeInRange(grade)) {
+        cout << "Grade " << grade << " at index " << gradeIndex << " is out of range ("
+             << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
+        cin.clear();
+        ClearLine();
+      } else {
+        student.grades[gradeIndex] = grade;
+        gradeIndex++;
+      }
+    }
+
+    cin.clear();
+    ClearLine();
+  }
 
   cout << "Enter exam grade: ";
   cin >> student.examGrade;
