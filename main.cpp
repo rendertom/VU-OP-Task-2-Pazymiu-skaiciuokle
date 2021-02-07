@@ -9,6 +9,10 @@ struct Student {
   int numGrades;
 };
 
+void ClearLine() {
+  cin.ignore(numeric_limits<streamsize>::max(), '\n');
+}
+
 void PrintStudent(Student *student) {
   cout << "First name: " << student->firstName << endl;
   cout << "Last name: " << student->lastName << endl;
@@ -26,6 +30,8 @@ int main() {
 
   cout << "Enter number of grades: ";
   cin >> student.numGrades;
+  cin.clear();
+  ClearLine();
 
   return 0;
 }
