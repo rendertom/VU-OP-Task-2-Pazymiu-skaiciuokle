@@ -175,7 +175,7 @@ void printRandomGrades(Student *student) {
   cout << "Generated random exam grade: " << student->examGrade << endl;
 }
 
-void copyStudents(Student *&array, int &size, Student value) {
+void pushStudent(Student *&array, int &size, Student value) {
   Student *tempArray = new Student[size + 1];
 
   for (int i = 0; i < size; i++) {
@@ -277,7 +277,7 @@ int main() {
       clearLine();
     }
 
-    copyStudents(students, numStudents, student);
+    pushStudent(students, numStudents, student);
     if (!confirm("Add another student?")) {
       break;
     }
