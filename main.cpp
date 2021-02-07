@@ -157,6 +157,15 @@ void processStudent(Student *student, bool shouldCalculateMedian = false) {
   }
 }
 
+void printRandomGrades(Student *student) {
+  cout << "Generated " << student->numGrades << " random grades: ";
+  for (int i = 0; i < student->numGrades; i++) {
+    cout << student->grades[i] << " ";
+  }
+  cout << endl;
+  cout << "Generated random exam grade: " << student->examGrade << endl;
+}
+
 int main() {
   Student student;
 
@@ -166,12 +175,11 @@ int main() {
   cout << "Please enter last name: ";
   getline(cin, student.lastName);
 
-  bool shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
   bool numberOfGradesIsKnown = confirm("Do you know the number of grades?");
-
   student.numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
   student.grades = new int[student.numGrades];
 
+  bool shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
   if (shouldGenerateRandomGrades) {
     if (numberOfGradesIsKnown) {
       for (int i = 0; i < student.numGrades; i++) {
@@ -186,15 +194,8 @@ int main() {
         }
       }
     }
-
-    cout << "Generated " << student.numGrades << " random grades: ";
-    for (int i = 0; i < student.numGrades; i++) {
-      cout << student.grades[i] << " ";
-    }
-    cout << endl;
-
     student.examGrade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
-    cout << "Generated random exam grade: " << student.examGrade << endl;
+    printRandomGrades(&student);
   } else {
     if (numberOfGradesIsKnown) {
       if (student.numGrades > 0) {
