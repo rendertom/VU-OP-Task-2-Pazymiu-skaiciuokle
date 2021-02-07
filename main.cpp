@@ -6,11 +6,13 @@ using namespace std;
 struct Student {
   string firstName;
   string lastName;
+  int numGrades;
 };
 
 void PrintStudent(Student *student) {
   cout << "First name: " << student->firstName << endl;
   cout << "Last name: " << student->lastName << endl;
+  cout << "Number of grades: " << student->numGrades << endl;
 }
 
 int main() {
@@ -21,6 +23,9 @@ int main() {
 
   cout << "Please enter last name: ";
   getline(cin, student.lastName);
+
+  cout << "Enter number of grades: ";
+  cin >> student.numGrades;
 
   return 0;
 }
