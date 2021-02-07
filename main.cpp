@@ -43,7 +43,7 @@ void clearLine() {
 
 bool confirm(const string &message, char yes = 'y', char no = 'n') {
   while (true) {
-    cout << message << " (" << yes << "/" << no << "): ";
+    cout << "-> " << message << " (" << yes << "/" << no << "): ";
 
     char response;
     cin >> response;
@@ -116,14 +116,16 @@ void printResult(Student *student, bool showMeanGrade = true) {
        << endl;
 }
 
-void printResults(Student *student, bool showMeanGrade = true) {
+void printResults(Student *students, int numStudents, bool showMeanGrade = true) {
   cout << left
        << setw(10) << "Vardas"
        << setw(16) << "Pavardė"
        << "Galutinis " << (showMeanGrade ? "Vid." : "Med.") << endl;
   cout << "-----------------------------------------------------------" << endl;
 
-  printResult(student, showMeanGrade);
+  for (int i = 0; i < numStudents; i++) {
+    printResult(&students[i], showMeanGrade);
+  }
 }
 
 void printStudent(Student *student) {
@@ -166,96 +168,122 @@ void printRandomGrades(Student *student) {
   cout << "Generated random exam grade: " << student->examGrade << endl;
 }
 
+void copyStudents(Student *&array, int &size, Student value) {
+  Student *tempArray = new Student[size + 1];
+
+  for (int i = 0; i < size; i++) {
+    tempArray[i] = array[i];
+  }
+
+  tempArray[size] = value;
+
+  delete[] array;
+  array = tempArray;
+  size++;
+}
+
 int main() {
-  Student student;
+  int numStudents = 0;
+  Student *students = new Student[numStudents];
 
-  cout << "Please enter first name: ";
-  getline(cin, student.firstName);
+  while (true) {
+    Student student;
 
-  cout << "Please enter last name: ";
-  getline(cin, student.lastName);
+    cout << "Please enter first name: ";
+    getline(cin, student.firstName);
 
-  bool numberOfGradesIsKnown = confirm("Do you know the number of grades?");
-  student.numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
-  student.grades = new int[student.numGrades];
+    cout << "Please enter last name: ";
+    getline(cin, student.lastName);
 
-  bool shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
-  if (shouldGenerateRandomGrades) {
-    if (numberOfGradesIsKnown) {
-      for (int i = 0; i < student.numGrades; i++) {
-        student.grades[i] = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
-      }
-    } else {
-      while (true) {
-        int grade = getRandomIntegerInRange(0, GRADE_MAX);
-        if (isValidGrade(grade)) {
-          arrayPush(student.grades, student.numGrades, grade);
-        } else {
-          break;
+    bool numberOfGradesIsKnown = confirm("Do you know the number of grades?");
+    student.numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
+    student.grades = new int[student.numGrades];
+
+    bool shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
+    if (shouldGenerateRandomGrades) {
+      if (numberOfGradesIsKnown) {
+        for (int i = 0; i < student.numGrades; i++) {
+          student.grades[i] = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
+        }
+      } else {
+        while (true) {
+          int grade = getRandomIntegerInRange(0, GRADE_MAX);
+          if (isValidGrade(grade)) {
+            arrayPush(student.grades, student.numGrades, grade);
+          } else {
+            break;
+          }
         }
       }
-    }
-    student.examGrade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
-    printRandomGrades(&student);
-  } else {
-    if (numberOfGradesIsKnown) {
-      if (student.numGrades > 0) {
-        cout << "Enter grades: ";
-        int gradeIndex = 0;
-        while (gradeIndex != student.numGrades) {
+      student.examGrade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
+      printRandomGrades(&student);
+    } else {
+      if (numberOfGradesIsKnown) {
+        if (student.numGrades > 0) {
+          cout << "Enter grades: ";
+          int gradeIndex = 0;
+          while (gradeIndex != student.numGrades) {
+            int grade;
+            cin >> grade;
+            if (!isValidGrade(grade)) {
+              cout << "Grade " << grade << " at index " << gradeIndex << " is out of range ("
+                   << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
+              clearLine();
+            } else {
+              student.grades[gradeIndex] = grade;
+              gradeIndex++;
+            }
+          }
+
+          clearLine();
+        }
+      } else {
+        while (true) {
+          cout << "Enter grade [" << student.numGrades << "] (type -1 to quit): ";
+
           int grade;
           cin >> grade;
-          if (!isValidGrade(grade)) {
-            cout << "Grade " << grade << " at index " << gradeIndex << " is out of range ("
-                 << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
-            clearLine();
+          clearLine();
+
+          if (grade == -1) {
+            break;
           } else {
-            student.grades[gradeIndex] = grade;
-            gradeIndex++;
-          }
-        }
-
-        clearLine();
-      }
-    } else {
-      while (true) {
-        cout << "Enter grade [" << student.numGrades << "] (type -1 to quit): ";
-
-        int grade;
-        cin >> grade;
-        clearLine();
-
-        if (grade == -1) {
-          break;
-        } else {
-          if (!isValidGrade(grade)) {
-            cout << "Grade " << grade << " is out of range ("
-                 << GRADE_MIN << "-" << GRADE_MAX << ")." << endl;
-          } else {
-            arrayPush(student.grades, student.numGrades, grade);
+            if (!isValidGrade(grade)) {
+              cout << "Grade " << grade << " is out of range ("
+                   << GRADE_MIN << "-" << GRADE_MAX << ")." << endl;
+            } else {
+              arrayPush(student.grades, student.numGrades, grade);
+            }
           }
         }
       }
-    }
 
-    cout << "Enter exam grade: ";
-    cin >> student.examGrade;
-    while (!isValidGrade(student.examGrade)) {
-      cout << "Grade " << student.examGrade << " is out of range ("
-           << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
-      clearLine();
+      cout << "Enter exam grade: ";
       cin >> student.examGrade;
+      while (!isValidGrade(student.examGrade)) {
+        cout << "Grade " << student.examGrade << " is out of range ("
+             << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
+        clearLine();
+        cin >> student.examGrade;
+      }
+
+      clearLine();
     }
 
-    clearLine();
+    copyStudents(students, numStudents, student);
+    if (!confirm("Add another student?")) {
+      break;
+    }
   }
 
   bool shouldCalculateMean = confirm("Calculate MEAN (otherwise, calculate MEDIAN)?");
-  processStudent(&student, shouldCalculateMean);
-  printResults(&student, shouldCalculateMean);
+  for (int i = 0; i < numStudents; i++) {
+    processStudent(&students[i], shouldCalculateMean);
+  }
 
-  cout << "--------------" << endl;
-  printStudent(&student);
+  cout << endl;
+  printResults(students, numStudents, shouldCalculateMean);
+  cout << endl;
 
   return 0;
 }
