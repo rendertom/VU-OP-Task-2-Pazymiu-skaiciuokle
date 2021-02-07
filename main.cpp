@@ -11,6 +11,7 @@ struct Student {
   string lastName;
   int numGrades;
   int *grades;
+  int examGrade;
 };
 
 void ClearLine() {
@@ -27,6 +28,8 @@ void PrintStudent(Student *student) {
     cout << student->grades[i] << " ";
   }
   cout << endl;
+
+  cout << "Exam grade: " << student->examGrade << endl;
 }
 
 int main() {
@@ -59,6 +62,22 @@ int main() {
       gradeIndex++;
     }
   }
+
+  cin.clear();
+  ClearLine();
+
+  cout << "Enter exam grade: ";
+  cin >> student.examGrade;
+  while (student.examGrade < GRADE_MIN || student.examGrade > GRADE_MAX) {
+    cout << "Grade " << student.examGrade << " is out of range ("
+         << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
+    cin.clear();
+    ClearLine();
+    cin >> student.examGrade;
+  }
+
+  cin.clear();
+  ClearLine();
 
   return 0;
 }
