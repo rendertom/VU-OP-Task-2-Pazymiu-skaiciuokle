@@ -27,7 +27,7 @@ bool isOddNumber(int value) {
   return value % 2 != 0;
 }
 
-void ClearLine() {
+void clearLine() {
   cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
@@ -67,7 +67,7 @@ double findMedian(int *array, int arrayLength) {
   return (double)(array[(arrayLength - 1) / 2] + array[arrayLength / 2]) / 2.0;
 }
 
-void PrintResult(Student *student, bool showMedianGrade = false) {
+void printResult(Student *student, bool showMedianGrade = false) {
   cout << left
        << setw(10) << student->firstName
        << setw(15) << student->lastName
@@ -76,17 +76,17 @@ void PrintResult(Student *student, bool showMedianGrade = false) {
        << endl;
 }
 
-void PrintResults(Student *student, bool showMedianGrade = false) {
+void printResults(Student *student, bool showMedianGrade = false) {
   cout << left
        << setw(10) << "Vardas"
        << setw(16) << "Pavardė"
        << "Galutinis " << (showMedianGrade ? "Med." : "Vid.") << endl;
   cout << "-----------------------------------------------------------" << endl;
 
-  PrintResult(student, showMedianGrade);
+  printResult(student, showMedianGrade);
 }
 
-void PrintStudent(Student *student) {
+void printStudent(Student *student) {
   cout << "First name: " << student->firstName << endl;
   cout << "Last name: " << student->lastName << endl;
   cout << "Number of grades: " << student->numGrades << endl;
@@ -103,7 +103,7 @@ void PrintStudent(Student *student) {
   cout << "Median grade: " << student->medianGrade << endl;
 }
 
-void ProcessStudent(Student *student, bool shouldCalculateMedian = false) {
+void processStudent(Student *student, bool shouldCalculateMedian = false) {
   student->finalGrade = 0;
   student->meanGrade = 0;
   student->medianGrade = 0;
@@ -124,7 +124,7 @@ bool confirm(const string &message, char yes = 'y', char no = 'n') {
     char response;
     cin >> response;
     cin.clear();
-    ClearLine();
+    clearLine();
     if (response == yes) {
       return true;
     } else if (response == no) {
@@ -161,12 +161,12 @@ int main() {
       cout << "Enter number of grades: ";
       cin >> student.numGrades;
       cin.clear();
-      ClearLine();
+      clearLine();
       while (student.numGrades < 0) {
         cout << "Value cannot be negative. Please enter new value: ";
         cin >> student.numGrades;
         cin.clear();
-        ClearLine();
+        clearLine();
       }
       student.grades = new int[student.numGrades];
       for (int i = 0; i < student.numGrades; i++) {
@@ -199,12 +199,12 @@ int main() {
       cout << "Enter number of grades: ";
       cin >> student.numGrades;
       cin.clear();
-      ClearLine();
+      clearLine();
       while (student.numGrades < 0) {
         cout << "Value cannot be negative. Please enter new value: ";
         cin >> student.numGrades;
         cin.clear();
-        ClearLine();
+        clearLine();
       }
       student.grades = new int[student.numGrades];
 
@@ -218,7 +218,7 @@ int main() {
             cout << "Grade " << grade << " at index " << gradeIndex << " is out of range ("
                  << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
             cin.clear();
-            ClearLine();
+            clearLine();
           } else {
             student.grades[gradeIndex] = grade;
             gradeIndex++;
@@ -226,7 +226,7 @@ int main() {
         }
 
         cin.clear();
-        ClearLine();
+        clearLine();
       }
     } else {
       student.numGrades = 0;
@@ -237,7 +237,7 @@ int main() {
         cout << "Enter grade [" << student.numGrades << "] (type -1 to quit): ";
         cin >> grade;
         cin.clear();
-        ClearLine();
+        clearLine();
         if (grade != -1) {
           if (!isValidGrade(grade)) {
             cout << "Grade " << grade << " is out of range ("
@@ -255,20 +255,20 @@ int main() {
       cout << "Grade " << student.examGrade << " is out of range ("
            << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
       cin.clear();
-      ClearLine();
+      clearLine();
       cin >> student.examGrade;
     }
 
     cin.clear();
-    ClearLine();
+    clearLine();
   }
 
   bool shouldCalculateMedian = confirm("Calculate MEDIAN (otherwise, calculate MEAN)?");
-  ProcessStudent(&student, shouldCalculateMedian);
-  PrintResults(&student, shouldCalculateMedian);
+  processStudent(&student, shouldCalculateMedian);
+  printResults(&student, shouldCalculateMedian);
 
   cout << "--------------" << endl;
-  PrintStudent(&student);
+  printStudent(&student);
 
   return 0;
 }
