@@ -79,6 +79,13 @@ double findMedian(int *array, int arrayLength) {
   return (double)(array[(arrayLength - 1) / 2] + array[arrayLength / 2]) / 2.0;
 }
 
+void freeMemory(Student *students, int numStudents) {
+  for (int i = 0; i < numStudents; i++) {
+    delete[] students[i].grades;
+  }
+  delete[] students;
+}
+
 int getNumberOfGrades() {
   cout << "Enter number of grades: ";
   int numGrades;
@@ -284,6 +291,8 @@ int main() {
   cout << endl;
   printResults(students, numStudents, shouldCalculateMean);
   cout << endl;
+
+  freeMemory(students, numStudents);
 
   return 0;
 }
