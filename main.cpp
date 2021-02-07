@@ -1,3 +1,4 @@
+#include <iomanip>  // std::setw
 #include <iostream>
 #include <string>
 
@@ -31,6 +32,25 @@ double findMean(int *array, int length) {
   }
 
   return (double)sum / length;
+}
+
+void PrintResult(Student *student) {
+  cout << left
+       << setw(10) << student->firstName
+       << setw(15) << student->lastName
+       << setw(12) << fixed << setprecision(2)
+       << student->finalGrade
+       << endl;
+}
+
+void PrintResults(Student *student) {
+  cout << left
+       << setw(10) << "Vardas"
+       << setw(16) << "Pavardė"
+       << "Galutinis" << endl;
+  cout << "----------------------------------" << endl;
+
+  PrintResult(student);
 }
 
 void PrintStudent(Student *student) {
@@ -114,6 +134,7 @@ int main() {
   ClearLine();
 
   ProcessStudent(&student);
+  PrintResults(&student);
 
   cout << "--------------" << endl;
   PrintStudent(&student);
