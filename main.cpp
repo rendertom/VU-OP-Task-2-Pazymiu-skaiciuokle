@@ -107,23 +107,23 @@ bool isValidGrade(int grade) {
   return grade >= GRADE_MIN && grade <= GRADE_MAX;
 }
 
-void printResult(Student *student, bool showMedianGrade = false) {
+void printResult(Student *student, bool showMeanGrade = true) {
   cout << left
        << setw(10) << student->firstName
        << setw(15) << student->lastName
        << setw(12) << fixed << setprecision(2)
-       << (showMedianGrade ? student->medianGrade : student->finalGrade)
+       << (showMeanGrade ? student->finalGrade : student->medianGrade)
        << endl;
 }
 
-void printResults(Student *student, bool showMedianGrade = false) {
+void printResults(Student *student, bool showMeanGrade = true) {
   cout << left
        << setw(10) << "Vardas"
        << setw(16) << "Pavardė"
-       << "Galutinis " << (showMedianGrade ? "Med." : "Vid.") << endl;
+       << "Galutinis " << (showMeanGrade ? "Vid." : "Med.") << endl;
   cout << "-----------------------------------------------------------" << endl;
 
-  printResult(student, showMedianGrade);
+  printResult(student, showMeanGrade);
 }
 
 void printStudent(Student *student) {
@@ -143,16 +143,16 @@ void printStudent(Student *student) {
   cout << "Median grade: " << student->medianGrade << endl;
 }
 
-void processStudent(Student *student, bool shouldCalculateMedian = false) {
+void processStudent(Student *student, bool shouldCalculateMean = true) {
   student->finalGrade = 0;
   student->meanGrade = 0;
   student->medianGrade = 0;
   if (student->numGrades > 0) {
-    if (shouldCalculateMedian) {
-      student->medianGrade = findMedian(student->grades, student->numGrades);
-    } else {
+    if (shouldCalculateMean) {
       student->meanGrade = findMean(student->grades, student->numGrades);
       student->finalGrade = 0.4 * student->meanGrade + 0.6 * student->examGrade;
+    } else {
+      student->medianGrade = findMedian(student->grades, student->numGrades);
     }
   }
 }
@@ -250,9 +250,9 @@ int main() {
     clearLine();
   }
 
-  bool shouldCalculateMedian = confirm("Calculate MEDIAN (otherwise, calculate MEAN)?");
-  processStudent(&student, shouldCalculateMedian);
-  printResults(&student, shouldCalculateMedian);
+  bool shouldCalculateMean = confirm("Calculate MEAN (otherwise, calculate MEDIAN)?");
+  processStudent(&student, shouldCalculateMean);
+  printResults(&student, shouldCalculateMean);
 
   cout << "--------------" << endl;
   printStudent(&student);
