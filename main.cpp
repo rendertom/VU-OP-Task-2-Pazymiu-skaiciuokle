@@ -186,11 +186,12 @@ int main() {
         student.grades[i] = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
       }
     } else {
-      int grade = -1;
-      while (grade != 0) {
-        grade = getRandomIntegerInRange(0, GRADE_MAX);
+      while (true) {
+        int grade = getRandomIntegerInRange(0, GRADE_MAX);
         if (isValidGrade(grade)) {
           arrayPush(student.grades, student.numGrades, grade);
+        } else {
+          break;
         }
       }
     }
@@ -217,12 +218,16 @@ int main() {
         clearLine();
       }
     } else {
-      int grade;
-      while (grade != -1) {
+      while (true) {
         cout << "Enter grade [" << student.numGrades << "] (type -1 to quit): ";
+
+        int grade;
         cin >> grade;
         clearLine();
-        if (grade != -1) {
+
+        if (grade == -1) {
+          break;
+        } else {
           if (!isValidGrade(grade)) {
             cout << "Grade " << grade << " is out of range ("
                  << GRADE_MIN << "-" << GRADE_MAX << ")." << endl;
