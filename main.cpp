@@ -37,6 +37,7 @@ void arrayPush(int *&array, int &size, int value) {
 }
 
 void clearLine() {
+  cin.clear();
   cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
@@ -46,7 +47,6 @@ bool confirm(const string &message, char yes = 'y', char no = 'n') {
 
     char response;
     cin >> response;
-    cin.clear();
     clearLine();
     if (response == yes) {
       return true;
@@ -158,12 +158,10 @@ int main() {
     if (numberOfGradesIsKnown) {
       cout << "Enter number of grades: ";
       cin >> student.numGrades;
-      cin.clear();
       clearLine();
       while (student.numGrades < 0) {
         cout << "Value cannot be negative. Please enter new value: ";
         cin >> student.numGrades;
-        cin.clear();
         clearLine();
       }
       student.grades = new int[student.numGrades];
@@ -196,12 +194,10 @@ int main() {
     if (numberOfGradesIsKnown) {
       cout << "Enter number of grades: ";
       cin >> student.numGrades;
-      cin.clear();
       clearLine();
       while (student.numGrades < 0) {
         cout << "Value cannot be negative. Please enter new value: ";
         cin >> student.numGrades;
-        cin.clear();
         clearLine();
       }
       student.grades = new int[student.numGrades];
@@ -215,7 +211,6 @@ int main() {
           if (!isValidGrade(grade)) {
             cout << "Grade " << grade << " at index " << gradeIndex << " is out of range ("
                  << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
-            cin.clear();
             clearLine();
           } else {
             student.grades[gradeIndex] = grade;
@@ -223,7 +218,6 @@ int main() {
           }
         }
 
-        cin.clear();
         clearLine();
       }
     } else {
@@ -234,7 +228,6 @@ int main() {
       while (grade != -1) {
         cout << "Enter grade [" << student.numGrades << "] (type -1 to quit): ";
         cin >> grade;
-        cin.clear();
         clearLine();
         if (grade != -1) {
           if (!isValidGrade(grade)) {
@@ -252,12 +245,10 @@ int main() {
     while (!isValidGrade(student.examGrade)) {
       cout << "Grade " << student.examGrade << " is out of range ("
            << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
-      cin.clear();
       clearLine();
       cin >> student.examGrade;
     }
 
-    cin.clear();
     clearLine();
   }
 
