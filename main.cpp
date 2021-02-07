@@ -117,17 +117,17 @@ void ProcessStudent(Student *student, bool shouldCalculateMedian = false) {
   }
 }
 
-bool getConfirmation(const string &message) {
+bool confirm(const string &message, char yes = 'y', char no = 'n') {
   while (true) {
-    cout << message;
+    cout << message << " (" << yes << "/" << no << "): ";
 
     char response;
     cin >> response;
     cin.clear();
     ClearLine();
-    if (response == 'y') {
+    if (response == yes) {
       return true;
-    } else if (response == 'n') {
+    } else if (response == no) {
       return false;
     } else {
       cout << "Unknown character. ";
@@ -153,8 +153,8 @@ int main() {
   cout << "Please enter last name: ";
   getline(cin, student.lastName);
 
-  bool shouldGenerateRandomGrades = getConfirmation("Generate random grades (otherwise, enter grades manually)? (y/n): ");
-  bool numberOfGradesIsKnown = getConfirmation("Do you know the number of grades? (y/n): ");
+  bool shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
+  bool numberOfGradesIsKnown = confirm("Do you know the number of grades?");
 
   if (shouldGenerateRandomGrades) {
     if (numberOfGradesIsKnown) {
@@ -189,7 +189,7 @@ int main() {
     for (int i = 0; i < student.numGrades; i++) {
       cout << student.grades[i] << " ";
     }
-    
+
     cout << endl;
 
     student.examGrade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
@@ -263,7 +263,7 @@ int main() {
     ClearLine();
   }
 
-  bool shouldCalculateMedian = getConfirmation("Calculate Median instead of Mean value? (y/n): ");
+  bool shouldCalculateMedian = confirm("Calculate MEDIAN (otherwise, calculate MEAN)?");
   ProcessStudent(&student, shouldCalculateMedian);
   PrintResults(&student, shouldCalculateMedian);
 
