@@ -31,7 +31,6 @@ struct Student {
 
 void arrayCopy(int *targetArray, int *sourceArray, int size) {
   for (int i = 0; i < size; i++) {
-    // cout << "Copying: " << sourceArray[i] << endl;
     targetArray[i] = sourceArray[i];
   }
 }
@@ -189,18 +188,18 @@ void printRandomGrades(Student *student) {
   cout << "Generated random exam grade: " << student->examGrade << endl;
 }
 
-void pushStudent(Student *&array, int &size, Student value) {
-  Student *tempArray = new Student[size + 1];
+void pushStudent(Student *&students, int &numStudents, Student student) {
+  Student *tempArray = new Student[numStudents + 1];
 
-  for (int i = 0; i < size; i++) {
-    tempArray[i] = array[i];
+  for (int i = 0; i < numStudents; i++) {
+    tempArray[i] = students[i];
   }
 
-  tempArray[size] = value;
+  tempArray[numStudents] = student;
 
-  delete[] array;
-  array = tempArray;
-  size++;
+  delete[] students;
+  students = tempArray;
+  numStudents++;
 }
 
 int main() {
