@@ -59,7 +59,7 @@ Programa yra realizuota dviem būdais, kur rezultatai yra saugomi į `C` tipo ma
 
 ## Programos diegimas ir paleidimas
 
-- Atsisiųskite programos versiją iš [Releases](https://github.com/rendertom/VU-Objektinis-Programavimas/releases) aplanko ir ją išsiarchyvuokite,
+- Atsisiųskite programos versiją iš [Releases](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases) aplanko ir ją išsiarchyvuokite,
 - Komandinėje eilutėje įvykdykite sekančius veiksmus:
 
 ```shell
