@@ -1,4 +1,5 @@
-#include <iomanip>  // std::setw
+#include <algorithm>  //std::sort
+#include <iomanip>    // std::setw
 #include <iostream>
 #include <random>  // std::rand, std::srand
 #include <string>
