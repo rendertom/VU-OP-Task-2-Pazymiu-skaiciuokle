@@ -169,7 +169,11 @@ int main() {
     const bool numberOfGradesIsKnown = confirm("Do you know the number of grades?");
     const int numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
 
-    bool shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
+    bool shouldGenerateRandomGrades = false;
+    if (numGrades > 0) {
+      shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
+    }
+
     if (shouldGenerateRandomGrades) {
       if (numberOfGradesIsKnown) {
         for (int i = 0; i < numGrades; i++) {
