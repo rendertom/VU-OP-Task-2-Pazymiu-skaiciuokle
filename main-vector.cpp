@@ -133,11 +133,13 @@ void processStudent(Student *student, bool shouldCalculateMean = true) {
   student->finalGrade = 0;
   student->meanGrade = 0;
   student->medianGrade = 0;
-  if (student->grades.size() > 0) {
-    if (shouldCalculateMean) {
+  if (shouldCalculateMean) {
+    if (student->grades.size() > 0) {
       student->meanGrade = findMean(student->grades);
-      student->finalGrade = 0.4 * student->meanGrade + 0.6 * student->examGrade;
-    } else {
+    }
+    student->finalGrade = 0.4 * student->meanGrade + 0.6 * student->examGrade;
+  } else {
+    if (student->grades.size() > 0) {
       student->medianGrade = findMedian(student->grades);
     }
   }
