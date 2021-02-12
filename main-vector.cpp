@@ -37,12 +37,8 @@ void clearLine() {
 }
 
 bool confirm(const string &message, char yes = 'y', char no = 'n') {
-  // https://stackoverflow.com/a/9158263
-  string colorYellow = "\033[33m";
-  string colorReset = "\033[0m";
-
   while (true) {
-    cout << colorYellow << "-> " << message << " (" << yes << "/" << no << "): " << colorReset;
+    cout << "-> " << message << " (" << yes << "/" << no << "): ";
 
     char response;
     cin >> response;
@@ -133,11 +129,13 @@ void processStudent(Student *student, bool shouldCalculateMean = true) {
   student->finalGrade = 0;
   student->meanGrade = 0;
   student->medianGrade = 0;
-  if (student->grades.size() > 0) {
-    if (shouldCalculateMean) {
+  if (shouldCalculateMean) {
+    if (student->grades.size() > 0) {
       student->meanGrade = findMean(student->grades);
-      student->finalGrade = 0.4 * student->meanGrade + 0.6 * student->examGrade;
-    } else {
+    }
+    student->finalGrade = 0.4 * student->meanGrade + 0.6 * student->examGrade;
+  } else {
+    if (student->grades.size() > 0) {
       student->medianGrade = findMedian(student->grades);
     }
   }
@@ -167,7 +165,11 @@ int main() {
     const bool numberOfGradesIsKnown = confirm("Do you know the number of grades?");
     const int numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
 
-    bool shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
+    bool shouldGenerateRandomGrades = false;
+    if (numGrades > 0) {
+      shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
+    }
+
     if (shouldGenerateRandomGrades) {
       if (numberOfGradesIsKnown) {
         for (int i = 0; i < numGrades; i++) {

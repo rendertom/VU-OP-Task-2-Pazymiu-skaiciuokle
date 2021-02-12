@@ -67,3 +67,14 @@ cd nuoroda_į_programos_aplanką
 g++ 'main-vector.cpp' -o 'main'
 ./main
 ```
+
+### Changelog
+
+- [v0.1](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases/tag/v0.1) - Pradinė programos versija
+- [v0.1.1](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases/tag/v0.1.1)
+  - pataisyta
+    - Vidurkio ir Mediano skaičiavimas, kai nėra įvesta pažymių.
+    - Nerodo pažymių įvedimo formos užklausos (random/manual), jei vartotojas neturi pažymių.
+  - pašalinta:
+    - VSCode IDE nustatymai (.vscode > settings.json).
+    - `std::cout` teksto spalvos nustatymai.
