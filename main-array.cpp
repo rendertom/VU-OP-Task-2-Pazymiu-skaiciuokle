@@ -222,7 +222,11 @@ int main() {
     student.numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
     student.grades = new int[student.numGrades];
 
-    bool shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
+    bool shouldGenerateRandomGrades = false;
+    if (student.numGrades > 0) {
+      shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
+    }
+
     if (shouldGenerateRandomGrades) {
       if (numberOfGradesIsKnown) {
         for (int i = 0; i < student.numGrades; i++) {
