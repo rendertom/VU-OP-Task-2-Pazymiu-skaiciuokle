@@ -52,12 +52,8 @@ void clearLine() {
 }
 
 bool confirm(const string &message, char yes = 'y', char no = 'n') {
-  // https://stackoverflow.com/a/9158263
-  string colorYellow = "\033[33m";
-  string colorReset = "\033[0m";
-
   while (true) {
-    cout << colorYellow << "-> " << message << " (" << yes << "/" << no << "): " << colorReset;
+    cout << "-> " << message << " (" << yes << "/" << no << "): ";
 
     char response;
     cin >> response;
