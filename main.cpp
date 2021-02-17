@@ -198,40 +198,44 @@ void printRandomGrades(Student *student) {
   cout << "Generated random exam grade: " << student->examGrade << endl;
 }
 
+void ReadStudentsFromFile(const string &filePath, vector<Student> &students) {
+  ifstream file;
+  file.open(filePath);
+
+  if (!file) {
+    cout << "Error: file could not be opened" << endl;
+    exit(1);
+  }
+
+  string line;
+  getline(file, line);
+  while (getline(file, line)) {
+    Student student;
+
+    istringstream iss(line);
+    iss >> student.firstName >> student.lastName;
+
+    int grade;
+    while (iss >> grade) {
+      student.grades.push_back(grade);
+    }
+
+    student.grades.pop_back();
+    student.examGrade = grade;
+
+    students.push_back(student);
+  }
+
+  file.close();
+}
+
 int main() {
   vector<Student> students;
 
   string filePath = "students test.txt";
   bool shouldReadFromFile = confirm("(y) Read data from \"" + filePath + "\"; (n) Enter grades manaully:");
   if (shouldReadFromFile) {
-    ifstream file;
-    file.open(filePath);
-
-    if (!file) {
-      cout << "Error: file could not be opened" << endl;
-      exit(1);
-    }
-
-    string line;
-    getline(file, line);
-    while (getline(file, line)) {
-      Student student;
-
-      istringstream iss(line);
-      iss >> student.firstName >> student.lastName;
-
-      int grade;
-      while (iss >> grade) {
-        student.grades.push_back(grade);
-      }
-
-      student.grades.pop_back();
-      student.examGrade = grade;
-
-      students.push_back(student);
-    }
-
-    file.close();
+    ReadStudentsFromFile(filePath, students);
   } else {
     while (true) {
       Student student;
