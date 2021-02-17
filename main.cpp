@@ -140,6 +140,13 @@ void printResults(vector<Student> &students, int resultType) {
   }
   cout << "-----------------------------------------------------------" << endl;
 
+  sort(students.begin(), students.end(),
+       [](const Student &a, const Student &b) {
+         return a.lastName != b.lastName
+                    ? a.lastName < b.lastName
+                    : a.firstName < b.firstName;
+       });
+
   for (int i = 0; i < students.size(); i++) {
     printResult(&students[i], resultType);
   }
