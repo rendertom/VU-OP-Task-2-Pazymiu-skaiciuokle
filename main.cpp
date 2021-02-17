@@ -74,6 +74,11 @@ bool confirm(const string &message, char yes = 'y', char no = 'n') {
   }
 }
 
+bool doesFileExist(string filePath) {
+  ifstream file(filePath);
+  return file.good();
+}
+
 double findFinalGrade(double meanGrade, double examGrade) {
   return 0.4 * meanGrade + 0.6 * examGrade;
 }
@@ -239,6 +244,17 @@ string getResultType() {
   return resultType;
 }
 
+bool shouldReadFromFile(const string &filePath) {
+  bool result = false;
+  if (doesFileExist(filePath)) {
+    result = confirm("(y)Read grades from file \"" + filePath + "\"; (n)Enter grades manaully:");
+  } else {
+    cout << "File does not exist at path \"" << filePath << "\". Switching to manual mode." << endl;
+  }
+
+  return result;
+}
+
 void Grades_EnterManually(bool numberOfGradesIsKnown, int numGrades, Student &student) {
   if (numberOfGradesIsKnown) {
     if (numGrades > 0) {
@@ -344,9 +360,8 @@ void Grades_ReadFromFile(const string &filePath, vector<Student> &students) {
 int main() {
   vector<Student> students;
 
-  string filePath = "students test.txt";
-  bool shouldReadFromFile = confirm("(y) Read data from \"" + filePath + "\"; (n) Enter grades manaully:");
-  if (shouldReadFromFile) {
+  string filePath = "kursiokai.txt";
+  if (shouldReadFromFile(filePath)) {
     Grades_ReadFromFile(filePath, students);
   } else {
     while (true) {
