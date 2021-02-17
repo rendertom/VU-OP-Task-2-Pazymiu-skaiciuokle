@@ -201,6 +201,19 @@ void printRandomGrades(Student &student) {
   cout << "Generated random exam grade: " << student.examGrade << endl;
 }
 
+string getResultType() {
+  int promptResult = promptForInt("Choose what to calculate: (1)Mean, (2)Median, (3)Both:", 1, 3);
+
+  string resultType = RESULT_TYPE_BOTH;
+  if (promptResult == 1) {
+    resultType = RESULT_TYPE_MEAN;
+  } else if (promptResult == 2) {
+    resultType = RESULT_TYPE_MEDIAN;
+  }
+
+  return resultType;
+}
+
 void Grades_EnterManually(bool numberOfGradesIsKnown, int numGrades, Student &student) {
   if (numberOfGradesIsKnown) {
     if (numGrades > 0) {
@@ -341,15 +354,7 @@ int main() {
     }
   }
 
-  int promptResult = promptForInt("Choose what to calculate: (1)Mean, (2)Median, (3)Both:", 1, 3);
-
-  string resultType = RESULT_TYPE_BOTH;
-  if (promptResult == 1) {
-    resultType = RESULT_TYPE_MEAN;
-  } else if (promptResult == 2) {
-    resultType = RESULT_TYPE_MEDIAN;
-  }
-
+  string resultType = getResultType();
   for (int i = 0; i < students.size(); i++) {
     processStudent(&students[i], resultType);
   }
