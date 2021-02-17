@@ -250,7 +250,7 @@ int main() {
       const int numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
 
       bool shouldGenerateRandomGrades = false;
-      if (numGrades > 0) {
+      if (!numberOfGradesIsKnown || numGrades > 0) {
         shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
       }
 
