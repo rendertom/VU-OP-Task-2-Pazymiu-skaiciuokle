@@ -1,7 +1,9 @@
-#include <algorithm>  //std::sort
+#include <algorithm>  // std::sort
+#include <fstream>    // std::ifstream
 #include <iomanip>    // std::setw
 #include <iostream>
-#include <random>  // std::rand, std::srand
+#include <random>   // std::rand, std::srand
+#include <sstream>  // std::istringstream
 #include <string>
 #include <vector>
 
@@ -12,6 +14,8 @@ using std::cin;
 using std::cout;
 using std::endl;
 using std::fixed;
+using std::ifstream;
+using std::istringstream;
 using std::left;
 using std::numeric_limits;
 using std::setprecision;
@@ -153,96 +157,129 @@ void printRandomGrades(Student *student) {
 int main() {
   vector<Student> students;
 
-  while (true) {
-    Student student;
+  string filePath = "students test.txt";
+  bool shouldReadFromFile = confirm("(y) Read data from \"" + filePath + "\"; (n) Enter grades manaully:");
+  if (shouldReadFromFile) {
+    ifstream file;
+    file.open(filePath);
 
-    cout << "Please enter first name: ";
-    getline(cin, student.firstName);
-
-    cout << "Please enter last name: ";
-    getline(cin, student.lastName);
-
-    const bool numberOfGradesIsKnown = confirm("Do you know the number of grades?");
-    const int numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
-
-    bool shouldGenerateRandomGrades = false;
-    if (numGrades > 0) {
-      shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
+    if (!file) {
+      cout << "Error: file could not be opened" << endl;
+      exit(1);
     }
 
-    if (shouldGenerateRandomGrades) {
-      if (numberOfGradesIsKnown) {
-        for (int i = 0; i < numGrades; i++) {
-          int grade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
-          student.grades.push_back(grade);
-        }
-      } else {
-        while (true) {
-          int grade = getRandomIntegerInRange(0, GRADE_MAX);
-          if (isValidGrade(grade)) {
+    string line;
+    getline(file, line);
+    while (getline(file, line)) {
+      Student student;
+
+      istringstream iss(line);
+      iss >> student.firstName >> student.lastName;
+
+      int grade;
+      while (iss >> grade) {
+        student.grades.push_back(grade);
+      }
+
+      student.grades.pop_back();
+      student.examGrade = grade;
+
+      students.push_back(student);
+    }
+
+    file.close();
+  } else {
+    while (true) {
+      Student student;
+
+      cout << "Please enter first name: ";
+      getline(cin, student.firstName);
+
+      cout << "Please enter last name: ";
+      getline(cin, student.lastName);
+
+      const bool numberOfGradesIsKnown = confirm("Do you know the number of grades?");
+      const int numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
+
+      bool shouldGenerateRandomGrades = false;
+      if (numGrades > 0) {
+        shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
+      }
+
+      if (shouldGenerateRandomGrades) {
+        if (numberOfGradesIsKnown) {
+          for (int i = 0; i < numGrades; i++) {
+            int grade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
             student.grades.push_back(grade);
-          } else {
-            break;
+          }
+        } else {
+          while (true) {
+            int grade = getRandomIntegerInRange(0, GRADE_MAX);
+            if (isValidGrade(grade)) {
+              student.grades.push_back(grade);
+            } else {
+              break;
+            }
           }
         }
-      }
-      student.examGrade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
-      printRandomGrades(&student);
+        student.examGrade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
+        printRandomGrades(&student);
 
-    } else {
-      if (numberOfGradesIsKnown) {
-        if (numGrades > 0) {
-          cout << "Enter grades: ";
-          while (student.grades.size() != numGrades) {
+      } else {
+        if (numberOfGradesIsKnown) {
+          if (numGrades > 0) {
+            cout << "Enter grades: ";
+            while (student.grades.size() != numGrades) {
+              int grade;
+              cin >> grade;
+              if (!isValidGrade(grade)) {
+                cout << "Grade " << grade << " at index " << student.grades.size() << " is out of range ("
+                     << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
+                clearLine();
+              } else {
+                student.grades.push_back(grade);
+              }
+            }
+
+            clearLine();
+          }
+        } else {
+          while (true) {
+            cout << "Enter grade [" << student.grades.size() << "] (type -1 to quit): ";
+
             int grade;
             cin >> grade;
-            if (!isValidGrade(grade)) {
-              cout << "Grade " << grade << " at index " << student.grades.size() << " is out of range ("
-                   << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
-              clearLine();
+            clearLine();
+
+            if (grade == -1) {
+              break;
             } else {
-              student.grades.push_back(grade);
-            }
-          }
-
-          clearLine();
-        }
-      } else {
-        while (true) {
-          cout << "Enter grade [" << student.grades.size() << "] (type -1 to quit): ";
-
-          int grade;
-          cin >> grade;
-          clearLine();
-
-          if (grade == -1) {
-            break;
-          } else {
-            if (!isValidGrade(grade)) {
-              cout << "Grade " << grade << " is out of range ("
-                   << GRADE_MIN << "-" << GRADE_MAX << ")." << endl;
-            } else {
-              student.grades.push_back(grade);
+              if (!isValidGrade(grade)) {
+                cout << "Grade " << grade << " is out of range ("
+                     << GRADE_MIN << "-" << GRADE_MAX << ")." << endl;
+              } else {
+                student.grades.push_back(grade);
+              }
             }
           }
         }
-      }
 
-      cout << "Enter exam grade: ";
-      cin >> student.examGrade;
-      while (!isValidGrade(student.examGrade)) {
-        cout << "Grade " << student.examGrade << " is out of range ("
-             << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
-        clearLine();
+        cout << "Enter exam grade: ";
         cin >> student.examGrade;
+        while (!isValidGrade(student.examGrade)) {
+          cout << "Grade " << student.examGrade << " is out of range ("
+               << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
+          clearLine();
+          cin >> student.examGrade;
+        }
+
+        clearLine();
       }
 
-      clearLine();
-    }
-
-    students.push_back(student);
-    if (!confirm("Add another student?")) {
-      break;
+      students.push_back(student);
+      if (!confirm("Add another student?")) {
+        break;
+      }
     }
   }
 
