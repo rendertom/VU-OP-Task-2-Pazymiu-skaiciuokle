@@ -216,6 +216,12 @@ void processStudent(Student *student, const string &resultType) {
   }
 }
 
+void processStudents(vector<Student> &students, const string &resultType) {
+  for (int i = 0; i < students.size(); i++) {
+    processStudent(&students[i], resultType);
+  }
+}
+
 int promptForInt(string message, int min, int max) {
   while (true) {
     cout << "-> " << message << " (" << min << "-" << max << "): ";
@@ -398,9 +404,7 @@ int main() {
   }
 
   string resultType = getResultType();
-  for (int i = 0; i < students.size(); i++) {
-    processStudent(&students[i], resultType);
-  }
+  processStudents(students, resultType);
 
   cout << endl;
   printResults(students, resultType);
