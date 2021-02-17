@@ -74,7 +74,15 @@ bool confirm(const string &message, char yes = 'y', char no = 'n') {
   }
 }
 
+double findFinalGrade(double meanGrade, double examGrade) {
+  return 0.4 * meanGrade + 0.6 * examGrade;
+}
+
 double findMean(vector<int> &array) {
+  if (array.empty()) {
+    return 0;
+  }
+
   const int arraySize = array.size();
   int sum = 0;
   for (int i = 0; i < arraySize; i++) {
@@ -85,6 +93,10 @@ double findMean(vector<int> &array) {
 }
 
 double findMedian(vector<int> &array) {
+  if (array.empty()) {
+    return 0;
+  }
+
   sort(array.begin(), array.end());
 
   const int arraySize = array.size();
@@ -178,24 +190,15 @@ void printResults(vector<Student> &students, const string &resultType) {
 }
 
 void processStudent(Student *student, const string &resultType) {
-  student->finalGrade = 0;
-  student->meanGrade = 0;
-  student->medianGrade = 0;
   if (resultType == RESULT_TYPE_MEAN) {
-    if (student->grades.size() > 0) {
-      student->meanGrade = findMean(student->grades);
-    }
-    student->finalGrade = 0.4 * student->meanGrade + 0.6 * student->examGrade;
+    student->meanGrade = findMean(student->grades);
+    student->finalGrade = findFinalGrade(student->meanGrade, student->examGrade);
   } else if (resultType == RESULT_TYPE_MEDIAN) {
-    if (student->grades.size() > 0) {
-      student->medianGrade = findMedian(student->grades);
-    }
+    student->medianGrade = findMedian(student->grades);
   } else if (resultType == RESULT_TYPE_BOTH) {
-    if (student->grades.size() > 0) {
-      student->meanGrade = findMean(student->grades);
-      student->medianGrade = findMedian(student->grades);
-    }
-    student->finalGrade = 0.4 * student->meanGrade + 0.6 * student->examGrade;
+    student->meanGrade = findMean(student->grades);
+    student->finalGrade = findFinalGrade(student->meanGrade, student->examGrade);
+    student->medianGrade = findMedian(student->grades);
   }
 }
 
