@@ -142,6 +142,15 @@ bool isValidGrade(int grade) {
   return grade >= GRADE_MIN && grade <= GRADE_MAX;
 }
 
+void printRandomGrades(Student &student) {
+  cout << "Generated " << student.grades.size() << " random grades: ";
+  for (int i = 0; i < student.grades.size(); i++) {
+    cout << student.grades[i] << " ";
+  }
+  cout << endl;
+  cout << "Generated random exam grade: " << student.examGrade << endl;
+}
+
 void printResult(Student *student, const string &resultType, Width &width) {
   cout << left
        << setw(width.firstName) << student->firstName
@@ -222,13 +231,11 @@ int promptForInt(string message, int min, int max) {
   }
 }
 
-void printRandomGrades(Student &student) {
-  cout << "Generated " << student.grades.size() << " random grades: ";
-  for (int i = 0; i < student.grades.size(); i++) {
-    cout << student.grades[i] << " ";
-  }
-  cout << endl;
-  cout << "Generated random exam grade: " << student.examGrade << endl;
+string promptForString(const string &message) {
+  string result;
+  cout << "-> " << message;
+  getline(cin, result);
+  return result;
 }
 
 string getResultType() {
@@ -366,12 +373,8 @@ int main() {
   } else {
     while (true) {
       Student student;
-
-      cout << "Please enter first name: ";
-      getline(cin, student.firstName);
-
-      cout << "Please enter last name: ";
-      getline(cin, student.lastName);
+      student.firstName = promptForString("Please enter first name: ");
+      student.lastName = promptForString("Please enter last name: ");
 
       const bool numberOfGradesIsKnown = confirm("Do you know the number of grades?");
       const int numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
