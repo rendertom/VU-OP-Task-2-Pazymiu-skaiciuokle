@@ -28,6 +28,13 @@ using std::streamsize;
 using std::string;
 using std::vector;
 
+struct Names {
+  string firstName = "Vardas";
+  string lastName = "Pavarde";
+  string mean = "Galutinis Vid.";
+  string median = "Galutinis Med.";
+} names;
+
 struct Student {
   string firstName;
   string lastName;
@@ -37,6 +44,13 @@ struct Student {
   double finalGrade;
   double medianGrade;
 };
+
+struct Width {
+  int firstName = 6 + 6;
+  int lastName = 7 + 9;
+  int mean = 14 + 1;
+  int median = 14 + 1;
+} width;
 
 void clearLine() {
   cin.clear();
@@ -111,37 +125,45 @@ bool isValidGrade(int grade) {
   return grade >= GRADE_MIN && grade <= GRADE_MAX;
 }
 
-void printResult(Student *student, const string &resultType) {
+void printResult(Student *student, const string &resultType, Width &width) {
   cout << left
-       << setw(10) << student->firstName
-       << setw(15) << student->lastName
+       << setw(width.firstName) << student->firstName
+       << setw(width.lastName) << student->lastName
        << fixed << setprecision(2);
 
   if (resultType == RESULT_TYPE_MEAN) {
-    cout << student->finalGrade;
+    cout << setw(width.mean) << student->finalGrade;
   } else if (resultType == RESULT_TYPE_MEDIAN) {
-    cout << student->medianGrade;
+    cout << setw(width.median) << student->medianGrade;
   } else if (resultType == RESULT_TYPE_BOTH) {
-    cout << setw(16)
-         << student->finalGrade
-         << student->medianGrade;
+    cout << setw(width.mean) << student->finalGrade;
+    cout << setw(width.median) << student->medianGrade;
   }
+
   cout << endl;
 }
 
 void printResults(vector<Student> &students, const string &resultType) {
   cout << left
-       << setw(10) << "Vardas"
-       << setw(16) << "Pavardė";
+       << setw(width.firstName) << names.firstName
+       << setw(width.lastName) << names.lastName;
+
+  int tableWidth = width.firstName + width.lastName;
 
   if (resultType == RESULT_TYPE_MEAN) {
-    cout << "Galutinis Vid." << endl;
+    cout << setw(width.mean) << names.mean;
+    tableWidth += width.mean;
   } else if (resultType == RESULT_TYPE_MEDIAN) {
-    cout << "Galutinis Med." << endl;
+    cout << setw(width.median) << names.median;
+    tableWidth += width.median;
   } else if (resultType == RESULT_TYPE_BOTH) {
-    cout << "Galutinis Vid.  Galutinis Med." << endl;
+    cout << setw(width.mean) << names.mean;
+    tableWidth += width.mean;
+    cout << setw(width.median) << names.median;
+    tableWidth += width.median;
   }
-  cout << "-----------------------------------------------------------" << endl;
+  cout << endl;
+  cout << string(tableWidth, '-') << endl;
 
   sort(students.begin(), students.end(),
        [](const Student &a, const Student &b) {
@@ -151,7 +173,7 @@ void printResults(vector<Student> &students, const string &resultType) {
        });
 
   for (int i = 0; i < students.size(); i++) {
-    printResult(&students[i], resultType);
+    printResult(&students[i], resultType, width);
   }
 }
 
