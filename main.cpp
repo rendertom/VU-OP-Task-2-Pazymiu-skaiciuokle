@@ -108,39 +108,76 @@ bool isValidGrade(int grade) {
   return grade >= GRADE_MIN && grade <= GRADE_MAX;
 }
 
-void printResult(Student *student, bool showMeanGrade = true) {
+void printResult(Student *student, int resultType) {
   cout << left
        << setw(10) << student->firstName
        << setw(15) << student->lastName
-       << setw(12) << fixed << setprecision(2)
-       << (showMeanGrade ? student->finalGrade : student->medianGrade)
-       << endl;
+       << fixed << setprecision(2);
+
+  if (resultType == 1) {  // Mean
+    cout << student->finalGrade;
+  } else if (resultType == 2) {  // Median
+    cout << student->medianGrade;
+  } else if (resultType == 3) {  // Both
+    cout << setw(16)
+         << student->finalGrade
+         << student->medianGrade;
+  }
+  cout << endl;
 }
 
-void printResults(vector<Student> &students, bool showMeanGrade = true) {
+void printResults(vector<Student> &students, int resultType) {
   cout << left
        << setw(10) << "Vardas"
-       << setw(16) << "Pavardė"
-       << "Galutinis " << (showMeanGrade ? "Vid." : "Med.") << endl;
+       << setw(16) << "Pavardė";
+
+  if (resultType == 1) {  // Mean
+    cout << "Galutinis Vid." << endl;
+  } else if (resultType == 2) {  // Median
+    cout << "Galutinis Med." << endl;
+  } else if (resultType == 3) {  // Both
+    cout << "Galutinis Vid.  Galutinis Med." << endl;
+  }
   cout << "-----------------------------------------------------------" << endl;
 
   for (int i = 0; i < students.size(); i++) {
-    printResult(&students[i], showMeanGrade);
+    printResult(&students[i], resultType);
   }
 }
 
-void processStudent(Student *student, bool shouldCalculateMean = true) {
+void processStudent(Student *student, int resultType) {
   student->finalGrade = 0;
   student->meanGrade = 0;
   student->medianGrade = 0;
-  if (shouldCalculateMean) {
+  if (resultType == 1) {  // Mean
     if (student->grades.size() > 0) {
       student->meanGrade = findMean(student->grades);
     }
     student->finalGrade = 0.4 * student->meanGrade + 0.6 * student->examGrade;
-  } else {
+  } else if (resultType == 2) {  // Median
     if (student->grades.size() > 0) {
       student->medianGrade = findMedian(student->grades);
+    }
+  } else if (resultType == 3) {  // Both
+    if (student->grades.size() > 0) {
+      student->meanGrade = findMean(student->grades);
+      student->medianGrade = findMedian(student->grades);
+    }
+    student->finalGrade = 0.4 * student->meanGrade + 0.6 * student->examGrade;
+  }
+}
+
+int promptForInt(string message, int min, int max) {
+  while (true) {
+    cout << "-> " << message << " (" << min << "-" << max << "): ";
+
+    int value;
+    cin >> value;
+    clearLine();
+    if (value >= min && value <= max) {
+      return value;
+    } else {
+      cout << "Value is not in range. ";
     }
   }
 }
@@ -283,13 +320,13 @@ int main() {
     }
   }
 
-  bool shouldCalculateMean = confirm("Calculate MEAN (otherwise, calculate MEDIAN)?");
+  int resultType = promptForInt("Choose what to calculate: (1)Mean, (2)Median, (3)Both:", 1, 3);
   for (int i = 0; i < students.size(); i++) {
-    processStudent(&students[i], shouldCalculateMean);
+    processStudent(&students[i], resultType);
   }
 
   cout << endl;
-  printResults(students, shouldCalculateMean);
+  printResults(students, resultType);
   cout << endl;
 
   return 0;
