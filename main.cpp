@@ -189,13 +189,13 @@ int promptForInt(string message, int min, int max) {
   }
 }
 
-void printRandomGrades(Student *student) {
-  cout << "Generated " << student->grades.size() << " random grades: ";
-  for (int i = 0; i < student->grades.size(); i++) {
-    cout << student->grades[i] << " ";
+void printRandomGrades(Student &student) {
+  cout << "Generated " << student.grades.size() << " random grades: ";
+  for (int i = 0; i < student.grades.size(); i++) {
+    cout << student.grades[i] << " ";
   }
   cout << endl;
-  cout << "Generated random exam grade: " << student->examGrade << endl;
+  cout << "Generated random exam grade: " << student.examGrade << endl;
 }
 
 void ReadStudentsFromFile(const string &filePath, vector<Student> &students) {
@@ -229,6 +229,77 @@ void ReadStudentsFromFile(const string &filePath, vector<Student> &students) {
   file.close();
 }
 
+void Grades_EnterManually(bool numberOfGradesIsKnown, int numGrades, Student &student) {
+  if (numberOfGradesIsKnown) {
+    if (numGrades > 0) {
+      cout << "Enter grades: ";
+      while (student.grades.size() != numGrades) {
+        int grade;
+        cin >> grade;
+        if (!isValidGrade(grade)) {
+          cout << "Grade " << grade << " at index " << student.grades.size() << " is out of range ("
+               << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
+          clearLine();
+        } else {
+          student.grades.push_back(grade);
+        }
+      }
+
+      clearLine();
+    }
+  } else {
+    while (true) {
+      cout << "Enter grade [" << student.grades.size() << "] (type -1 to quit): ";
+
+      int grade;
+      cin >> grade;
+      clearLine();
+
+      if (grade == -1) {
+        break;
+      } else {
+        if (!isValidGrade(grade)) {
+          cout << "Grade " << grade << " is out of range ("
+               << GRADE_MIN << "-" << GRADE_MAX << ")." << endl;
+        } else {
+          student.grades.push_back(grade);
+        }
+      }
+    }
+  }
+
+  cout << "Enter exam grade: ";
+  cin >> student.examGrade;
+  while (!isValidGrade(student.examGrade)) {
+    cout << "Grade " << student.examGrade << " is out of range ("
+         << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
+    clearLine();
+    cin >> student.examGrade;
+  }
+
+  clearLine();
+}
+
+void Grades_GenerateRandomly(bool numberOfGradesIsKnown, int numGrades, Student &student) {
+  if (numberOfGradesIsKnown) {
+    for (int i = 0; i < numGrades; i++) {
+      int grade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
+      student.grades.push_back(grade);
+    }
+  } else {
+    while (true) {
+      int grade = getRandomIntegerInRange(0, GRADE_MAX);
+      if (isValidGrade(grade)) {
+        student.grades.push_back(grade);
+      } else {
+        break;
+      }
+    }
+  }
+  student.examGrade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
+  printRandomGrades(student);
+}
+
 int main() {
   vector<Student> students;
 
@@ -255,73 +326,9 @@ int main() {
       }
 
       if (shouldGenerateRandomGrades) {
-        if (numberOfGradesIsKnown) {
-          for (int i = 0; i < numGrades; i++) {
-            int grade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
-            student.grades.push_back(grade);
-          }
-        } else {
-          while (true) {
-            int grade = getRandomIntegerInRange(0, GRADE_MAX);
-            if (isValidGrade(grade)) {
-              student.grades.push_back(grade);
-            } else {
-              break;
-            }
-          }
-        }
-        student.examGrade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
-        printRandomGrades(&student);
-
+        Grades_GenerateRandomly(numberOfGradesIsKnown, numGrades, student);
       } else {
-        if (numberOfGradesIsKnown) {
-          if (numGrades > 0) {
-            cout << "Enter grades: ";
-            while (student.grades.size() != numGrades) {
-              int grade;
-              cin >> grade;
-              if (!isValidGrade(grade)) {
-                cout << "Grade " << grade << " at index " << student.grades.size() << " is out of range ("
-                     << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
-                clearLine();
-              } else {
-                student.grades.push_back(grade);
-              }
-            }
-
-            clearLine();
-          }
-        } else {
-          while (true) {
-            cout << "Enter grade [" << student.grades.size() << "] (type -1 to quit): ";
-
-            int grade;
-            cin >> grade;
-            clearLine();
-
-            if (grade == -1) {
-              break;
-            } else {
-              if (!isValidGrade(grade)) {
-                cout << "Grade " << grade << " is out of range ("
-                     << GRADE_MIN << "-" << GRADE_MAX << ")." << endl;
-              } else {
-                student.grades.push_back(grade);
-              }
-            }
-          }
-        }
-
-        cout << "Enter exam grade: ";
-        cin >> student.examGrade;
-        while (!isValidGrade(student.examGrade)) {
-          cout << "Grade " << student.examGrade << " is out of range ("
-               << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
-          clearLine();
-          cin >> student.examGrade;
-        }
-
-        clearLine();
+        Grades_EnterManually(numberOfGradesIsKnown, numGrades, student);
       }
 
       students.push_back(student);
