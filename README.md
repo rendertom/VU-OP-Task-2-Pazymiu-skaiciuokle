@@ -6,32 +6,36 @@ Programa yra skirta apskaičiuoti pažymių vidurkį ir/arba medianą.
 
 Paleidus programą komandinėje eilutėje yra prašoma atlikti keletą veiksmų:
 
-- Įvesti vardą ir pavardę,
+- Pasirinkti, ar duomenis suvesti ranka, ar juos skaityti iš failo `kursiokai.txt`,
+- Pasirinkus įvedimą ranka, prašoma įvesti vardą ir pavardę,
 - Įvesti namų darbų įvertinimus bei egzamino balą.
 - Po duomenų suvedimo yra apskaičiuojamas įvertinimų vidurkis arba medianas.
 
 > Programa suteikia galimybę generuoti atsitiktinius namų darbų rezultatus bei egzamino balą, bei suvesti daugiau nei vieno studento duomenis.
 
-Paleidus programą, prašome sekti komandinėje eilutėje nurodytus instrukcijas. Vienas iš galimymų programos eigos variantų yra toks:
+Paleidus programą, prašome sekti komandinėje eilutėje nurodytus instrukcijas.
+
+Vienas iš galimymų programos eigos variantų yra toks:
 
 ```shell
-Please enter first name: Tomas
-Please enter last name: Makaronas
+-> (y)Read grades from file "kursiokai.txt"; (n)Enter grades manaully: (y/n): n
+-> Please enter first name: Tomas
+-> Please enter last name: Makaronas
 -> Do you know the number of grades? (y/n): y
 Enter number of grades: 5
 -> Generate RANDOM grades (otherwise, enter grades MANUALLY)? (y/n): n
 Enter grades: 7 8 9 9 10
 Enter exam grade: 10
 -> Add another student? (y/n): y
-Please enter first name: Jurga
-Please enter last name: Spurga
+-> Please enter first name: Jurga
+-> Please enter last name: Spurga
 -> Do you know the number of grades? (y/n): n
 -> Generate RANDOM grades (otherwise, enter grades MANUALLY)? (y/n): y
-Generated 13 random grades: 6 1 10 9 3 10 4 9 8 4 8 8 7
-Generated random exam grade: 3
+Generated 7 random grades: 8 5 3 8 2 8 5
+Generated random exam grade: 4
 -> Add another student? (y/n): y
-Please enter first name: Studentas
-Please enter last name: Nabagėlis
+-> Please enter first name: Studentas
+-> Please enter last name: Nabagelis
 -> Do you know the number of grades? (y/n): n
 -> Generate RANDOM grades (otherwise, enter grades MANUALLY)? (y/n): n
 Enter grade [0] (type -1 to quit): 7
@@ -40,22 +44,20 @@ Enter grade [2] (type -1 to quit): 9
 Enter grade [3] (type -1 to quit): -1
 Enter exam grade: 8
 -> Add another student? (y/n): n
--> Calculate MEAN (otherwise, calculate MEDIAN)? (y/n): y
+-> Choose what to calculate: (1)Mean, (2)Median, (3)Both: (1-3): 3
 ```
 
 Po sėkmingo duomenų suvedimo į terminalo langą išvedami rezultatai panašia forma:
 
 ```shell
-Vardas    Pavardė        Galutinis Vid.
----------------------------------------
-Tomas     Makaronas      9.44
-Jurga     Spurga         4.48
-Studentas Nabagėlis      8.00
+Vardas      Pavarde         Galutinis Vid. Galutinis Med.
+----------------------------------------------------------
+Tomas       Makaronas       9.44           9.00
+Studentas   Nabagelis       8.00           8.00
+Jurga       Spurga          4.63           5.00
 ```
 
 Galutinis vidurkis yra apskaičiuojamas pagal formulę `galutinis = 0.4 * vidurkis + 0.6 * egzaminas`.
-
-Programa yra realizuota dviem būdais, kur rezultatai yra saugomi į `C` tipo masyvą (failas `main-array.cpp`), arba į `std::vector` tipo konteinerį (failas `main-vector.cpp`).
 
 ## Programos diegimas ir paleidimas
 
@@ -64,7 +66,7 @@ Programa yra realizuota dviem būdais, kur rezultatai yra saugomi į `C` tipo ma
 
 ```shell
 cd nuoroda_į_programos_aplanką
-g++ 'main-vector.cpp' -o 'main'
+g++ 'main.cpp' -o 'main'
 ./main
 ```
 
@@ -75,6 +77,15 @@ g++ 'main-vector.cpp' -o 'main'
   - pataisyta
     - Vidurkio ir Mediano skaičiavimas, kai nėra įvesta pažymių.
     - Nerodo pažymių įvedimo formos užklausos (random/manual), jei vartotojas neturi pažymių.
-  - pašalinta:
+  - pašalinta
     - VSCode IDE nustatymai (.vscode > settings.json).
     - `std::cout` teksto spalvos nustatymai.
+- [v0.2](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases/tag/v0.2)
+  - pataisyta
+    - Nerodo atsitiktinės (random) pažymių įvedimo užklausos, kai pažymių skaičius yra nežinomas.
+  - pašalinta
+    - `C` tipo masyvo programos realizcija: pašalintas failas `main-array.cpp`, o failas `main-vector.cpp` pervadintas į `main.cpp`.
+  - pridėta
+    - Galimybė skaityti rezultatus iš išorinio failo.
+    - Galimybė atspausdinti Vidurkį, Medianą, arba abu iš karto.
+    - Spausdinamas sarašas išrikiuojamas abėcėlės tvarka pagal pavardes.
