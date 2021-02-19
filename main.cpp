@@ -2,10 +2,11 @@
 #include <fstream>    // std::ifstream
 #include <iomanip>    // std::setw
 #include <iostream>
-#include <random>   // std::rand, std::srand
 #include <sstream>  // std::stringstream
 #include <string>
 #include <vector>
+
+#include "RND.hpp"  // getIntegerInRange
 
 #define GRADE_MIN 1
 #define GRADE_MAX 10
@@ -127,15 +128,6 @@ int getNumberOfGrades() {
   }
 
   return numGrades;
-}
-
-int getRandomIntegerInRange(int min, int max) {
-  static bool first = true;
-  if (first) {
-    srand(time(NULL));  //seeding for the first time only!
-    first = false;
-  }
-  return min + rand() % ((max + 1) - min);
 }
 
 bool isValidGrade(int grade) {
@@ -322,12 +314,12 @@ void Grades_EnterManually(bool numberOfGradesIsKnown, int numGrades, Student &st
 void Grades_GenerateRandomly(bool numberOfGradesIsKnown, int numGrades, Student &student) {
   if (numberOfGradesIsKnown) {
     for (int i = 0; i < numGrades; i++) {
-      int grade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
+      int grade = RND::getIntegerInRange(GRADE_MIN, GRADE_MAX);
       student.grades.push_back(grade);
     }
   } else {
     while (true) {
-      int grade = getRandomIntegerInRange(0, GRADE_MAX);
+      int grade = RND::getIntegerInRange(0, GRADE_MAX);
       if (isValidGrade(grade)) {
         student.grades.push_back(grade);
       } else {
@@ -335,7 +327,7 @@ void Grades_GenerateRandomly(bool numberOfGradesIsKnown, int numGrades, Student 
       }
     }
   }
-  student.examGrade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
+  student.examGrade = RND::getIntegerInRange(GRADE_MIN, GRADE_MAX);
   printRandomGrades(student);
 }
 
