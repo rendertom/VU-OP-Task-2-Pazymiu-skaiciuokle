@@ -35,19 +35,6 @@ int getNumberOfGrades() {
   return numGrades;
 }
 
-bool isValidGrade(int grade) {
-  return grade >= GRADE_MIN && grade <= GRADE_MAX;
-}
-
-void printRandomGrades(Student::Student &student) {
-  cout << "Generated " << student.grades.size() << " random grades: ";
-  for (int i = 0; i < student.grades.size(); i++) {
-    cout << student.grades[i] << " ";
-  }
-  cout << endl;
-  cout << "Generated random exam grade: " << student.examGrade << endl;
-}
-
 string getResultType() {
   int promptResult = Console::promptForInt("Choose what to calculate: (1)Mean, (2)Median, (3)Both:", 1, 3);
 
@@ -59,6 +46,19 @@ string getResultType() {
   }
 
   return resultType;
+}
+
+bool isValidGrade(int grade) {
+  return grade >= GRADE_MIN && grade <= GRADE_MAX;
+}
+
+void printRandomGrades(Student::Student &student) {
+  cout << "Generated " << student.grades.size() << " random grades: ";
+  for (int i = 0; i < student.grades.size(); i++) {
+    cout << student.grades[i] << " ";
+  }
+  cout << endl;
+  cout << "Generated random exam grade: " << student.examGrade << endl;
 }
 
 bool shouldReadFromFile(const string &filePath) {
