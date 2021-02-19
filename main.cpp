@@ -84,7 +84,7 @@ void printRandomGrades(Student &student) {
   cout << "Generated random exam grade: " << student.examGrade << endl;
 }
 
-void printResult(Student *student, const string &resultType, Width &width) {
+void printResult(Student *student, const string &resultType) {
   cout << left
        << setw(width.firstName) << student->firstName
        << setw(width.lastName) << student->lastName
@@ -132,7 +132,7 @@ void printResults(vector<Student> &students, const string &resultType) {
        });
 
   for (int i = 0; i < students.size(); i++) {
-    printResult(&students[i], resultType, width);
+    printResult(&students[i], resultType);
   }
 }
 
