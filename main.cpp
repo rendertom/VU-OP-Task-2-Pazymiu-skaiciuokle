@@ -145,22 +145,19 @@ void Grades_GenerateRandomly(bool numberOfGradesIsKnown, int numGrades, Student:
 }
 
 void Grades_ReadFromFile(const string &filePath, vector<Student::Student> &students) {
-  string line;
-  vector<string> lines;
-  stringstream buffer = File::getBuffer(filePath);
   Timer timer;
   timer.start();
 
-  while (!buffer.eof()) {
-    getline(buffer, line);
-    lines.push_back(line);
-  }
+  stringstream buffer = File::getBuffer(filePath);
+  cout << "Buffering time: " << timer.elapsed() << endl;
+  timer.reset();
 
-  int arraySize = lines.size();
-  for (int i = 1; i < arraySize; i++) {
+  string line;
+  getline(buffer, line);
+  while (getline(buffer, line)) {
     Student::Student student;
 
-    stringstream iss(lines[i]);
+    stringstream iss(line);
     iss >> student.firstName >> student.lastName;
 
     int grade;
@@ -180,7 +177,7 @@ void Grades_ReadFromFile(const string &filePath, vector<Student::Student> &stude
 int main() {
   vector<Student::Student> students;
 
-  string filePath = "kursiokai.txt";
+  string filePath = "studentai1000000.txt";
   if (shouldReadFromFile(filePath)) {
     Grades_ReadFromFile(filePath, students);
   } else {
