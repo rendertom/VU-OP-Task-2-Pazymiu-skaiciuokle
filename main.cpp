@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "Console.hpp"
 #include "RND.hpp"  // getIntegerInRange
 
 #define GRADE_MIN 1
@@ -20,11 +21,9 @@ using std::endl;
 using std::fixed;
 using std::ifstream;
 using std::left;
-using std::numeric_limits;
 using std::setprecision;
 using std::setw;
 using std::sort;
-using std::streamsize;
 using std::string;
 using std::stringstream;
 using std::vector;
@@ -52,28 +51,6 @@ struct Width {
   int mean = 14 + 1;
   int median = 14 + 1;
 } width;
-
-void clearLine() {
-  cin.clear();
-  cin.ignore(numeric_limits<streamsize>::max(), '\n');
-}
-
-bool confirm(const string &message, char yes = 'y', char no = 'n') {
-  while (true) {
-    cout << "-> " << message << " (" << yes << "/" << no << "): ";
-
-    char response;
-    cin >> response;
-    clearLine();
-    if (response == yes) {
-      return true;
-    } else if (response == no) {
-      return false;
-    } else {
-      cout << "Unknown character. ";
-    }
-  }
-}
 
 bool doesFileExist(string filePath) {
   ifstream file(filePath);
@@ -119,12 +96,12 @@ int getNumberOfGrades() {
   cout << "Enter number of grades: ";
   int numGrades;
   cin >> numGrades;
-  clearLine();
+  Console::clearLine();
 
   while (numGrades < 0) {
     cout << "Value cannot be negative. Please enter new value: ";
     cin >> numGrades;
-    clearLine();
+    Console::clearLine();
   }
 
   return numGrades;
@@ -214,30 +191,8 @@ void processStudents(vector<Student> &students, const string &resultType) {
   }
 }
 
-int promptForInt(string message, int min, int max) {
-  while (true) {
-    cout << "-> " << message << " (" << min << "-" << max << "): ";
-
-    int value;
-    cin >> value;
-    clearLine();
-    if (value >= min && value <= max) {
-      return value;
-    } else {
-      cout << "Value is not in range. ";
-    }
-  }
-}
-
-string promptForString(const string &message) {
-  string result;
-  cout << "-> " << message;
-  getline(cin, result);
-  return result;
-}
-
 string getResultType() {
-  int promptResult = promptForInt("Choose what to calculate: (1)Mean, (2)Median, (3)Both:", 1, 3);
+  int promptResult = Console::promptForInt("Choose what to calculate: (1)Mean, (2)Median, (3)Both:", 1, 3);
 
   string resultType = RESULT_TYPE_BOTH;
   if (promptResult == 1) {
@@ -252,7 +207,7 @@ string getResultType() {
 bool shouldReadFromFile(const string &filePath) {
   bool result = false;
   if (doesFileExist(filePath)) {
-    result = confirm("(y)Read grades from file \"" + filePath + "\"; (n)Enter grades manaully:");
+    result = Console::confirm("(y)Read grades from file \"" + filePath + "\"; (n)Enter grades manaully:");
   } else {
     cout << "File does not exist at path \"" << filePath << "\". Switching to manual mode." << endl;
   }
@@ -270,13 +225,13 @@ void Grades_EnterManually(bool numberOfGradesIsKnown, int numGrades, Student &st
         if (!isValidGrade(grade)) {
           cout << "Grade " << grade << " at index " << student.grades.size() << " is out of range ("
                << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
-          clearLine();
+          Console::clearLine();
         } else {
           student.grades.push_back(grade);
         }
       }
 
-      clearLine();
+      Console::clearLine();
     }
   } else {
     while (true) {
@@ -284,7 +239,7 @@ void Grades_EnterManually(bool numberOfGradesIsKnown, int numGrades, Student &st
 
       int grade;
       cin >> grade;
-      clearLine();
+      Console::clearLine();
 
       if (grade == -1) {
         break;
@@ -304,11 +259,11 @@ void Grades_EnterManually(bool numberOfGradesIsKnown, int numGrades, Student &st
   while (!isValidGrade(student.examGrade)) {
     cout << "Grade " << student.examGrade << " is out of range ("
          << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
-    clearLine();
+    Console::clearLine();
     cin >> student.examGrade;
   }
 
-  clearLine();
+  Console::clearLine();
 }
 
 void Grades_GenerateRandomly(bool numberOfGradesIsKnown, int numGrades, Student &student) {
@@ -373,15 +328,15 @@ int main() {
   } else {
     while (true) {
       Student student;
-      student.firstName = promptForString("Please enter first name: ");
-      student.lastName = promptForString("Please enter last name: ");
+      student.firstName = Console::promptForString("Please enter first name: ");
+      student.lastName = Console::promptForString("Please enter last name: ");
 
-      const bool numberOfGradesIsKnown = confirm("Do you know the number of grades?");
+      const bool numberOfGradesIsKnown = Console::confirm("Do you know the number of grades?");
       const int numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
 
       bool shouldGenerateRandomGrades = false;
       if (!numberOfGradesIsKnown || numGrades > 0) {
-        shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
+        shouldGenerateRandomGrades = Console::confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
       }
 
       if (shouldGenerateRandomGrades) {
@@ -391,7 +346,7 @@ int main() {
       }
 
       students.push_back(student);
-      if (!confirm("Add another student?")) {
+      if (!Console::confirm("Add another student?")) {
         break;
       }
     }
