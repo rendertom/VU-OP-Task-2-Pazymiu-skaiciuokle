@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "Console.hpp"
+#include "Math.hpp"
 #include "RND.hpp"  // getIntegerInRange
 
 #define GRADE_MIN 1
@@ -59,37 +60,6 @@ bool doesFileExist(string filePath) {
 
 double findFinalGrade(double meanGrade, double examGrade) {
   return 0.4 * meanGrade + 0.6 * examGrade;
-}
-
-double findMean(vector<int> &array) {
-  if (array.empty()) {
-    return 0;
-  }
-
-  const int arraySize = array.size();
-  int sum = 0;
-  for (int i = 0; i < arraySize; i++) {
-    sum += array[i];
-  }
-
-  return (double)sum / arraySize;
-}
-
-double findMedian(vector<int> &array) {
-  if (array.empty()) {
-    return 0;
-  }
-
-  sort(array.begin(), array.end());
-
-  const int arraySize = array.size();
-  const bool isOddNumber = arraySize % 2 != 0;
-
-  if (isOddNumber) {
-    return (double)array[arraySize / 2];
-  }
-
-  return (double)(array[(arraySize - 1) / 2] + array[arraySize / 2]) / 2.0;
 }
 
 int getNumberOfGrades() {
@@ -174,14 +144,14 @@ void printResults(vector<Student> &students, const string &resultType) {
 
 void processStudent(Student *student, const string &resultType) {
   if (resultType == RESULT_TYPE_MEAN) {
-    student->meanGrade = findMean(student->grades);
+    student->meanGrade = Math::findMean(student->grades);
     student->finalGrade = findFinalGrade(student->meanGrade, student->examGrade);
   } else if (resultType == RESULT_TYPE_MEDIAN) {
-    student->medianGrade = findMedian(student->grades);
+    student->medianGrade = Math::findMedian(student->grades);
   } else if (resultType == RESULT_TYPE_BOTH) {
-    student->meanGrade = findMean(student->grades);
+    student->meanGrade = Math::findMean(student->grades);
     student->finalGrade = findFinalGrade(student->meanGrade, student->examGrade);
-    student->medianGrade = findMedian(student->grades);
+    student->medianGrade = Math::findMedian(student->grades);
   }
 }
 
