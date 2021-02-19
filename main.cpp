@@ -3,7 +3,7 @@
 #include <iomanip>    // std::setw
 #include <iostream>
 #include <random>   // std::rand, std::srand
-#include <sstream>  // std::istringstream
+#include <sstream>  // std::stringstream
 #include <string>
 #include <vector>
 
@@ -18,7 +18,6 @@ using std::cout;
 using std::endl;
 using std::fixed;
 using std::ifstream;
-using std::istringstream;
 using std::left;
 using std::numeric_limits;
 using std::setprecision;
@@ -26,6 +25,7 @@ using std::setw;
 using std::sort;
 using std::streamsize;
 using std::string;
+using std::stringstream;
 using std::vector;
 
 struct Names {
@@ -348,12 +348,16 @@ void Grades_ReadFromFile(const string &filePath, vector<Student> &students) {
     exit(1);
   }
 
+  stringstream buffer;
+  buffer << file.rdbuf();
+  file.close();
+
   string line;
-  getline(file, line);
-  while (getline(file, line)) {
+  getline(buffer, line);
+  while (getline(buffer, line)) {
     Student student;
 
-    istringstream iss(line);
+    stringstream iss(line);
     iss >> student.firstName >> student.lastName;
 
     int grade;
@@ -366,8 +370,6 @@ void Grades_ReadFromFile(const string &filePath, vector<Student> &students) {
 
     students.push_back(student);
   }
-
-  file.close();
 }
 
 int main() {
