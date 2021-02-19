@@ -32,7 +32,7 @@ namespace Console {
     }
   }
 
-  int promptForInt(string message, int min, int max) {
+  int promptForInt(const string &message, int min, int max) {
     while (true) {
       cout << "-> " << message << " (" << min << "-" << max << "): ";
 
