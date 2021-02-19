@@ -4,13 +4,12 @@
 
 namespace RND {
 
-std::random_device rd;
-std::mt19937 mt(rd());
+  std::random_device rd;
+  std::mt19937 mt(rd());
 
-int getIntegerInRange(int min, int max) {
-  std::uniform_int_distribution<int> uid(min, max);
+  int getIntegerInRange(int min, int max) {
+    std::uniform_int_distribution<int> uid(min, max);
 
-  return uid(mt);
+    return uid(mt);
+  }
 }
-
-}  // namespace RND
