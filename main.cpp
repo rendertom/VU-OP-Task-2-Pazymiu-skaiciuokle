@@ -9,6 +9,7 @@
 #include "RND.hpp"  // getIntegerInRange
 #include "Student.hpp"
 #include "Table.hpp"
+#include "Timer.hpp"
 
 #define GRADE_MIN 1
 #define GRADE_MAX 10
@@ -147,7 +148,9 @@ void Grades_ReadFromFile(const string &filePath, vector<Student::Student> &stude
   string line;
   vector<string> lines;
   stringstream buffer = File::getBuffer(filePath);
-  
+  Timer timer;
+  timer.start();
+
   while (!buffer.eof()) {
     getline(buffer, line);
     lines.push_back(line);
@@ -170,6 +173,8 @@ void Grades_ReadFromFile(const string &filePath, vector<Student::Student> &stude
 
     students.push_back(student);
   }
+
+  cout << "Reading data from file took " << timer.elapsed() << endl;
 }
 
 int main() {
