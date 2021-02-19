@@ -1,5 +1,4 @@
 #include <algorithm>  // std::sort
-#include <fstream>    // std::ifstream
 #include <iomanip>    // std::setw
 #include <iostream>
 #include <sstream>  // std::stringstream
@@ -7,6 +6,7 @@
 #include <vector>
 
 #include "Console.hpp"
+#include "File.hpp"
 #include "Math.hpp"
 #include "RND.hpp"  // getIntegerInRange
 
@@ -20,7 +20,6 @@ using std::cin;
 using std::cout;
 using std::endl;
 using std::fixed;
-using std::ifstream;
 using std::left;
 using std::setprecision;
 using std::setw;
@@ -52,11 +51,6 @@ struct Width {
   int mean = 14 + 1;
   int median = 14 + 1;
 } width;
-
-bool doesFileExist(string filePath) {
-  ifstream file(filePath);
-  return file.good();
-}
 
 double findFinalGrade(double meanGrade, double examGrade) {
   return 0.4 * meanGrade + 0.6 * examGrade;
@@ -176,7 +170,7 @@ string getResultType() {
 
 bool shouldReadFromFile(const string &filePath) {
   bool result = false;
-  if (doesFileExist(filePath)) {
+  if (File::doesFileExist(filePath)) {
     result = Console::confirm("(y)Read grades from file \"" + filePath + "\"; (n)Enter grades manaully:");
   } else {
     cout << "File does not exist at path \"" << filePath << "\". Switching to manual mode." << endl;
@@ -257,17 +251,7 @@ void Grades_GenerateRandomly(bool numberOfGradesIsKnown, int numGrades, Student 
 }
 
 void Grades_ReadFromFile(const string &filePath, vector<Student> &students) {
-  ifstream file;
-  file.open(filePath);
-
-  if (!file) {
-    cout << "Error: file could not be opened" << endl;
-    exit(1);
-  }
-
-  stringstream buffer;
-  buffer << file.rdbuf();
-  file.close();
+  stringstream buffer = File::getBuffer(filePath);
 
   string line;
   getline(buffer, line);
