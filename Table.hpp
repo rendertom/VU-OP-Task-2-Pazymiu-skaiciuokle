@@ -76,7 +76,7 @@ namespace Table {
                       : a.firstName < b.firstName;
          });
 
-    for (int i = 0; i < students.size(); i++) {
+    for (int i = 0, il = students.size(); i < il; i++) {
       printResult(&students[i], resultType);
     }
   }

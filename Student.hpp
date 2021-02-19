@@ -40,7 +40,7 @@ namespace Student {
   }
 
   void processStudents(vector<Student> &students, const string &resultType) {
-    for (int i = 0; i < students.size(); i++) {
+    for (int i = 0, il = students.size(); i < il; i++) {
       processStudent(&students[i], resultType);
     }
   }

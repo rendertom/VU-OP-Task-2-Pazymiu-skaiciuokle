@@ -54,8 +54,9 @@ bool isValidGrade(int grade) {
 }
 
 void printRandomGrades(Student::Student &student) {
-  cout << "Generated " << student.grades.size() << " random grades: ";
-  for (int i = 0; i < student.grades.size(); i++) {
+  const int arraySize = student.grades.size();
+  cout << "Generated " << arraySize << " random grades: ";
+  for (int i = 0; i < arraySize; i++) {
     cout << student.grades[i] << " ";
   }
   cout << endl;
@@ -177,7 +178,7 @@ void Grades_ReadFromFile(const string &filePath, vector<Student::Student> &stude
 int main() {
   vector<Student::Student> students;
 
-  string filePath = "studentai1000000.txt";
+  string filePath = "kursiokai.txt";
   if (shouldReadFromFile(filePath)) {
     Grades_ReadFromFile(filePath, students);
   } else {
