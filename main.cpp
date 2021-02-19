@@ -1,60 +1,24 @@
-#include <algorithm>  // std::sort
-#include <iomanip>    // std::setw
 #include <iostream>
 #include <sstream>  // std::stringstream
 #include <string>
 #include <vector>
 
 #include "Console.hpp"
+#include "Definitions.hpp"
 #include "File.hpp"
-#include "Math.hpp"
 #include "RND.hpp"  // getIntegerInRange
+#include "Student.hpp"
+#include "Table.hpp"
 
 #define GRADE_MIN 1
 #define GRADE_MAX 10
-#define RESULT_TYPE_MEAN "RESULT_TYPE_MEAN"
-#define RESULT_TYPE_MEDIAN "RESULT_TYPE_MEDIAN"
-#define RESULT_TYPE_BOTH "RESULT_TYPE_BOTH"
 
 using std::cin;
 using std::cout;
 using std::endl;
-using std::fixed;
-using std::left;
-using std::setprecision;
-using std::setw;
-using std::sort;
 using std::string;
 using std::stringstream;
 using std::vector;
-
-struct Names {
-  string firstName = "Vardas";
-  string lastName = "Pavarde";
-  string mean = "Galutinis Vid.";
-  string median = "Galutinis Med.";
-} names;
-
-struct Student {
-  string firstName;
-  string lastName;
-  vector<int> grades;
-  int examGrade;
-  double meanGrade;
-  double finalGrade;
-  double medianGrade;
-};
-
-struct Width {
-  int firstName = 6 + 6;
-  int lastName = 7 + 9;
-  int mean = 14 + 1;
-  int median = 14 + 1;
-} width;
-
-double findFinalGrade(double meanGrade, double examGrade) {
-  return 0.4 * meanGrade + 0.6 * examGrade;
-}
 
 int getNumberOfGrades() {
   cout << "Enter number of grades: ";
@@ -75,84 +39,13 @@ bool isValidGrade(int grade) {
   return grade >= GRADE_MIN && grade <= GRADE_MAX;
 }
 
-void printRandomGrades(Student &student) {
+void printRandomGrades(Student::Student &student) {
   cout << "Generated " << student.grades.size() << " random grades: ";
   for (int i = 0; i < student.grades.size(); i++) {
     cout << student.grades[i] << " ";
   }
   cout << endl;
   cout << "Generated random exam grade: " << student.examGrade << endl;
-}
-
-void printResult(Student *student, const string &resultType) {
-  cout << left
-       << setw(width.firstName) << student->firstName
-       << setw(width.lastName) << student->lastName
-       << fixed << setprecision(2);
-
-  if (resultType == RESULT_TYPE_MEAN) {
-    cout << setw(width.mean) << student->finalGrade;
-  } else if (resultType == RESULT_TYPE_MEDIAN) {
-    cout << setw(width.median) << student->medianGrade;
-  } else if (resultType == RESULT_TYPE_BOTH) {
-    cout << setw(width.mean) << student->finalGrade;
-    cout << setw(width.median) << student->medianGrade;
-  }
-
-  cout << endl;
-}
-
-void printResults(vector<Student> &students, const string &resultType) {
-  cout << left
-       << setw(width.firstName) << names.firstName
-       << setw(width.lastName) << names.lastName;
-
-  int tableWidth = width.firstName + width.lastName;
-
-  if (resultType == RESULT_TYPE_MEAN) {
-    cout << setw(width.mean) << names.mean;
-    tableWidth += width.mean;
-  } else if (resultType == RESULT_TYPE_MEDIAN) {
-    cout << setw(width.median) << names.median;
-    tableWidth += width.median;
-  } else if (resultType == RESULT_TYPE_BOTH) {
-    cout << setw(width.mean) << names.mean;
-    tableWidth += width.mean;
-    cout << setw(width.median) << names.median;
-    tableWidth += width.median;
-  }
-  cout << endl;
-  cout << string(tableWidth, '-') << endl;
-
-  sort(students.begin(), students.end(),
-       [](const Student &a, const Student &b) {
-         return a.lastName != b.lastName
-                    ? a.lastName < b.lastName
-                    : a.firstName < b.firstName;
-       });
-
-  for (int i = 0; i < students.size(); i++) {
-    printResult(&students[i], resultType);
-  }
-}
-
-void processStudent(Student *student, const string &resultType) {
-  if (resultType == RESULT_TYPE_MEAN) {
-    student->meanGrade = Math::findMean(student->grades);
-    student->finalGrade = findFinalGrade(student->meanGrade, student->examGrade);
-  } else if (resultType == RESULT_TYPE_MEDIAN) {
-    student->medianGrade = Math::findMedian(student->grades);
-  } else if (resultType == RESULT_TYPE_BOTH) {
-    student->meanGrade = Math::findMean(student->grades);
-    student->finalGrade = findFinalGrade(student->meanGrade, student->examGrade);
-    student->medianGrade = Math::findMedian(student->grades);
-  }
-}
-
-void processStudents(vector<Student> &students, const string &resultType) {
-  for (int i = 0; i < students.size(); i++) {
-    processStudent(&students[i], resultType);
-  }
 }
 
 string getResultType() {
@@ -179,7 +72,7 @@ bool shouldReadFromFile(const string &filePath) {
   return result;
 }
 
-void Grades_EnterManually(bool numberOfGradesIsKnown, int numGrades, Student &student) {
+void Grades_EnterManually(bool numberOfGradesIsKnown, int numGrades, Student::Student &student) {
   if (numberOfGradesIsKnown) {
     if (numGrades > 0) {
       cout << "Enter grades: ";
@@ -230,7 +123,7 @@ void Grades_EnterManually(bool numberOfGradesIsKnown, int numGrades, Student &st
   Console::clearLine();
 }
 
-void Grades_GenerateRandomly(bool numberOfGradesIsKnown, int numGrades, Student &student) {
+void Grades_GenerateRandomly(bool numberOfGradesIsKnown, int numGrades, Student::Student &student) {
   if (numberOfGradesIsKnown) {
     for (int i = 0; i < numGrades; i++) {
       int grade = RND::getIntegerInRange(GRADE_MIN, GRADE_MAX);
@@ -250,13 +143,13 @@ void Grades_GenerateRandomly(bool numberOfGradesIsKnown, int numGrades, Student 
   printRandomGrades(student);
 }
 
-void Grades_ReadFromFile(const string &filePath, vector<Student> &students) {
+void Grades_ReadFromFile(const string &filePath, vector<Student::Student> &students) {
   stringstream buffer = File::getBuffer(filePath);
 
   string line;
   getline(buffer, line);
   while (getline(buffer, line)) {
-    Student student;
+    Student::Student student;
 
     stringstream iss(line);
     iss >> student.firstName >> student.lastName;
@@ -274,14 +167,14 @@ void Grades_ReadFromFile(const string &filePath, vector<Student> &students) {
 }
 
 int main() {
-  vector<Student> students;
+  vector<Student::Student> students;
 
   string filePath = "kursiokai.txt";
   if (shouldReadFromFile(filePath)) {
     Grades_ReadFromFile(filePath, students);
   } else {
     while (true) {
-      Student student;
+      Student::Student student;
       student.firstName = Console::promptForString("Please enter first name: ");
       student.lastName = Console::promptForString("Please enter last name: ");
 
@@ -307,10 +200,10 @@ int main() {
   }
 
   string resultType = getResultType();
-  processStudents(students, resultType);
+  Student::processStudents(students, resultType);
 
   cout << endl;
-  printResults(students, resultType);
+  Table::printResults(students, resultType);
   cout << endl;
 
   return 0;
