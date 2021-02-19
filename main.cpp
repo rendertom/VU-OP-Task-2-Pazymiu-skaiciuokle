@@ -144,14 +144,20 @@ void Grades_GenerateRandomly(bool numberOfGradesIsKnown, int numGrades, Student:
 }
 
 void Grades_ReadFromFile(const string &filePath, vector<Student::Student> &students) {
-  stringstream buffer = File::getBuffer(filePath);
-
   string line;
-  getline(buffer, line);
-  while (getline(buffer, line)) {
+  vector<string> lines;
+  stringstream buffer = File::getBuffer(filePath);
+  
+  while (!buffer.eof()) {
+    getline(buffer, line);
+    lines.push_back(line);
+  }
+
+  int arraySize = lines.size();
+  for (int i = 1; i < arraySize; i++) {
     Student::Student student;
 
-    stringstream iss(line);
+    stringstream iss(lines[i]);
     iss >> student.firstName >> student.lastName;
 
     int grade;
