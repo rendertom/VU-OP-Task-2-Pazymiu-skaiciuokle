@@ -3,13 +3,13 @@
 #include <string>
 #include <vector>
 
-#include "Console.hpp"
-#include "Definitions.hpp"
-#include "File.hpp"
-#include "RND.hpp"  // getIntegerInRange
-#include "Student.hpp"
-#include "Table.hpp"
-#include "Timer.hpp"
+#include "include/Console.hpp"
+#include "include/Definitions.hpp"
+#include "include/File.hpp"
+#include "include/RND.hpp"  // getIntegerInRange
+#include "include/Student.hpp"
+#include "include/Table.hpp"
+#include "include/Timer.hpp"
 
 #define GRADE_MIN 1
 #define GRADE_MAX 10
