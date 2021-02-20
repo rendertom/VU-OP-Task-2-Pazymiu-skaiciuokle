@@ -178,44 +178,48 @@ void Grades_ReadFromFile(const string &filePath, vector<Student::Student> &stude
 }
 
 int main() {
-  vector<Student::Student> students;
-
   string filePath = "kursiokai.txt";
-  if (shouldReadFromFile(filePath)) {
-    Grades_ReadFromFile(filePath, students);
-  } else {
-    while (true) {
-      Student::Student student;
-      student.firstName = Console::promptForString("Please enter first name: ");
-      student.lastName = Console::promptForString("Please enter last name: ");
 
-      const bool numberOfGradesIsKnown = Console::confirm("Do you know the number of grades?");
-      const int numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
+  try {
+    vector<Student::Student> students;
+    if (shouldReadFromFile(filePath)) {
+      Grades_ReadFromFile(filePath, students);
+    } else {
+      while (true) {
+        Student::Student student;
+        student.firstName = Console::promptForString("Please enter first name: ");
+        student.lastName = Console::promptForString("Please enter last name: ");
 
-      bool shouldGenerateRandomGrades = false;
-      if (!numberOfGradesIsKnown || numGrades > 0) {
-        shouldGenerateRandomGrades = Console::confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
-      }
+        const bool numberOfGradesIsKnown = Console::confirm("Do you know the number of grades?");
+        const int numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
 
-      if (shouldGenerateRandomGrades) {
-        Grades_GenerateRandomly(numberOfGradesIsKnown, numGrades, student);
-      } else {
-        Grades_EnterManually(numberOfGradesIsKnown, numGrades, student);
-      }
+        bool shouldGenerateRandomGrades = false;
+        if (!numberOfGradesIsKnown || numGrades > 0) {
+          shouldGenerateRandomGrades = Console::confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
+        }
 
-      students.push_back(student);
-      if (!Console::confirm("Add another student?")) {
-        break;
+        if (shouldGenerateRandomGrades) {
+          Grades_GenerateRandomly(numberOfGradesIsKnown, numGrades, student);
+        } else {
+          Grades_EnterManually(numberOfGradesIsKnown, numGrades, student);
+        }
+
+        students.push_back(student);
+        if (!Console::confirm("Add another student?")) {
+          break;
+        }
       }
     }
+
+    string resultType = getResultType();
+    Student::processStudents(students, resultType);
+
+    cout << endl;
+    Table::printResults(students, resultType);
+    cout << endl;
+
+    return 0;
+  } catch (std::exception &error) {
+    std::cerr << error.what() << endl;
   }
-
-  string resultType = getResultType();
-  Student::processStudents(students, resultType);
-
-  cout << endl;
-  Table::printResults(students, resultType);
-  cout << endl;
-
-  return 0;
 }
