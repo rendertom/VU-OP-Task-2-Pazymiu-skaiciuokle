@@ -65,17 +65,6 @@ void printRandomGrades(Student::Student &student) {
   cout << "Generated random exam grade: " << student.examGrade << endl;
 }
 
-bool shouldReadFromFile(const string &filePath) {
-  bool result = false;
-  if (File::doesFileExist(filePath)) {
-    result = Console::confirm("(y)Read grades from file \"" + filePath + "\"; (n)Enter grades manaully:");
-  } else {
-    cout << "File does not exist at path \"" << filePath << "\". Switching to manual mode." << endl;
-  }
-
-  return result;
-}
-
 void Grades_EnterManually(bool numberOfGradesIsKnown, int numGrades, Student::Student &student) {
   if (numberOfGradesIsKnown) {
     if (numGrades > 0) {
@@ -177,13 +166,24 @@ void Grades_ReadFromFile(const string &filePath, vector<Student::Student> &stude
   cout << "Reading data from file took " << timer.elapsed() << endl;
 }
 
+bool shouldReadFromFile() {
+  return Console::confirm("(y)Read grades from file; (n)Enter grades manaully:");
+}
+
 int main() {
-  string filePath = "kursiokai.txt";
+  vector<Student::Student> students;
 
   try {
-    vector<Student::Student> students;
-    if (shouldReadFromFile(filePath)) {
-      Grades_ReadFromFile(filePath, students);
+    if (shouldReadFromFile()) {
+      string folderPath = "./data/";
+      string filePath = File::selectFileInFolder(folderPath, "txt");
+      if (filePath == "") {
+        return 0;
+      } else {
+        filePath = folderPath + filePath;
+        cout << "Reading data from \"" << filePath << "\"" << endl;
+        Grades_ReadFromFile(filePath, students);
+      }
     } else {
       while (true) {
         Student::Student student;
