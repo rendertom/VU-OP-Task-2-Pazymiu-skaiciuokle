@@ -177,8 +177,8 @@ int main() {
     if (shouldReadFromFile()) {
       string folderPath = "./data/";
       string filePath = File::selectFileInFolder(folderPath, "txt");
-      if (filePath == "") {
-        return 0;
+      if (filePath.empty()) {
+        return 1;
       } else {
         filePath = folderPath + filePath;
         cout << "Reading data from \"" << filePath << "\"" << endl;
