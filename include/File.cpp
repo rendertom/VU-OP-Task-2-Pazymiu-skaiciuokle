@@ -10,8 +10,7 @@ stringstream File::getBuffer(const string &filePath) {
   file.open(filePath);
 
   if (!file) {
-    cout << "Error: file could not be opened" << endl;
-    exit(1);
+    throw std::runtime_error("Error: file \"" + filePath + "\" could not be opened");
   }
 
   stringstream buffer;
