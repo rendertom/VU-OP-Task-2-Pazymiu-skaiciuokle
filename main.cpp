@@ -166,57 +166,75 @@ void Grades_ReadFromFile(const string &filePath, vector<Student::Student> &stude
   cout << "Reading data from file took " << timer.elapsed() << endl;
 }
 
-bool shouldReadFromFile() {
-  return Console::confirm("(y)Read grades from file; (n)Enter grades manaully:");
+void Data_EnterManually(vector<Student::Student> &students) {
+  while (true) {
+    Student::Student student;
+    student.firstName = Console::promptForString("Please enter first name: ");
+    student.lastName = Console::promptForString("Please enter last name: ");
+
+    const bool numberOfGradesIsKnown = Console::confirm("Do you know the number of grades?");
+    const int numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
+
+    bool shouldGenerateRandomGrades = false;
+    if (!numberOfGradesIsKnown || numGrades > 0) {
+      shouldGenerateRandomGrades = Console::confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
+    }
+
+    if (shouldGenerateRandomGrades) {
+      Grades_GenerateRandomly(numberOfGradesIsKnown, numGrades, student);
+    } else {
+      Grades_EnterManually(numberOfGradesIsKnown, numGrades, student);
+    }
+
+    students.push_back(student);
+    if (!Console::confirm("Add another student?")) {
+      break;
+    }
+  }
+}
+
+void Data_ReadFromFile(vector<Student::Student> &students) {
+  string extension = "txt";
+  string folderPath = "./data/";
+  string filePath = File::selectFileInFolder(folderPath, extension);
+  if (filePath.empty()) {
+    const bool shouldEnterManually = Console::confirm(
+        "Do you want to enter grades manually instead?:");
+
+    if (shouldEnterManually) {
+      cout << "Switching to manual mode." << endl;
+      Data_EnterManually(students);
+    } else {
+      cout << "Terminating program." << endl;
+    }
+  } else {
+    filePath = folderPath + filePath;
+    cout << "Reading data from \"" << filePath << "\"" << endl;
+    Grades_ReadFromFile(filePath, students);
+  }
 }
 
 int main() {
   vector<Student::Student> students;
 
+  const bool shouldReadFromFile = Console::confirm(
+      "(y)Read grades from file; (n)Enter grades manaully:");
+
   try {
-    if (shouldReadFromFile()) {
-      string folderPath = "./data/";
-      string filePath = File::selectFileInFolder(folderPath, "txt");
-      if (filePath.empty()) {
-        return 1;
-      } else {
-        filePath = folderPath + filePath;
-        cout << "Reading data from \"" << filePath << "\"" << endl;
-        Grades_ReadFromFile(filePath, students);
-      }
+    if (shouldReadFromFile) {
+      Data_ReadFromFile(students);
     } else {
-      while (true) {
-        Student::Student student;
-        student.firstName = Console::promptForString("Please enter first name: ");
-        student.lastName = Console::promptForString("Please enter last name: ");
-
-        const bool numberOfGradesIsKnown = Console::confirm("Do you know the number of grades?");
-        const int numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
-
-        bool shouldGenerateRandomGrades = false;
-        if (!numberOfGradesIsKnown || numGrades > 0) {
-          shouldGenerateRandomGrades = Console::confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
-        }
-
-        if (shouldGenerateRandomGrades) {
-          Grades_GenerateRandomly(numberOfGradesIsKnown, numGrades, student);
-        } else {
-          Grades_EnterManually(numberOfGradesIsKnown, numGrades, student);
-        }
-
-        students.push_back(student);
-        if (!Console::confirm("Add another student?")) {
-          break;
-        }
-      }
+      Data_EnterManually(students);
     }
 
-    string resultType = getResultType();
-    Student::processStudents(students, resultType);
+    if (students.size() > 0) {
+      string resultType = getResultType();
+      Student::processStudents(students, resultType);
 
-    cout << endl;
-    Table::printResults(students, resultType);
-    cout << endl;
+      cout << endl;
+      Table::printResults(students, resultType);
+      cout << endl;
+    }
 
     return 0;
   } catch (std::exception &error) {
