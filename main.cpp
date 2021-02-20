@@ -16,27 +16,11 @@
 #define GRADE_MIN 1
 #define GRADE_MAX 10
 
-using std::cin;
 using std::cout;
 using std::endl;
 using std::string;
 using std::stringstream;
 using std::vector;
-
-int getNumberOfGrades() {
-  cout << "Enter number of grades: ";
-  int numGrades;
-  cin >> numGrades;
-  Console::clearLine();
-
-  while (numGrades < 0) {
-    cout << "Value cannot be negative. Please enter new value: ";
-    cin >> numGrades;
-    Console::clearLine();
-  }
-
-  return numGrades;
-}
 
 string getResultType() {
   int promptResult = Console::promptForInt("Choose what to calculate: (1)Mean, (2)Median, (3)Both:", 1, 3);
@@ -49,10 +33,6 @@ string getResultType() {
   }
 
   return resultType;
-}
-
-bool isValidGrade(int grade) {
-  return grade >= GRADE_MIN && grade <= GRADE_MAX;
 }
 
 void printRandomGrades(Student::Student &student) {
@@ -68,52 +48,24 @@ void printRandomGrades(Student::Student &student) {
 void Grades_EnterManually(bool numberOfGradesIsKnown, int numGrades, Student::Student &student) {
   if (numberOfGradesIsKnown) {
     if (numGrades > 0) {
-      cout << "Enter grades: ";
       while (student.grades.size() != numGrades) {
-        int grade;
-        cin >> grade;
-        if (!isValidGrade(grade)) {
-          cout << "Grade " << grade << " at index " << student.grades.size() << " is out of range ("
-               << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
-          Console::clearLine();
-        } else {
-          student.grades.push_back(grade);
-        }
+        int grade = Console::promptForInt("Enter grade", GRADE_MIN, GRADE_MAX);
+        student.grades.push_back(grade);
       }
-
-      Console::clearLine();
     }
   } else {
     while (true) {
-      cout << "Enter grade [" << student.grades.size() << "] (type -1 to quit): ";
-
-      int grade;
-      cin >> grade;
-      Console::clearLine();
-
+      int grade = Console::promptForInt(
+          "Enter grade (type -1 to quit)", GRADE_MIN, GRADE_MAX, -1);
       if (grade == -1) {
         break;
       } else {
-        if (!isValidGrade(grade)) {
-          cout << "Grade " << grade << " is out of range ("
-               << GRADE_MIN << "-" << GRADE_MAX << ")." << endl;
-        } else {
-          student.grades.push_back(grade);
-        }
+        student.grades.push_back(grade);
       }
     }
   }
 
-  cout << "Enter exam grade: ";
-  cin >> student.examGrade;
-  while (!isValidGrade(student.examGrade)) {
-    cout << "Grade " << student.examGrade << " is out of range ("
-         << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
-    Console::clearLine();
-    cin >> student.examGrade;
-  }
-
-  Console::clearLine();
+  student.examGrade = Console::promptForInt("Enter exam grade", GRADE_MIN, GRADE_MAX);
 }
 
 void Grades_GenerateRandomly(bool numberOfGradesIsKnown, int numGrades, Student::Student &student) {
@@ -125,10 +77,10 @@ void Grades_GenerateRandomly(bool numberOfGradesIsKnown, int numGrades, Student:
   } else {
     while (true) {
       int grade = RND::getIntegerInRange(0, GRADE_MAX);
-      if (isValidGrade(grade)) {
-        student.grades.push_back(grade);
-      } else {
+      if (grade == 0) {
         break;
+      } else {
+        student.grades.push_back(grade);
       }
     }
   }
@@ -172,8 +124,11 @@ void Data_EnterManually(vector<Student::Student> &students) {
     student.firstName = Console::promptForString("Please enter first name: ");
     student.lastName = Console::promptForString("Please enter last name: ");
 
+    int numGrades = 0;
     const bool numberOfGradesIsKnown = Console::confirm("Do you know the number of grades?");
-    const int numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
+    if (numberOfGradesIsKnown) {
+      numGrades = Console::promptForInt("Enter number of grades", 0, 100);
+    }
 
     bool shouldGenerateRandomGrades = false;
     if (!numberOfGradesIsKnown || numGrades > 0) {
