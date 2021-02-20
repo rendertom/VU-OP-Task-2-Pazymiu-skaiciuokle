@@ -66,7 +66,7 @@ Galutinis vidurkis yra apskaičiuojamas pagal formulę `galutinis = 0.4 * vidurk
 
 ```shell
 cd nuoroda_į_programos_aplanką
-g++ 'main.cpp' -o 'main'
+g++ -std=c++11 include/*.cpp 'main.cpp' -o 'main' && './main'
 ./main
 ```
 
@@ -89,3 +89,10 @@ g++ 'main.cpp' -o 'main'
     - Galimybė skaityti rezultatus iš išorinio failo.
     - Galimybė atspausdinti Vidurkį, Medianą, arba abu iš karto.
     - Spausdinamas sarašas išrikiuojamas abėcėlės tvarka pagal pavardes.
+- [v0.3](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases/tag/v0.3)
+  - pakeista
+    - Optimizuotas nuskaitomo failo apdorojimas, nuskaitant jo turinį į buffer'į.
+    - Optimizuotas ciklo _for_ veikimas, nuskaitant masyvo dydį į kintamąjį.
+    - Reorganizuota failo struktūra, suskaldant pagrindinį failą į smulkelsnius failus su antraštėm _header_. Sukurti atskiri _header_ failai: Console.hpp, Definitions.hpp, File.hpp, Math.hpp, RND.hpp, Student.hpp, Table.hpp, Timer.hpp.
+  - pridėta
+    - Išimčių _exceptions_ valdymas.
