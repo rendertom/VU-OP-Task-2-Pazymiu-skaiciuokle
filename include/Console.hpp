@@ -13,6 +13,6 @@ using std::string;
 namespace Console {
   void clearLine();
   bool confirm(const string &, char = 'y', char = 'n');
-  int promptForInt(const string &, int, int);
+  int promptForInt(const string &, int, int, int = -100);
   string promptForString(const string &);
 }

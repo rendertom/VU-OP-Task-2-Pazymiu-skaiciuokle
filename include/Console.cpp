@@ -22,17 +22,19 @@ bool Console::confirm(const string &message, char yes, char no) {
   }
 }
 
-int Console::promptForInt(const string &message, int min, int max) {
+int Console::promptForInt(const string &message, int min, int max, int escapeValue) {
   while (true) {
     cout << "-> " << message << " (" << min << "-" << max << "): ";
 
     int value;
     cin >> value;
     clearLine();
-    if (value >= min && value <= max) {
+    if (value == escapeValue) {
+      return escapeValue;
+    } else if (value >= min && value <= max) {
       return value;
     } else {
-      cout << "Value is not in range. ";
+      cout << "Value is out of range. ";
     }
   }
 }
