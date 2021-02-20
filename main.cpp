@@ -1,3 +1,5 @@
+// g++ -std=c++11 include/*.cpp 'main.cpp' -o 'main' && './main'
+
 #include <iostream>
 #include <sstream>  // std::stringstream
 #include <string>

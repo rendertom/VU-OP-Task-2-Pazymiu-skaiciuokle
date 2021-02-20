@@ -1,3 +1,5 @@
+#pragma once
+
 #include <chrono>
 
 class Timer {
@@ -8,15 +10,7 @@ class Timer {
   std::chrono::time_point<clock> startTime;
 
  public:
-  double elapsed() const {
-    return duration(clock::now() - startTime).count();
-  }
-
-  void reset() {
-    startTime = clock::now();
-  }
-
-  void start() {
-    reset();
-  }
+  double elapsed() const;
+  void reset();
+  void start();
 };
