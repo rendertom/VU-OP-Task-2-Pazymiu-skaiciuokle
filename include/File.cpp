@@ -59,6 +59,7 @@ bool File::isFolder(const string &filePath) {
 }
 
 string File::selectFileInFolder(const string &folderPath, const string &extension) {
+  string fileName;
   if (!fileExists(folderPath)) {
     cout << "Folder \"" << folderPath << "\" does not exist." << endl;
   } else if (!isFolder(folderPath)) {
@@ -69,7 +70,7 @@ string File::selectFileInFolder(const string &folderPath, const string &extensio
     if (numFiles == 0) {
       cout << "Folder \"" << folderPath << "\" contains no files with extension \"" << extension << "\"." << endl;
     } else if (numFiles == 1) {
-      return fileNames[0];
+      fileName = fileNames[0];
     } else {
       std::sort(fileNames.begin(), fileNames.end());
 
@@ -79,9 +80,9 @@ string File::selectFileInFolder(const string &folderPath, const string &extensio
       }
 
       int index = Console::promptForInt("Please select a file:", 1, numFiles);
-      return fileNames[index - 1];
+      fileName = fileNames[index - 1];
     }
   }
 
-  return "";
+  return fileName;
 }
