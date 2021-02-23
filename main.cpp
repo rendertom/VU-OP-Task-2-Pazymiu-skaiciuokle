@@ -1,251 +1,29 @@
-#include <algorithm>  // std::sort
-#include <fstream>    // std::ifstream
-#include <iomanip>    // std::setw
+// g++ -std=c++11 include/*.cpp 'main.cpp' -o 'main' && './main'
+
 #include <iostream>
-#include <random>   // std::rand, std::srand
-#include <sstream>  // std::istringstream
+#include <sstream>  // std::stringstream
 #include <string>
 #include <vector>
 
+#include "include/Console.hpp"
+#include "include/Definitions.hpp"
+#include "include/File.hpp"
+#include "include/RND.hpp"  // getIntegerInRange
+#include "include/Student.hpp"
+#include "include/Table.hpp"
+#include "include/Timer.hpp"
+
 #define GRADE_MIN 1
 #define GRADE_MAX 10
-#define RESULT_TYPE_MEAN "RESULT_TYPE_MEAN"
-#define RESULT_TYPE_MEDIAN "RESULT_TYPE_MEDIAN"
-#define RESULT_TYPE_BOTH "RESULT_TYPE_BOTH"
 
-using std::cin;
 using std::cout;
 using std::endl;
-using std::fixed;
-using std::ifstream;
-using std::istringstream;
-using std::left;
-using std::numeric_limits;
-using std::setprecision;
-using std::setw;
-using std::sort;
-using std::streamsize;
 using std::string;
+using std::stringstream;
 using std::vector;
 
-struct Names {
-  string firstName = "Vardas";
-  string lastName = "Pavarde";
-  string mean = "Galutinis Vid.";
-  string median = "Galutinis Med.";
-} names;
-
-struct Student {
-  string firstName;
-  string lastName;
-  vector<int> grades;
-  int examGrade;
-  double meanGrade;
-  double finalGrade;
-  double medianGrade;
-};
-
-struct Width {
-  int firstName = 6 + 6;
-  int lastName = 7 + 9;
-  int mean = 14 + 1;
-  int median = 14 + 1;
-} width;
-
-void clearLine() {
-  cin.clear();
-  cin.ignore(numeric_limits<streamsize>::max(), '\n');
-}
-
-bool confirm(const string &message, char yes = 'y', char no = 'n') {
-  while (true) {
-    cout << "-> " << message << " (" << yes << "/" << no << "): ";
-
-    char response;
-    cin >> response;
-    clearLine();
-    if (response == yes) {
-      return true;
-    } else if (response == no) {
-      return false;
-    } else {
-      cout << "Unknown character. ";
-    }
-  }
-}
-
-bool doesFileExist(string filePath) {
-  ifstream file(filePath);
-  return file.good();
-}
-
-double findFinalGrade(double meanGrade, double examGrade) {
-  return 0.4 * meanGrade + 0.6 * examGrade;
-}
-
-double findMean(vector<int> &array) {
-  if (array.empty()) {
-    return 0;
-  }
-
-  const int arraySize = array.size();
-  int sum = 0;
-  for (int i = 0; i < arraySize; i++) {
-    sum += array[i];
-  }
-
-  return (double)sum / arraySize;
-}
-
-double findMedian(vector<int> &array) {
-  if (array.empty()) {
-    return 0;
-  }
-
-  sort(array.begin(), array.end());
-
-  const int arraySize = array.size();
-  const bool isOddNumber = arraySize % 2 != 0;
-
-  if (isOddNumber) {
-    return (double)array[arraySize / 2];
-  }
-
-  return (double)(array[(arraySize - 1) / 2] + array[arraySize / 2]) / 2.0;
-}
-
-int getNumberOfGrades() {
-  cout << "Enter number of grades: ";
-  int numGrades;
-  cin >> numGrades;
-  clearLine();
-
-  while (numGrades < 0) {
-    cout << "Value cannot be negative. Please enter new value: ";
-    cin >> numGrades;
-    clearLine();
-  }
-
-  return numGrades;
-}
-
-int getRandomIntegerInRange(int min, int max) {
-  static bool first = true;
-  if (first) {
-    srand(time(NULL));  //seeding for the first time only!
-    first = false;
-  }
-  return min + rand() % ((max + 1) - min);
-}
-
-bool isValidGrade(int grade) {
-  return grade >= GRADE_MIN && grade <= GRADE_MAX;
-}
-
-void printRandomGrades(Student &student) {
-  cout << "Generated " << student.grades.size() << " random grades: ";
-  for (int i = 0; i < student.grades.size(); i++) {
-    cout << student.grades[i] << " ";
-  }
-  cout << endl;
-  cout << "Generated random exam grade: " << student.examGrade << endl;
-}
-
-void printResult(Student *student, const string &resultType, Width &width) {
-  cout << left
-       << setw(width.firstName) << student->firstName
-       << setw(width.lastName) << student->lastName
-       << fixed << setprecision(2);
-
-  if (resultType == RESULT_TYPE_MEAN) {
-    cout << setw(width.mean) << student->finalGrade;
-  } else if (resultType == RESULT_TYPE_MEDIAN) {
-    cout << setw(width.median) << student->medianGrade;
-  } else if (resultType == RESULT_TYPE_BOTH) {
-    cout << setw(width.mean) << student->finalGrade;
-    cout << setw(width.median) << student->medianGrade;
-  }
-
-  cout << endl;
-}
-
-void printResults(vector<Student> &students, const string &resultType) {
-  cout << left
-       << setw(width.firstName) << names.firstName
-       << setw(width.lastName) << names.lastName;
-
-  int tableWidth = width.firstName + width.lastName;
-
-  if (resultType == RESULT_TYPE_MEAN) {
-    cout << setw(width.mean) << names.mean;
-    tableWidth += width.mean;
-  } else if (resultType == RESULT_TYPE_MEDIAN) {
-    cout << setw(width.median) << names.median;
-    tableWidth += width.median;
-  } else if (resultType == RESULT_TYPE_BOTH) {
-    cout << setw(width.mean) << names.mean;
-    tableWidth += width.mean;
-    cout << setw(width.median) << names.median;
-    tableWidth += width.median;
-  }
-  cout << endl;
-  cout << string(tableWidth, '-') << endl;
-
-  sort(students.begin(), students.end(),
-       [](const Student &a, const Student &b) {
-         return a.lastName != b.lastName
-                    ? a.lastName < b.lastName
-                    : a.firstName < b.firstName;
-       });
-
-  for (int i = 0; i < students.size(); i++) {
-    printResult(&students[i], resultType, width);
-  }
-}
-
-void processStudent(Student *student, const string &resultType) {
-  if (resultType == RESULT_TYPE_MEAN) {
-    student->meanGrade = findMean(student->grades);
-    student->finalGrade = findFinalGrade(student->meanGrade, student->examGrade);
-  } else if (resultType == RESULT_TYPE_MEDIAN) {
-    student->medianGrade = findMedian(student->grades);
-  } else if (resultType == RESULT_TYPE_BOTH) {
-    student->meanGrade = findMean(student->grades);
-    student->finalGrade = findFinalGrade(student->meanGrade, student->examGrade);
-    student->medianGrade = findMedian(student->grades);
-  }
-}
-
-void processStudents(vector<Student> &students, const string &resultType) {
-  for (int i = 0; i < students.size(); i++) {
-    processStudent(&students[i], resultType);
-  }
-}
-
-int promptForInt(string message, int min, int max) {
-  while (true) {
-    cout << "-> " << message << " (" << min << "-" << max << "): ";
-
-    int value;
-    cin >> value;
-    clearLine();
-    if (value >= min && value <= max) {
-      return value;
-    } else {
-      cout << "Value is not in range. ";
-    }
-  }
-}
-
-string promptForString(const string &message) {
-  string result;
-  cout << "-> " << message;
-  getline(cin, result);
-  return result;
-}
-
 string getResultType() {
-  int promptResult = promptForInt("Choose what to calculate: (1)Mean, (2)Median, (3)Both:", 1, 3);
+  int promptResult = Console::promptForInt("Choose what to calculate: (1)Mean, (2)Median, (3)Both:", 1, 3);
 
   string resultType = RESULT_TYPE_BOTH;
   if (promptResult == 1) {
@@ -257,103 +35,73 @@ string getResultType() {
   return resultType;
 }
 
-bool shouldReadFromFile(const string &filePath) {
-  bool result = false;
-  if (doesFileExist(filePath)) {
-    result = confirm("(y)Read grades from file \"" + filePath + "\"; (n)Enter grades manaully:");
-  } else {
-    cout << "File does not exist at path \"" << filePath << "\". Switching to manual mode." << endl;
+void printRandomGrades(Student::Student &student) {
+  const int arraySize = student.grades.size();
+  cout << "Generated " << arraySize << " random grades: ";
+  for (int i = 0; i < arraySize; i++) {
+    cout << student.grades[i] << " ";
   }
-
-  return result;
+  cout << endl;
+  cout << "Generated random exam grade: " << student.examGrade << endl;
 }
 
-void Grades_EnterManually(bool numberOfGradesIsKnown, int numGrades, Student &student) {
+void Grades_EnterManually(bool numberOfGradesIsKnown, int numGrades, Student::Student &student) {
   if (numberOfGradesIsKnown) {
     if (numGrades > 0) {
-      cout << "Enter grades: ";
       while (student.grades.size() != numGrades) {
-        int grade;
-        cin >> grade;
-        if (!isValidGrade(grade)) {
-          cout << "Grade " << grade << " at index " << student.grades.size() << " is out of range ("
-               << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
-          clearLine();
-        } else {
-          student.grades.push_back(grade);
-        }
+        int grade = Console::promptForInt("Enter grade", GRADE_MIN, GRADE_MAX);
+        student.grades.push_back(grade);
       }
-
-      clearLine();
     }
   } else {
     while (true) {
-      cout << "Enter grade [" << student.grades.size() << "] (type -1 to quit): ";
-
-      int grade;
-      cin >> grade;
-      clearLine();
-
+      int grade = Console::promptForInt(
+          "Enter grade (type -1 to quit)", GRADE_MIN, GRADE_MAX, -1);
       if (grade == -1) {
         break;
       } else {
-        if (!isValidGrade(grade)) {
-          cout << "Grade " << grade << " is out of range ("
-               << GRADE_MIN << "-" << GRADE_MAX << ")." << endl;
-        } else {
-          student.grades.push_back(grade);
-        }
+        student.grades.push_back(grade);
       }
     }
   }
 
-  cout << "Enter exam grade: ";
-  cin >> student.examGrade;
-  while (!isValidGrade(student.examGrade)) {
-    cout << "Grade " << student.examGrade << " is out of range ("
-         << GRADE_MIN << "-" << GRADE_MAX << "). Fix it and continue entering." << endl;
-    clearLine();
-    cin >> student.examGrade;
-  }
-
-  clearLine();
+  student.examGrade = Console::promptForInt("Enter exam grade", GRADE_MIN, GRADE_MAX);
 }
 
-void Grades_GenerateRandomly(bool numberOfGradesIsKnown, int numGrades, Student &student) {
+void Grades_GenerateRandomly(bool numberOfGradesIsKnown, int numGrades, Student::Student &student) {
   if (numberOfGradesIsKnown) {
     for (int i = 0; i < numGrades; i++) {
-      int grade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
+      int grade = RND::getIntegerInRange(GRADE_MIN, GRADE_MAX);
       student.grades.push_back(grade);
     }
   } else {
     while (true) {
-      int grade = getRandomIntegerInRange(0, GRADE_MAX);
-      if (isValidGrade(grade)) {
-        student.grades.push_back(grade);
-      } else {
+      int grade = RND::getIntegerInRange(0, GRADE_MAX);
+      if (grade == 0) {
         break;
+      } else {
+        student.grades.push_back(grade);
       }
     }
   }
-  student.examGrade = getRandomIntegerInRange(GRADE_MIN, GRADE_MAX);
+  student.examGrade = RND::getIntegerInRange(GRADE_MIN, GRADE_MAX);
   printRandomGrades(student);
 }
 
-void Grades_ReadFromFile(const string &filePath, vector<Student> &students) {
-  ifstream file;
-  file.open(filePath);
+void Grades_ReadFromFile(const string &filePath, vector<Student::Student> &students) {
+  Timer timer;
+  timer.start();
 
-  if (!file) {
-    cout << "Error: file could not be opened" << endl;
-    exit(1);
-  }
+  stringstream buffer = File::getBuffer(filePath);
+  cout << "Buffering time: " << timer.elapsed() << endl;
+  timer.reset();
 
   string line;
-  getline(file, line);
-  while (getline(file, line)) {
-    Student student;
+  getline(buffer, line);
+  while (getline(buffer, line)) {
+    Student::Student student;
 
-    istringstream iss(line);
+    stringstream iss(line);
     iss >> student.firstName >> student.lastName;
 
     int grade;
@@ -367,48 +115,84 @@ void Grades_ReadFromFile(const string &filePath, vector<Student> &students) {
     students.push_back(student);
   }
 
-  file.close();
+  cout << "Reading data from file took " << timer.elapsed() << endl;
+}
+
+void Data_EnterManually(vector<Student::Student> &students) {
+  while (true) {
+    Student::Student student;
+    student.firstName = Console::promptForString("Please enter first name: ");
+    student.lastName = Console::promptForString("Please enter last name: ");
+
+    int numGrades = 0;
+    const bool numberOfGradesIsKnown = Console::confirm("Do you know the number of grades?");
+    if (numberOfGradesIsKnown) {
+      numGrades = Console::promptForInt("Enter number of grades", 0, 100);
+    }
+
+    bool shouldGenerateRandomGrades = false;
+    if (!numberOfGradesIsKnown || numGrades > 0) {
+      shouldGenerateRandomGrades = Console::confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
+    }
+
+    if (shouldGenerateRandomGrades) {
+      Grades_GenerateRandomly(numberOfGradesIsKnown, numGrades, student);
+    } else {
+      Grades_EnterManually(numberOfGradesIsKnown, numGrades, student);
+    }
+
+    students.push_back(student);
+    if (!Console::confirm("Add another student?")) {
+      break;
+    }
+  }
+}
+
+void Data_ReadFromFile(vector<Student::Student> &students) {
+  string extension = "txt";
+  string folderPath = "./data/";
+  string filePath = File::selectFileInFolder(folderPath, extension);
+  if (filePath.empty()) {
+    const bool shouldEnterManually = Console::confirm(
+        "Do you want to enter grades manually instead?:");
+
+    if (shouldEnterManually) {
+      cout << "Switching to manual mode." << endl;
+      Data_EnterManually(students);
+    } else {
+      cout << "Terminating program." << endl;
+    }
+  } else {
+    filePath = folderPath + filePath;
+    cout << "Reading data from \"" << filePath << "\"" << endl;
+    Grades_ReadFromFile(filePath, students);
+  }
 }
 
 int main() {
-  vector<Student> students;
+  vector<Student::Student> students;
 
-  string filePath = "kursiokai.txt";
-  if (shouldReadFromFile(filePath)) {
-    Grades_ReadFromFile(filePath, students);
-  } else {
-    while (true) {
-      Student student;
-      student.firstName = promptForString("Please enter first name: ");
-      student.lastName = promptForString("Please enter last name: ");
+  const bool shouldReadFromFile = Console::confirm(
+      "(y)Read grades from file; (n)Enter grades manaully:");
 
-      const bool numberOfGradesIsKnown = confirm("Do you know the number of grades?");
-      const int numGrades = numberOfGradesIsKnown ? getNumberOfGrades() : 0;
-
-      bool shouldGenerateRandomGrades = false;
-      if (!numberOfGradesIsKnown || numGrades > 0) {
-        shouldGenerateRandomGrades = confirm("Generate RANDOM grades (otherwise, enter grades MANUALLY)?");
-      }
-
-      if (shouldGenerateRandomGrades) {
-        Grades_GenerateRandomly(numberOfGradesIsKnown, numGrades, student);
-      } else {
-        Grades_EnterManually(numberOfGradesIsKnown, numGrades, student);
-      }
-
-      students.push_back(student);
-      if (!confirm("Add another student?")) {
-        break;
-      }
+  try {
+    if (shouldReadFromFile) {
+      Data_ReadFromFile(students);
+    } else {
+      Data_EnterManually(students);
     }
+
+    if (students.size() > 0) {
+      string resultType = getResultType();
+      Student::processStudents(students, resultType);
+
+      cout << endl;
+      Table::printResults(students, resultType);
+      cout << endl;
+    }
+
+    return 0;
+  } catch (std::exception &error) {
+    std::cerr << error.what() << endl;
   }
-
-  string resultType = getResultType();
-  processStudents(students, resultType);
-
-  cout << endl;
-  printResults(students, resultType);
-  cout << endl;
-
-  return 0;
 }

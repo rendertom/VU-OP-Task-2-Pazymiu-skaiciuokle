@@ -4,21 +4,34 @@ Programa yra skirta apskaičiuoti pažymių vidurkį ir/arba medianą.
 
 ## Veikimo principas
 
-Paleidus programą komandinėje eilutėje yra prašoma atlikti keletą veiksmų:
+> Paleidus programą, prašome sekti komandinėje eilutėje nurodytas instrukcijas.
 
-- Pasirinkti, ar duomenis suvesti ranka, ar juos skaityti iš failo `kursiokai.txt`,
-- Pasirinkus įvedimą ranka, prašoma įvesti vardą ir pavardę,
+Paleidus programą komandinėje eilutėje yra prašoma pasirinkti, ar duomenis skaityti **iš failo**, ar **suvesti ranka**.
+
+Pasirinkus duomenų nuskaitymą iš failo, programa ieško `*.txt` failų `./data/` direktorijoje. Aptikus kelis failus, programa siūlo pasirinkti, kurį failą nuskaityti:
+
+```bash
+-> (y)Read grades from file; (n)Enter grades manaully: (y/n): y
+Folder "./data/" contains multiple files. Please select one:
+1: kursiokai.txt
+2: studentai1000000.txt
+3: studentai10000000.txt
+-> Please select a file: (1-3): 1
+Reading data from "./data/kursiokai.txt"
+```
+
+Pasirinkus galimybę duomenis suvesti rankiniu būdų, programa siūlo sekančius pasirinkimus:
+
+- Įvesti vardą ir pavardę,
 - Įvesti namų darbų įvertinimus bei egzamino balą.
 - Po duomenų suvedimo yra apskaičiuojamas įvertinimų vidurkis arba medianas.
 
 > Programa suteikia galimybę generuoti atsitiktinius namų darbų rezultatus bei egzamino balą, bei suvesti daugiau nei vieno studento duomenis.
 
-Paleidus programą, prašome sekti komandinėje eilutėje nurodytus instrukcijas.
-
-Vienas iš galimymų programos eigos variantų yra toks:
+Vienas iš rankiniu būdu suvestos informacijos programos eigos variantų gali būti toks:
 
 ```shell
--> (y)Read grades from file "kursiokai.txt"; (n)Enter grades manaully: (y/n): n
+-> (y)Read grades from file; (n)Enter grades manaully: (y/n): n
 -> Please enter first name: Tomas
 -> Please enter last name: Makaronas
 -> Do you know the number of grades? (y/n): y
@@ -66,7 +79,7 @@ Galutinis vidurkis yra apskaičiuojamas pagal formulę `galutinis = 0.4 * vidurk
 
 ```shell
 cd nuoroda_į_programos_aplanką
-g++ 'main.cpp' -o 'main'
+g++ -std=c++11 include/*.cpp 'main.cpp' -o 'main' && './main'
 ./main
 ```
 
@@ -89,3 +102,11 @@ g++ 'main.cpp' -o 'main'
     - Galimybė skaityti rezultatus iš išorinio failo.
     - Galimybė atspausdinti Vidurkį, Medianą, arba abu iš karto.
     - Spausdinamas sarašas išrikiuojamas abėcėlės tvarka pagal pavardes.
+- [v0.3](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases/tag/v0.3)
+  - pakeista
+    - Optimizuotas nuskaitomo failo apdorojimas, nuskaitant jo turinį į buffer'į.
+    - Optimizuotas ciklo _for_ veikimas, nuskaitant masyvo dydį į kintamąjį.
+    - Reorganizuota failo struktūra, suskaldant pagrindinį failą į smulkesnius failus su antraštėm _header_. Sukurti atskiri _header_ failai: Console.hpp, Definitions.hpp, File.hpp, Math.hpp, RND.hpp, Student.hpp, Table.hpp, Timer.hpp.
+  - pridėta
+    - Išimčių _exceptions_ valdymas.
+    - Failų, esančių `/data/`direktorijoje pasirinkimas nuskaitymui naudojant komandinę eilutę.
