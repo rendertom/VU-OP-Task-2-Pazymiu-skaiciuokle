@@ -9,6 +9,7 @@
 #include "include/File.hpp"
 #include "include/RND.hpp"  // getIntegerInRange
 #include "include/Student.hpp"
+#include "include/Students.hpp"
 #include "include/Table.hpp"
 #include "include/Timer.hpp"
 #include "include/Utils.hpp"
@@ -189,6 +190,38 @@ void Data_GenerateRecords() {
   cout << "done" << endl;
 }
 
+void Data_FilterRecords() {
+  string extension = "txt";
+  string folderPath = "./data/";
+  string fileName = File::selectFileInFolder(folderPath, extension);
+
+  if (fileName.empty()) {
+    return;
+  }
+
+  string filePath = folderPath + fileName;
+  vector<Student::Student> students;
+  cout << "Reading data from \"" << filePath << "\"" << endl;
+  Grades_ReadFromFile(filePath, students);
+
+  if (students.empty()) {
+    throw std::runtime_error("Error: file \"" + filePath + "\" contains no student data");
+  }
+
+  string resultType = RESULT_TYPE_MEAN;
+  cout << "Processing students..." << endl;
+  Student::processStudents(students, resultType);
+
+  vector<Student::Student> losers;
+  cout << "Filtering students..." << endl;
+  Students::filter(students, losers, Student::isLoser);
+
+  string baseName = File::getBaseName(fileName);
+
+  Students::save(losers, folderPath + baseName + " losers.txt");
+  Students::save(students, folderPath + baseName + " winners.txt");
+}
+
 void Data_ReadFromFile(vector<Student::Student> &students) {
   string extension = "txt";
   string folderPath = "./data/";
@@ -212,18 +245,21 @@ void Data_ReadFromFile(vector<Student::Student> &students) {
 
 int main() {
   cout << "1. Generate new records" << endl;
-  cout << "2. Read grades from a file" << endl;
-  cout << "3. Enter grades manually" << endl;
+  cout << "2. Filter records" << endl;
+  cout << "3. Read grades from a file" << endl;
+  cout << "4. Enter grades manually" << endl;
   int selection = Console::promptForInt("Select:", 1, 3);
 
   try {
     if (selection == 1) {
       Data_GenerateRecords();
+    } else if (selection == 2) {
+      Data_FilterRecords();
     } else {
       vector<Student::Student> students;
-      if (selection == 2) {
+      if (selection == 3) {
         Data_ReadFromFile(students);
-      } else if (selection == 3) {
+      } else if (selection == 4) {
         Data_EnterManually(students);
       }
 
