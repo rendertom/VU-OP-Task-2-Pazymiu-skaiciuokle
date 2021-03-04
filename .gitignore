@@ -1,9 +1,13 @@
 main
 main-array
 main-vector
-studentai*.txt
-temp files/
 
 data/*
-.vscode/
 --*.txt
+
+#VSCode
+.vscode/
+
+#CLion
+cmake-build-debug/*
+.idea
