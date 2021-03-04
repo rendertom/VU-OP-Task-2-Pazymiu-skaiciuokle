@@ -4,5 +4,6 @@ main-vector
 studentai*.txt
 temp files/
 
+data/*
 .vscode/
 --*.txt
