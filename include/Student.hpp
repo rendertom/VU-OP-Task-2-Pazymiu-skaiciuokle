@@ -23,6 +23,7 @@ namespace Student {
   };
 
   double findFinalGrade(double, double);
+  bool isLoser(Student &);
   void processStudent(Student *, const string &);
   void processStudents(vector<Student> &, const string &);
 }
