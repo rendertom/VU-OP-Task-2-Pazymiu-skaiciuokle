@@ -1,11 +1,14 @@
 #pragma once
 
 #include <algorithm>  // std::sort
-#include <iomanip>    // std::fixed, left,setprecision, setw
+#include <iomanip>  // std::fixed, left,setprecision, setw
 #include <iostream>
+#include <sstream>  // std:: stringstream,
 #include <string>
 
+#include "Console.hpp"
 #include "Definitions.hpp"
+#include "File.hpp"
 #include "Student.hpp"
 
 using std::cout;
@@ -16,6 +19,7 @@ using std::setprecision;
 using std::setw;
 using std::sort;
 using std::string;
+using std::stringstream;
 
 namespace Table {
   struct Names {
@@ -32,6 +36,7 @@ namespace Table {
     int median = 14 + 1;
   };
 
-  void printResult(Student::Student *, const string &);
-  void printResults(vector<Student::Student> &, const string &);
+  void addHeaderToBuffer(stringstream &, const string &);
+  void addStudentToBuffer(Student::Student *, const string &, stringstream &);
+  void print(vector<Student::Student> &, const string &);
 }
