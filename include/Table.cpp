@@ -48,7 +48,6 @@ void Table::addHeaderToBuffer(stringstream &buffer, const string &resultType) {
 }
 
 void Table::print(vector<Student::Student> &students, const string &resultType) {
-  cout << "start 1" << endl;
   stringstream buffer;
   addHeaderToBuffer(buffer, resultType);
 

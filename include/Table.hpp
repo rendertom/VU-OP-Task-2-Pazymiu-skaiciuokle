@@ -27,6 +27,8 @@ namespace Table {
     string lastName = "Pavarde";
     string mean = "Galutinis Vid.";
     string median = "Galutinis Med.";
+    string homework = "ND";
+    string egzam = "Egz.";
   };
 
   struct Width {
