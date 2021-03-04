@@ -16,6 +16,7 @@
 using std::cout;
 using std::endl;
 using std::ifstream;
+using std::ofstream;
 using std::string;
 using std::stringstream;
 using std::vector;
@@ -26,5 +27,6 @@ namespace File {
   vector<string> getFilenamesInFolder(const string &, const string &);
   bool isFile(const string &);
   bool isFolder(const string &);
+  void saveBuffer(const string &, stringstream &);
   string selectFileInFolder(const string &, const string &);
 }

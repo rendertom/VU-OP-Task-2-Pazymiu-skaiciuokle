@@ -58,6 +58,18 @@ bool File::isFolder(const string &filePath) {
   return false;
 }
 
+void File::saveBuffer(const string &filePath, stringstream &buffer) {
+  ofstream file;
+  file.open(filePath);
+
+  if (!file) {
+    throw std::runtime_error("Error: file \"" + filePath + "\" could not be opened");
+  }
+
+  file << buffer.str();
+  file.close();
+}
+
 string File::selectFileInFolder(const string &folderPath, const string &extension) {
   string fileName;
   if (!fileExists(folderPath)) {
