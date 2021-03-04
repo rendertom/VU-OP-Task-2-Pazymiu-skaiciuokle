@@ -23,6 +23,7 @@ using std::vector;
 
 namespace File {
   bool fileExists(const string &);
+  string getBaseName(const string &);
   stringstream getBuffer(const string &);
   vector<string> getFilenamesInFolder(const string &, const string &);
   bool isFile(const string &);

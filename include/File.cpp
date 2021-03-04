@@ -5,6 +5,12 @@ bool File::fileExists(const string &filePath) {
   return stat(filePath.c_str(), &info) == 0;
 }
 
+string File::getBaseName(const string &fileName) {
+  size_t lastindex = fileName.find_last_of(".");
+  string baseName = fileName.substr(0, lastindex);
+  return baseName;
+}
+
 stringstream File::getBuffer(const string &filePath) {
   ifstream file;
   file.open(filePath);
