@@ -185,10 +185,7 @@ int main() {
     if (students.size() > 0) {
       string resultType = getResultType();
       Student::processStudents(students, resultType);
-
-      cout << endl;
-      Table::printResults(students, resultType);
-      cout << endl;
+      Table::print(students, resultType);
     }
 
     return 0;
