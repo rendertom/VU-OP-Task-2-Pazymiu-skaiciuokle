@@ -12,6 +12,7 @@
 #include "include/Student.hpp"
 #include "include/Table.hpp"
 #include "include/Timer.hpp"
+#include "include/Utils.hpp"
 
 #define GRADE_MIN 1
 #define GRADE_MAX 10
@@ -148,6 +149,47 @@ void Data_EnterManually(vector<Student::Student> &students) {
   }
 }
 
+void Data_GenerateRecords() {
+  int numRecords = Console::promptForInt("How many records:", 1, 10000000);
+
+  struct Table::Names names;
+  int numDigits = Utils::getNumberOfDigits(numRecords);
+  int firstNameWidth = names.firstName.size() + numDigits + 1;
+  int lastNameWidth = names.lastName.size() + numDigits + 1;
+
+  int numHomeworks = RND::getIntegerInRange(5, 20);
+  int homeworkWidth = names.homework.size() + Utils::getNumberOfDigits(numHomeworks) + 1;
+
+  std::stringstream buffer;
+
+  cout << "Buffering records..." << endl;
+  buffer << left
+         << setw(firstNameWidth) << names.firstName
+         << setw(lastNameWidth) << names.lastName;
+
+  for (int i = 1; i <= numHomeworks; i++) {
+    buffer << setw(homeworkWidth) << names.homework + std::to_string(i);
+  }
+
+  buffer << names.egzam << "\n";
+
+  for (int i = 1; i <= numRecords; i++) {
+    buffer << setw(firstNameWidth) << names.firstName + std::to_string(i)
+           << setw(lastNameWidth) << names.lastName + std::to_string(i);
+
+    for (int j = 1; j <= numHomeworks; j++) {
+      buffer << setw(homeworkWidth) << RND::getIntegerInRange(1, 10);
+    }
+
+    buffer << RND::getIntegerInRange(1, 10) << "\n";
+  }
+
+  cout << "Saving file..." << endl;
+  string filePath = "./data/test " + std::to_string(numRecords) + ".txt";
+  File::saveBuffer(filePath, buffer);
+  cout << "done" << endl;
+}
+
 void Data_ReadFromFile(vector<Student::Student> &students) {
   string extension = "txt";
   string folderPath = "./data/";
@@ -170,22 +212,27 @@ void Data_ReadFromFile(vector<Student::Student> &students) {
 }
 
 int main() {
-  vector<Student::Student> students;
-
-  const bool shouldReadFromFile = Console::confirm(
-      "(y)Read grades from file; (n)Enter grades manaully:");
+  cout << "1. Generate new records" << endl;
+  cout << "2. Read grades from a file" << endl;
+  cout << "3. Enter grades manaully" << endl;
+  int selection = Console::promptForInt("Select:", 1, 3);
 
   try {
-    if (shouldReadFromFile) {
-      Data_ReadFromFile(students);
+    if (selection == 1) {
+      Data_GenerateRecords();
     } else {
-      Data_EnterManually(students);
-    }
+      vector<Student::Student> students;
+      if (selection == 2) {
+        Data_ReadFromFile(students);
+      } else if (selection == 3) {
+        Data_EnterManually(students);
+      }
 
-    if (students.size() > 0) {
-      string resultType = getResultType();
-      Student::processStudents(students, resultType);
-      Table::print(students, resultType);
+      if (students.size() > 0) {
+        string resultType = getResultType();
+        Student::processStudents(students, resultType);
+        Table::print(students, resultType);
+      }
     }
 
     return 0;
