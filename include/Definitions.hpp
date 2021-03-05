@@ -1,5 +1,6 @@
 #pragma once
 
+#define DATA_FOLDER "./data/"
 #define GRADE_MIN 1
 #define GRADE_MAX 10
 
