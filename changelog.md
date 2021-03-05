@@ -25,3 +25,7 @@
   - pridėta
     - Išimčių _exceptions_ valdymas.
     - Failų, esančių `/data/`direktorijoje pasirinkimas nuskaitymui naudojant komandinę eilutę.
+- [v0.4](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases/tag/v0.4)
+  - pridėta
+    - Galimybė generuoti naujus studentų sarašų failus.
+    - Galimybė filtruoti studentus ir išsaugoti rezultatus į atskirus failus.
