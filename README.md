@@ -1,8 +1,8 @@
-# Pažymių vidurkio skaičiuoklė
+# Pažymių vidurkio skaičiuoklė 🧮
 
 Programa yra skirta apskaičiuoti pažymių vidurkį ir/arba medianą.
 
-## Veikimo principas
+## 🥤 Veikimo principas
 
 > Paleidus programą, prašome sekti komandinėje eilutėje nurodytas instrukcijas.
 
@@ -19,7 +19,7 @@ Programa yra skirta apskaičiuoti pažymių vidurkį ir/arba medianą.
 3. [Read grades from a file](#read-grades-from-a-file)
 4. [Enter grades manually](#enter-grades-manually)
 
-### Generate new records
+### 📚 Generate new records
 
 Šis metodas skirtas naujų failų generavimui.
 
@@ -49,7 +49,7 @@ VardasXXX  PavardeXXX  3    4    8       6     8
 
 ---
 
-### Filter records
+### 🌪️ Filter records
 
 Šis metodas skirtas atskirti gerai besimokančius studentus nuo prastai besimokančių. Jei studento **vidurkis** yra didesnis arba lygus nei 5, tai jis priskiriamas prie gerai besimokančių, kitu atveju - prie besimokančių prastai.
 
@@ -88,7 +88,7 @@ Gerai besimokinantys studentai išsaugomis faile `XXX winners.txt`, o prastai - 
 
 ---
 
-### Read grades from a file
+### 📂 Read grades from a file
 
 Šis metodas skirtas **vidurkio** arba **mediano** (arba jų abiejų) skaičiavimui iš pasirinkto failo.
 
@@ -126,7 +126,7 @@ VardasXXX  PavardeXXX  6.45            7.00
 
 ---
 
-### Enter grades manually
+### ⌨️ Enter grades manually
 
 Metodas skirtas studento duomenims suvesti rankiniu būdų. Programa siūlo sekančius pasirinkimus:
 
@@ -181,7 +181,7 @@ Jurga       Spurga          4.63           5.00
 
 Galutinis vidurkis yra apskaičiuojamas pagal formulę `galutinis = 0.4 * vidurkis + 0.6 * egzaminas`.
 
-## Programos diegimas ir paleidimas
+## 🚀 Programos diegimas ir paleidimas
 
 - Atsisiųskite programos versiją iš [Releases](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases) aplanko ir ją išsiarchyvuokite,
 - Komandinėje eilutėje įvykdykite sekančius veiksmus:
