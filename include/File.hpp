@@ -1,3 +1,4 @@
+#include <__bit_reference>
 #pragma once
 
 #include <dirent.h>
@@ -26,7 +27,7 @@ namespace File {
   string getBaseName(const string &);
   stringstream getBuffer(const string &);
   vector<string> getFilenamesInFolder(const string &, const string &);
-  bool isFile(const string &);
+  __unused bool isFile(const string &);
   bool isFolder(const string &);
   void saveBuffer(const string &, stringstream &);
   string selectFileInFolder(const string &, const string &);

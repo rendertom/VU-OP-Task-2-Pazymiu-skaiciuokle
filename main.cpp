@@ -11,7 +11,6 @@
 #include "include/Student.hpp"
 #include "include/Students.hpp"
 #include "include/Timer.hpp"
-#include "include/Utils.hpp"
 
 using std::cout;
 using std::endl;
@@ -193,7 +192,7 @@ void Data_FilterRecords() {
 
   cout << "Searching for the first loser...";
   timer.reset();
-  vector<Student::Student>::iterator it = std::find_if(
+  auto it = std::find_if(
       students.begin(), students.end(), Student::isLoser);
   cout << timer.elapsed() << endl;
 
@@ -266,7 +265,7 @@ int main() {
       if (!students.empty()) {
         string resultType = getResultType();
         Student::processStudents(students, resultType);
-        Students::printFormated(students, resultType);
+        Students::printFormatted(students, resultType);
       }
     }
 

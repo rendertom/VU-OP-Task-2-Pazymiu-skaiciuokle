@@ -1,13 +1,13 @@
 #include "File.hpp"
 
 bool File::fileExists(const string &filePath) {
-  struct stat info;
+  struct stat info{};
   return stat(filePath.c_str(), &info) == 0;
 }
 
 string File::getBaseName(const string &fileName) {
-  size_t lastindex = fileName.find_last_of(".");
-  string baseName = fileName.substr(0, lastindex);
+  size_t lastIndex = fileName.find_last_of('.');
+  string baseName = fileName.substr(0, lastIndex);
   return baseName;
 }
 
@@ -31,8 +31,8 @@ vector<string> File::getFilenamesInFolder(const string &folderPath, const string
   struct dirent *entry;
   vector<string> fileNames;
 
-  if (directory != NULL) {
-    while ((entry = readdir(directory)) != NULL) {
+  if (directory != nullptr) {
+    while ((entry = readdir(directory)) != nullptr) {
       string fileName = entry->d_name;
       if (String::hasSuffix(fileName, extension)) {
         fileNames.push_back(fileName);
@@ -44,8 +44,8 @@ vector<string> File::getFilenamesInFolder(const string &folderPath, const string
   return fileNames;
 }
 
-bool File::isFile(const string &filePath) {
-  struct stat info;
+__unused bool File::isFile(const string &filePath) {
+  struct stat info{};
   if (stat(filePath.c_str(), &info) == 0) {
     if (info.st_mode & S_IFREG) {
       return true;
@@ -55,7 +55,7 @@ bool File::isFile(const string &filePath) {
 }
 
 bool File::isFolder(const string &filePath) {
-  struct stat info;
+  struct stat info{};
   if (stat(filePath.c_str(), &info) == 0) {
     if (info.st_mode & S_IFDIR) {
       return true;

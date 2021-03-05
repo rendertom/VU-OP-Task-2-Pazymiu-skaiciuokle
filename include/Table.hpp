@@ -10,7 +10,7 @@ namespace Table {
     std::string mean = "Galutinis Vid.";
     std::string median = "Galutinis Med.";
     std::string homework = "ND";
-    std::string egzam = "Egz.";
+    std::string exam = "Egz.";
   };
 
   struct Width {

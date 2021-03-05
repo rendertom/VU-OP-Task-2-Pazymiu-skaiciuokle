@@ -22,7 +22,7 @@ void Student::processStudent(Student *student, const string &resultType) {
 }
 
 void Student::processStudents(vector<Student> &students, const string &resultType) {
-  for (int i = 0, il = students.size(); i < il; i++) {
-    processStudent(&students[i], resultType);
+  for (auto & student : students) {
+    processStudent(&student, resultType);
   }
 }

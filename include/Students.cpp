@@ -1,6 +1,6 @@
 #include "Students.hpp"
 
-void addFormatedStudentToBuffer(Student::Student *student, const string &resultType, stringstream &buffer) {
+void addFormattedStudentToBuffer(Student::Student *student, const string &resultType, stringstream &buffer) {
   struct Table::Width width;
 
   buffer << left
@@ -20,7 +20,7 @@ void addFormatedStudentToBuffer(Student::Student *student, const string &resultT
   buffer << "\n";
 }
 
-void addFormatedHeaderToBuffer(stringstream &buffer, const string &resultType) {
+void addFormattedHeaderToBuffer(stringstream &buffer, const string &resultType) {
   struct Table::Width width;
   struct Table::Names names;
 
@@ -60,7 +60,7 @@ void addHeaderToBuffer(stringstream &buffer, int numGrades) {
     buffer << setw(gradeWidth) << names.homework + std::to_string(i);
   }
 
-  buffer << names.egzam << "\n";
+  buffer << names.exam << "\n";
 }
 
 void addStudentToBuffer(Student::Student &student, stringstream &buffer) {
@@ -110,22 +110,22 @@ void Students::generateRecords(int numStudents) {
   cout << timer.elapsed() << endl;
 }
 
-void Students::printFormated(vector<Student::Student> &students, const string &resultType) {
+void Students::printFormatted(vector<Student::Student> &students, const string &resultType) {
   stringstream buffer;
-  addFormatedHeaderToBuffer(buffer, resultType);
+  addFormattedHeaderToBuffer(buffer, resultType);
 
   cout << "Sorting students by name..." << endl;
   sortByNameAscending(students);
 
   cout << "Buffering students..." << endl;
   for (int i = 0, il = students.size(); i < il; i++) {
-    addFormatedStudentToBuffer(&students[i], resultType, buffer);
+    addFormattedStudentToBuffer(&students[i], resultType, buffer);
   }
 
   bool shouldSaveFile = Console::confirm("Print to (y)file or (n)console:");
 
   if (shouldSaveFile) {
-    string filePath = string(DATA_FOLDER) + "Formated.txt";
+    string filePath = string(DATA_FOLDER) + "Formatted.txt";
     cout << "Saving file..." << endl;
     File::saveBuffer(filePath, buffer);
     cout << "File saved" << endl;

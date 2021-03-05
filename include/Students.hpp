@@ -29,7 +29,7 @@ using std::vector;
 
 namespace Students {
   void generateRecords(int);
-  void printFormated(vector<Student::Student> &, const string &);
+  void printFormatted(vector<Student::Student> &, const string &);
   void save(vector<Student::Student> &, const string &);
   void sortByFinalGradeDescending(vector<Student::Student> &);
   void sortByNameAscending(vector<Student::Student> &);
