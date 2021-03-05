@@ -5,8 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(include)
 
-add_executable(
-        VU_OP_Task_2_Pazymiu_skaiciuokle
+add_executable(VU_OP_Task_2_Pazymiu_skaiciuokle
         include/Console.cpp
         include/Console.hpp
         include/Definitions.hpp
@@ -20,11 +19,11 @@ add_executable(
         include/String.hpp
         include/Student.cpp
         include/Student.hpp
-        include/Table.cpp
+        include/Students.cpp
+        include/Students.hpp
         include/Table.hpp
         include/Timer.cpp
         include/Timer.hpp
         include/Utils.cpp
         include/Utils.hpp
-        main.cpp
-)
+        main.cpp)
