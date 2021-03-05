@@ -6,21 +6,129 @@ Programa yra skirta apskaičiuoti pažymių vidurkį ir/arba medianą.
 
 > Paleidus programą, prašome sekti komandinėje eilutėje nurodytas instrukcijas.
 
-Paleidus programą komandinėje eilutėje yra prašoma pasirinkti, ar duomenis skaityti **iš failo**, ar **suvesti ranka**.
-
-Pasirinkus duomenų nuskaitymą iš failo, programa ieško `*.txt` failų `./data/` direktorijoje. Aptikus kelis failus, programa siūlo pasirinkti, kurį failą nuskaityti:
-
 ```bash
--> (y)Read grades from file; (n)Enter grades manaully: (y/n): y
-Folder "./data/" contains multiple files. Please select one:
-1: kursiokai.txt
-2: studentai1000000.txt
-3: studentai10000000.txt
--> Please select a file: (1-3): 1
-Reading data from "./data/kursiokai.txt"
+1. Generate new records
+2. Filter records
+3. Read grades from a file
+4. Enter grades manually
+-> Select: (1-4):
 ```
 
-Pasirinkus galimybę duomenis suvesti rankiniu būdų, programa siūlo sekančius pasirinkimus:
+1. [Generate new records](#generate-new-records)
+2. [Filter records](#filter-records)
+3. [Read grades from a file](#read-grades-from-a-file)
+4. [Enter grades manually](#enter-grades-manually)
+
+### Generate new records
+
+Šis metodas skirtas naujų failų generavimui.
+
+```bash
+-> Select: (1-4): 1
+-> How many records: (1-10000000): 1000
+```
+
+Po įvedimo `./data/` direktorijoje yra sukuriamas naujas failas `Random XXX.txt`, kur `XXX` yra užklausos dydis.
+Jame sugeneruojami studentų įrašai su 10 atsitiktinių namų darbų įvertinimų bei egzamino pažymiu.
+
+```bash
+Vardas     Pavarde     ND1  ND2  ND3 ... ND10  Egz.
+Vardas1    Pavarde1    2    8    6       9     3
+Vardas2    Pavarde2    1    2    3       7     10
+...
+VardasXXX  PavardeXXX  3    4    8       6     8
+```
+
+Žemiau pateikti testavimo atvejai. Laiko matavimas pateiktas sekundėmis.
+
+| Description        | 1000    | 10.000  | 100.000 | 1.000.000 | 10.000.000 |
+| :----------------- | :------ | :------ | :------ | :-------- | :--------- |
+| Buffering students | 0.00344 | 0.02834 | 0.23464 | 2.27576   | 23.217     |
+| Saving buffer      | 0.00049 | 0.00163 | 0.01616 | 0.13867   | 1.56499    |
+| **Total**          | 0.00398 | 0.03003 | 0.25170 | 2.42024   | 24.8665    |
+
+---
+
+### Filter records
+
+Šis metodas skirtas atskirti gerai besimokančius studentus nuo prastai besimokančių. Jei studento **vidurkis** yra didesnis arba lygus nei 5, tai jis priskiriamas prie gerai besimokančių, kitu atveju - prie besimokančių prastai.
+
+```bash
+-> Select: (1-4): 2
+Folder "./data/" contains multiple files. Please select one:
+1: Studentai 10.000.txt
+2: Studentai 100.000.txt
+3: Studentai 1000.000.txt
+4: Studentai 10.000.000.txt
+-> Please select a file: (1-4): 1
+```
+
+Gerai besimokinantys studentai išsaugomis faile `XXX winners.txt`, o prastai - `XXX losers.txt`, kur `XXX` yra šakninis pasirinkto failo pavadinimas.
+
+Žemiau pateikti testavimo atvejai. Laiko matavimas pateiktas sekundėmis.
+
+| Description                    | 10.000  | 100.000 | 1.000.000 | 10.000.000 |
+| :----------------------------- | :------ | :------ | :-------- | :--------- |
+| **Reading source file:**       |         |         |           |            |
+| Buffering file                 | 0.01779 | 0.18051 | 0.80284   | 7.6818     |
+| Processing buffer              | 0.06277 | 0.71893 | 3.57932   | 36.7005    |
+| Processing students            | 0.00024 | 0.00234 | 0.03426   | 0.27276    |
+| **Filtering:**                 |         |         |           |            |
+| Sorting students (descending)  | 0.00076 | 0.01204 | 0.09973   | 1.02805    |
+| Searching for the first loser  | 2.9e-05 | 0.00164 | 0.00378   | 0.04699    |
+| Copying losers to a new vector | 0.00069 | 0.01164 | 0.07389   | 0.92133    |
+| Resizing original vector       | 0.00036 | 0.01485 | 0.09852   | 1.26067    |
+| **Writing losers to file:**    |         |         |           |            |
+| Buffering students             | 0.01385 | 0.15100 | 0.59066   | 5.91808    |
+| Writing buffer to file         | 0.00105 | 0.01275 | 0.04718   | 0.49510    |
+| **Writing winners to file:**   |         |         |           |            |
+| Buffering students             | 0.01886 | 0.21706 | 0.86465   | 8.9698     |
+| Writing buffer to file         | 0.00181 | 0.01645 | 0.06368   | 0.68474    |
+| **Total**                      | 0.11841 | 1.34499 | 6.27838   | 64.1041    |
+
+---
+
+### Read grades from a file
+
+Šis metodas skirtas **vidurkio** arba **mediano** (arba jų abiejų) skaičiavimui iš pasirinkto failo.
+
+Programa ieško `*.txt` failų `./data/` direktorijoje. Aptikus kelis failus, programa siūlo pasirinkti, kurį failą nuskaityti:
+
+```bash
+-> Select: (1-4): 3
+Folder "./data/" contains multiple files. Please select one:
+1: Studentai 10.000.txt
+2: Studentai 100.000.txt
+3: Studentai 1000.000.txt
+4: Studentai 10.000.000.txt
+-> Please select a file: (1-4): 1
+Reading data from "./data/Studentai 10.000.txt"
+-> Choose what to calculate: (1)Mean, (2)Median, (3)Both: (1-3): 3
+```
+
+Po sėkmindo skaičiavimo duomenis galima automatiškai išsaugoti į failą, arba pateikti juos į konsolę:
+
+```bash
+-> Choose what to calculate: (1)Mean, (2)Median, (3)Both: (1-3): 3
+-> Print to (y)file or (n)console: (y/n): y
+```
+
+Pasirinkus išsaugojimą į failą, rezultatas atrodo taip:
+
+```bash
+Vardas     Pavarde     Galutinis Vid.  Galutinis Med.
+-----------------------------------------------------
+Vardas1    Pavarde1    3.43            6.00
+Vardas10   Pavarde10   7.23            4.00
+...
+VardasXXX  PavardeXXX  6.45            7.00
+```
+
+---
+
+### Enter grades manually
+
+Metodas skirtas studento duomenims suvesti rankiniu būdų. Programa siūlo sekančius pasirinkimus:
 
 - Įvesti vardą ir pavardę,
 - Įvesti namų darbų įvertinimus bei egzamino balą.
@@ -31,7 +139,7 @@ Pasirinkus galimybę duomenis suvesti rankiniu būdų, programa siūlo sekančiu
 Vienas iš rankiniu būdu suvestos informacijos programos eigos variantų gali būti toks:
 
 ```shell
--> (y)Read grades from file; (n)Enter grades manaully: (y/n): n
+-> Select: (1-4): 3
 -> Please enter first name: Tomas
 -> Please enter last name: Makaronas
 -> Do you know the number of grades? (y/n): y
@@ -58,6 +166,7 @@ Enter grade [3] (type -1 to quit): -1
 Enter exam grade: 8
 -> Add another student? (y/n): n
 -> Choose what to calculate: (1)Mean, (2)Median, (3)Both: (1-3): 3
+-> Print to (y)file or (n)console: (y/n): n
 ```
 
 Po sėkmingo duomenų suvedimo į terminalo langą išvedami rezultatai panašia forma:
