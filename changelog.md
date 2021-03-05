@@ -1,0 +1,27 @@
+# Changelog
+
+- [v0.1](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases/tag/v0.1) - Pradinė programos versija
+- [v0.1.1](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases/tag/v0.1.1)
+  - pataisyta
+    - Vidurkio ir Mediano skaičiavimas, kai nėra įvesta pažymių.
+    - Nerodo pažymių įvedimo formos užklausos (random/manual), jei vartotojas neturi pažymių.
+  - pašalinta
+    - VSCode IDE nustatymai (.vscode > settings.json).
+    - `std::cout` teksto spalvos nustatymai.
+- [v0.2](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases/tag/v0.2)
+  - pataisyta
+    - Nerodo atsitiktinės (random) pažymių įvedimo užklausos, kai pažymių skaičius yra nežinomas.
+  - pašalinta
+    - `C` tipo masyvo programos realizcija: pašalintas failas `main-array.cpp`, o failas `main-vector.cpp` pervadintas į `main.cpp`.
+  - pridėta
+    - Galimybė skaityti rezultatus iš išorinio failo.
+    - Galimybė atspausdinti Vidurkį, Medianą, arba abu iš karto.
+    - Spausdinamas sarašas išrikiuojamas abėcėlės tvarka pagal pavardes.
+- [v0.3](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases/tag/v0.3)
+  - pakeista
+    - Optimizuotas nuskaitomo failo apdorojimas, nuskaitant jo turinį į buffer'į.
+    - Optimizuotas ciklo _for_ veikimas, nuskaitant masyvo dydį į kintamąjį.
+    - Reorganizuota failo struktūra, suskaldant pagrindinį failą į smulkesnius failus su antraštėm _header_. Sukurti atskiri _header_ failai: Console.hpp, Definitions.hpp, File.hpp, Math.hpp, RND.hpp, Student.hpp, Table.hpp, Timer.hpp.
+  - pridėta
+    - Išimčių _exceptions_ valdymas.
+    - Failų, esančių `/data/`direktorijoje pasirinkimas nuskaitymui naudojant komandinę eilutę.
