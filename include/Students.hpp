@@ -13,6 +13,7 @@
 #include "RND.hpp"
 #include "Student.hpp"
 #include "Table.hpp"
+#include "Timer.hpp"
 #include "Utils.hpp"
 
 using std::cout;

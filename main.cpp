@@ -89,10 +89,12 @@ void Grades_ReadFromFile(const string &filePath, vector<Student::Student> &stude
   Timer timer;
   timer.start();
 
+  cout << "Buffering file...";
   stringstream buffer = File::getBuffer(filePath);
-  cout << "Buffering time: " << timer.elapsed() << endl;
-  timer.reset();
+  cout << timer.elapsed() << endl;
 
+  timer.reset();
+  cout << "Processing buffer...";
   string line;
   getline(buffer, line);
   while (getline(buffer, line)) {
@@ -112,7 +114,7 @@ void Grades_ReadFromFile(const string &filePath, vector<Student::Student> &stude
     students.push_back(student);
   }
 
-  cout << "Reading data from file took " << timer.elapsed() << endl;
+  cout << timer.elapsed() << endl;
 }
 
 void Data_EnterManually(vector<Student::Student> &students) {
@@ -147,54 +149,82 @@ void Data_EnterManually(vector<Student::Student> &students) {
 
 void Data_GenerateRecords() {
   const int numRecords = Console::promptForInt("How many records:", 1, 10000000);
+
+  Timer timer;
+  timer.start();
   Students::generateRecords(numRecords);
+  cout << "Total time: " << timer.elapsed() << endl;
 }
 
 void Data_FilterRecords() {
   string extension = "txt";
-  string folderPath = "./data/";
+  string folderPath = DATA_FOLDER;
   string fileName = File::selectFileInFolder(folderPath, extension);
 
   if (fileName.empty()) {
     return;
   }
 
+  Timer timer;
+  Timer timeTotal;
   string filePath = folderPath + fileName;
   vector<Student::Student> students;
-  cout << "Reading data from \"" << filePath << "\"" << endl;
+
+  timeTotal.reset();
+  timer.reset();
+  cout << "Reading data from \"" << fileName << "\"..." << endl;
   Grades_ReadFromFile(filePath, students);
+  cout << "Reading data from \"" << fileName << "\"..." << timer.elapsed() << endl;
 
   if (students.empty()) {
     throw std::runtime_error("Error: file \"" + filePath + "\" contains no student data");
   }
 
   string resultType = RESULT_TYPE_MEAN;
-  cout << "Processing students..." << endl;
+  cout << "Processing students...";
+  timer.reset();
   Student::processStudents(students, resultType);
+  cout << timer.elapsed() << endl;
 
-  cout << "Sorting students descending..." << endl;
+  cout << "Sorting students by final grade (descending)...";
+  timer.reset();
   Students::sortByFinalGradeDescending(students);
+  cout << timer.elapsed() << endl;
 
-  cout << "Searching for first loser..." << endl;
+  cout << "Searching for the first loser...";
+  timer.reset();
   vector<Student::Student>::iterator it = std::find_if(
       students.begin(), students.end(), Student::isLoser);
+  cout << timer.elapsed() << endl;
 
-  cout << "Copying losers to new vector..." << endl;
+  cout << "Copying all the losers to a new vector...";
+  timer.reset();
   vector<Student::Student> losers(students.end() - it);
   std::copy(it, students.end(), losers.begin());
+  cout << timer.elapsed() << endl;
 
-  cout << "Resizing original vector..." << endl;
+  cout << "Resizing original vector...";
+  timer.reset();
   students.resize(it - students.begin());
+  cout << timer.elapsed() << endl;
 
-  cout << "Writing to files..." << endl;
   string baseName = File::getBaseName(fileName);
+  cout << "Writing losers to file..." << endl;
+  timer.reset();
   Students::save(losers, folderPath + baseName + " losers.txt");
+  cout << "Writing losers to file..." << timer.elapsed() << endl;
+
+  cout << "Writing winners to file..." << endl;
+  timer.reset();
   Students::save(students, folderPath + baseName + " winners.txt");
+  cout << "Writing winners to file..." << timer.elapsed() << endl;
+
+  cout << "Total time: " << timeTotal.elapsed() << endl;
 }
 
 void Data_ReadFromFile(vector<Student::Student> &students) {
   string extension = "txt";
-  string folderPath = "./data/";
+  string folderPath = DATA_FOLDER;
   string filePath = File::selectFileInFolder(folderPath, extension);
   if (filePath.empty()) {
     const bool shouldEnterManually = Console::confirm(
