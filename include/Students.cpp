@@ -92,20 +92,6 @@ void addRandomStudentsToBuffer(stringstream &buffer, int numRecords, int numGrad
   }
 }
 
-void Students::filter(vector<Student::Student> &students,
-                      vector<Student::Student> &filtered,
-                      bool (*callback)(Student::Student &)) {
-  vector<Student::Student>::iterator it = students.begin();
-  while (it != students.end()) {
-    if (callback(*it)) {
-      filtered.push_back(*it);
-      it = students.erase(it);
-    } else {
-      it++;
-    }
-  }
-}
-
 void Students::generateRecords(int numRecords) {
   const int numGrades = RND::getIntegerInRange(5, 20);
   std::stringstream buffer;
@@ -124,13 +110,8 @@ void Students::printFormated(vector<Student::Student> &students, const string &r
   stringstream buffer;
   addFormatedHeaderToBuffer(buffer, resultType);
 
-  cout << "Sorting students..." << endl;
-  sort(students.begin(), students.end(),
-       [](const Student::Student &a, const Student::Student &b) {
-         return a.lastName != b.lastName
-                    ? a.lastName < b.lastName
-                    : a.firstName < b.firstName;
-       });
+  cout << "Sorting students by name..." << endl;
+  sortByNameAscending(students);
 
   cout << "Buffering students..." << endl;
   for (int i = 0, il = students.size(); i < il; i++) {
@@ -162,4 +143,20 @@ void Students::save(vector<Student::Student> &students, const string &filePath) 
   cout << "Saving file..." << endl;
   File::saveBuffer(filePath, buffer);
   cout << "done" << endl;
+}
+
+void Students::sortByFinalGradeDescending(vector<Student::Student> &students) {
+  sort(students.begin(), students.end(),
+       [](const Student::Student &a, const Student::Student &b) {
+         return a.finalGrade > b.finalGrade;
+       });
+}
+
+void Students::sortByNameAscending(vector<Student::Student> &students) {
+  sort(students.begin(), students.end(),
+       [](const Student::Student &a, const Student::Student &b) {
+         return a.lastName != b.lastName
+                    ? a.lastName < b.lastName
+                    : a.firstName < b.firstName;
+       });
 }

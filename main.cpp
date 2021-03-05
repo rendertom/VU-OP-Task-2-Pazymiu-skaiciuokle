@@ -172,12 +172,22 @@ void Data_FilterRecords() {
   cout << "Processing students..." << endl;
   Student::processStudents(students, resultType);
 
-  vector<Student::Student> losers;
-  cout << "Filtering students..." << endl;
-  Students::filter(students, losers, Student::isLoser);
+  cout << "Sorting students descending..." << endl;
+  Students::sortByFinalGradeDescending(students);
 
+  cout << "Searching for first loser..." << endl;
+  vector<Student::Student>::iterator it = std::find_if(
+      students.begin(), students.end(), Student::isLoser);
+
+  cout << "Copying losers to new vector..." << endl;
+  vector<Student::Student> losers(students.end() - it);
+  std::copy(it, students.end(), losers.begin());
+
+  cout << "Resizing original vector..." << endl;
+  students.resize(it - students.begin());
+
+  cout << "Writing to files..." << endl;
   string baseName = File::getBaseName(fileName);
-
   Students::save(losers, folderPath + baseName + " losers.txt");
   Students::save(students, folderPath + baseName + " winners.txt");
 }

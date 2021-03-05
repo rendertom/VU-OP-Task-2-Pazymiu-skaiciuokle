@@ -27,10 +27,9 @@ using std::stringstream;
 using std::vector;
 
 namespace Students {
-  void filter(vector<Student::Student> &,
-              vector<Student::Student> &,
-              bool (*callback)(Student::Student &));
   void generateRecords(int);
   void printFormated(vector<Student::Student> &, const string &);
   void save(vector<Student::Student> &, const string &);
+  void sortByFinalGradeDescending(vector<Student::Student> &);
+  void sortByNameAscending(vector<Student::Student> &);
 }
