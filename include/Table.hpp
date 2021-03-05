@@ -1,34 +1,16 @@
 #pragma once
 
-#include <algorithm>  // std::sort
-#include <iomanip>  // std::fixed, left,setprecision, setw
 #include <iostream>
-#include <sstream>  // std:: stringstream,
 #include <string>
-
-#include "Console.hpp"
-#include "Definitions.hpp"
-#include "File.hpp"
-#include "Student.hpp"
-
-using std::cout;
-using std::endl;
-using std::fixed;
-using std::left;
-using std::setprecision;
-using std::setw;
-using std::sort;
-using std::string;
-using std::stringstream;
 
 namespace Table {
   struct Names {
-    string firstName = "Vardas";
-    string lastName = "Pavarde";
-    string mean = "Galutinis Vid.";
-    string median = "Galutinis Med.";
-    string homework = "ND";
-    string egzam = "Egz.";
+    std::string firstName = "Vardas";
+    std::string lastName = "Pavarde";
+    std::string mean = "Galutinis Vid.";
+    std::string median = "Galutinis Med.";
+    std::string homework = "ND";
+    std::string egzam = "Egz.";
   };
 
   struct Width {
@@ -37,8 +19,4 @@ namespace Table {
     int mean = 14 + 1;
     int median = 14 + 1;
   };
-
-  void addHeaderToBuffer(stringstream &, const string &);
-  void addStudentToBuffer(Student::Student *, const string &, stringstream &);
-  void print(vector<Student::Student> &, const string &);
 }
