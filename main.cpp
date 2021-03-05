@@ -218,7 +218,7 @@ int main() {
   cout << "2. Filter records" << endl;
   cout << "3. Read grades from a file" << endl;
   cout << "4. Enter grades manually" << endl;
-  int selection = Console::promptForInt("Select:", 1, 3);
+  int selection = Console::promptForInt("Select:", 1, 4);
 
   try {
     if (selection == 1) {
