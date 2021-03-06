@@ -7,7 +7,7 @@ void printFilenames(vector<string> &fileNames) {
 }
 
 bool File::fileExists(const string &filePath) {
-  struct stat info{};
+  struct stat info {};
   return stat(filePath.c_str(), &info) == 0;
 }
 
@@ -51,7 +51,7 @@ vector<string> File::getFilenamesInFolder(const string &folderPath, const string
 }
 
 __unused bool File::isFile(const string &filePath) {
-  struct stat info{};
+  struct stat info {};
   if (stat(filePath.c_str(), &info) == 0) {
     if (info.st_mode & S_IFREG) {
       return true;
@@ -61,7 +61,7 @@ __unused bool File::isFile(const string &filePath) {
 }
 
 bool File::isFolder(const string &filePath) {
-  struct stat info{};
+  struct stat info {};
   if (stat(filePath.c_str(), &info) == 0) {
     if (info.st_mode & S_IFDIR) {
       return true;
