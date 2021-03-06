@@ -19,7 +19,7 @@ double Math::findMedian(vector<int> &array) {
     return 0;
   }
 
-  sort(array.begin(), array.end());
+  std::sort(array.begin(), array.end());
 
   const int arraySize = array.size();
   const bool isOddNumber = arraySize % 2 != 0;

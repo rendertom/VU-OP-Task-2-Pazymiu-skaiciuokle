@@ -2,7 +2,7 @@
 
 void printFilenames(vector<string> &fileNames) {
   for (int i = 0, il = fileNames.size(); i < il; i++) {
-    cout << i + 1 << ": " << fileNames[i] << endl;
+    std::cout << i + 1 << ": " << fileNames[i] << std::endl;
   }
 }
 
@@ -18,7 +18,7 @@ string File::getBaseName(const string &fileName) {
 }
 
 stringstream File::getBuffer(const string &filePath) {
-  ifstream file;
+  std::ifstream file;
   file.open(filePath);
 
   if (!file) {
@@ -71,7 +71,7 @@ bool File::isFolder(const string &filePath) {
 }
 
 void File::saveBuffer(const string &filePath, stringstream &buffer) {
-  ofstream file;
+  std::ofstream file;
   file.open(filePath);
 
   if (!file) {
@@ -85,20 +85,20 @@ void File::saveBuffer(const string &filePath, stringstream &buffer) {
 string File::selectFileInFolder(const string &folderPath, const string &extension) {
   string fileName;
   if (!fileExists(folderPath)) {
-    cout << "Folder \"" << folderPath << "\" does not exist." << endl;
+    std::cout << "Folder \"" << folderPath << "\" does not exist." << std::endl;
   } else if (!isFolder(folderPath)) {
-    cout << "\"" << folderPath << "\" is not a folder." << endl;
+    std::cout << "\"" << folderPath << "\" is not a folder." << std::endl;
   } else {
     vector<string> fileNames = getFilenamesInFolder(folderPath, extension);
     int numFiles = fileNames.size();
     if (numFiles == 0) {
-      cout << "Folder \"" << folderPath << "\" contains no files with extension \"" << extension << "\"." << endl;
+      std::cout << "Folder \"" << folderPath << "\" contains no files with extension \"" << extension << "\"." << std::endl;
     } else if (numFiles == 1) {
       fileName = fileNames[0];
     } else {
       std::sort(fileNames.begin(), fileNames.end());
 
-      cout << "Folder \"" << folderPath << "\" contains multiple files. Please select one:" << endl;
+      std::cout << "Folder \"" << folderPath << "\" contains multiple files. Please select one:" << std::endl;
       printFilenames(fileNames);
 
       int index = Console::promptForInt("Please select a file:", 1, numFiles);
@@ -113,24 +113,24 @@ vector<string> File::selectFilesInFolder(const string &folderPath, const string 
   vector<string> selectedFileNames;
 
   if (!fileExists(folderPath)) {
-    cout << "Folder \"" << folderPath << "\" does not exist." << endl;
+    std::cout << "Folder \"" << folderPath << "\" does not exist." << std::endl;
   } else if (!isFolder(folderPath)) {
-    cout << "\"" << folderPath << "\" is not a folder." << endl;
+    std::cout << "\"" << folderPath << "\" is not a folder." << std::endl;
   } else {
     vector<string> fileNames = getFilenamesInFolder(folderPath, extension);
     int numFiles = fileNames.size();
     if (numFiles == 0) {
-      cout << "Folder \"" << folderPath << "\" contains no files with extension \"" << extension << "\"." << endl;
+      std::cout << "Folder \"" << folderPath << "\" contains no files with extension \"" << extension << "\"." << std::endl;
     } else if (numFiles == 1) {
       selectedFileNames.push_back(fileNames[0]);
     } else {
       std::sort(fileNames.begin(), fileNames.end());
-      cout << "Folder \"" << folderPath << "\" contains multiple files. Please select some:" << endl;
+      std::cout << "Folder \"" << folderPath << "\" contains multiple files. Please select some:" << std::endl;
 
       printFilenames(fileNames);
       vector<int> numbers = Console::promptForInts("Please select some files:", 1, fileNames.size());
       for (int i = 0, il = numbers.size(); i < il; i++) {
-        selectedFileNames.push_back(fileNames[numbers[i - 1]]);
+        selectedFileNames.push_back(fileNames[numbers[i] - 1]);
       }
     }
   }

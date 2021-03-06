@@ -1,18 +1,12 @@
 #pragma once
 
 #include <iostream>
-#include <limits>  // std::numeric_limits
-#include <sstream>
+#include <limits>   // std::numeric_limits
+#include <sstream>  // std::stringstream
 #include <string>
 #include <vector>
 
-using std::cin;
-using std::cout;
-using std::endl;
-using std::numeric_limits;
-using std::streamsize;
 using std::string;
-using std::stringstream;
 using std::vector;
 
 namespace Console {

@@ -3,7 +3,6 @@
 #include <algorithm>  // std::sort
 #include <vector>
 
-using std::sort;
 using std::vector;
 
 namespace Math {
