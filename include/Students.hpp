@@ -32,6 +32,7 @@ namespace Students {
   void filter(const string &);
   void generateRecords(int);
   void printFormatted(vector<Student::Student> &, const string &);
+  void processStudents(vector<Student::Student> &, const string &);
   void readFromFile(const string &, vector<Student::Student> &);
   void save(vector<Student::Student> &, const string &);
   void sortByFinalGradeDescending(vector<Student::Student> &);

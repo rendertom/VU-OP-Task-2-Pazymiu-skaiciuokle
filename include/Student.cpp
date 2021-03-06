@@ -20,9 +20,3 @@ void Student::processStudent(Student *student, const string &resultType) {
     student->medianGrade = Math::findMedian(student->grades);
   }
 }
-
-void Student::processStudents(vector<Student> &students, const string &resultType) {
-  for (auto & student : students) {
-    processStudent(&student, resultType);
-  }
-}

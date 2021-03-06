@@ -110,7 +110,7 @@ void Students::filter(const string &fileName) {
   string resultType = RESULT_TYPE_MEAN;
   cout << "Processing students...";
   timer.reset();
-  Student::processStudents(students, resultType);
+  Students::processStudents(students, resultType);
   cout << timer.elapsed() << endl;
 
   cout << "Sorting students by final grade (descending)...";
@@ -194,6 +194,12 @@ void Students::printFormatted(vector<Student::Student> &students, const string &
     cout << "File saved" << endl;
   } else {
     cout << buffer.str() << endl;
+  }
+}
+
+void Students::processStudents(vector<Student::Student> &students, const string &resultType) {
+  for (auto &student : students) {
+    Student::processStudent(&student, resultType);
   }
 }
 

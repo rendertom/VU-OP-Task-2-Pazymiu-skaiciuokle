@@ -101,9 +101,9 @@ void Data_FilterRecords() {
   cout << std::fixed << std::setprecision(int(TIME_PRECISION));
 
   Timer timer;
-  for (auto & fileName : fileNames) {
+  for (int i = 0; i < numFilenames; i++) {
     timer.reset();
-    Students::filter(fileName);
+    Students::filter(fileNames[i]);
     cout << "Total time: " << timer.elapsed() << endl;
     cout << "----------------------" << endl;
   }
@@ -152,7 +152,7 @@ int main() {
 
       if (!students.empty()) {
         string resultType = getResultType();
-        Student::processStudents(students, resultType);
+        Students::processStudents(students, resultType);
         Students::printFormatted(students, resultType);
       }
     }
