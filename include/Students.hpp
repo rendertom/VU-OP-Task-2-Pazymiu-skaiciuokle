@@ -1,6 +1,6 @@
 #pragma once
 
-#include <algorithm>  // std::sort
+#include <algorithm>  // std::sort, copy
 #include <iomanip>    // std::fixed, left,setprecision, setw
 #include <iostream>
 #include <sstream>  // std:: stringstream,
