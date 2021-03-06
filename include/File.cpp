@@ -1,5 +1,11 @@
 #include "File.hpp"
 
+void printFilenames(vector<string> &fileNames) {
+  for (int i = 0, il = fileNames.size(); i < il; i++) {
+    cout << i + 1 << ": " << fileNames[i] << endl;
+  }
+}
+
 bool File::fileExists(const string &filePath) {
   struct stat info{};
   return stat(filePath.c_str(), &info) == 0;
@@ -93,9 +99,7 @@ string File::selectFileInFolder(const string &folderPath, const string &extensio
       std::sort(fileNames.begin(), fileNames.end());
 
       cout << "Folder \"" << folderPath << "\" contains multiple files. Please select one:" << endl;
-      for (int i = 0; i < numFiles; i++) {
-        cout << i + 1 << ": " << fileNames[i] << endl;
-      }
+      printFilenames(fileNames);
 
       int index = Console::promptForInt("Please select a file:", 1, numFiles);
       fileName = fileNames[index - 1];
@@ -103,4 +107,33 @@ string File::selectFileInFolder(const string &folderPath, const string &extensio
   }
 
   return fileName;
+}
+
+vector<string> File::selectFilesInFolder(const string &folderPath, const string &extension) {
+  vector<string> selectedFileNames;
+
+  if (!fileExists(folderPath)) {
+    cout << "Folder \"" << folderPath << "\" does not exist." << endl;
+  } else if (!isFolder(folderPath)) {
+    cout << "\"" << folderPath << "\" is not a folder." << endl;
+  } else {
+    vector<string> fileNames = getFilenamesInFolder(folderPath, extension);
+    int numFiles = fileNames.size();
+    if (numFiles == 0) {
+      cout << "Folder \"" << folderPath << "\" contains no files with extension \"" << extension << "\"." << endl;
+    } else if (numFiles == 1) {
+      selectedFileNames.push_back(fileNames[0]);
+    } else {
+      std::sort(fileNames.begin(), fileNames.end());
+      cout << "Folder \"" << folderPath << "\" contains multiple files. Please select some:" << endl;
+
+      printFilenames(fileNames);
+      vector<int> numbers = Console::promptForInts("Please select some files:", 1, fileNames.size());
+      for (int i = 0, il = numbers.size(); i < il; i++) {
+        selectedFileNames.push_back(fileNames[numbers[i - 1]]);
+      }
+    }
+  }
+
+  return selectedFileNames;
 }

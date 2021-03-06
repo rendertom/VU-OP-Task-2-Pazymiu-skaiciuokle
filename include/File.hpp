@@ -31,4 +31,5 @@ namespace File {
   bool isFolder(const string &);
   void saveBuffer(const string &, stringstream &);
   string selectFileInFolder(const string &, const string &);
+  vector<string> selectFilesInFolder(const string &, const string &);
 }
