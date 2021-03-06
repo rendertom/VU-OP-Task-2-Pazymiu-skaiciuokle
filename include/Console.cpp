@@ -39,6 +39,27 @@ int Console::promptForInt(const string &message, int min, int max, int escapeVal
   }
 }
 
+vector<int> Console::promptForInts(const string &message, int min, int max) {
+  cout << "-> " << message << " (" << min << "-" << max << "): ";
+  string line;
+  getline(cin, line);
+
+  stringstream iss(line);
+  int number;
+  vector<int> numbers;
+
+  while (iss >> number) {
+    if (number >= min && number <= max) {
+      numbers.push_back(number);
+    } else {
+      cout << number << " is out of range." << endl;
+      return promptForInts(message, min, max);
+    }
+  }
+
+  return numbers;
+}
+
 string Console::promptForString(const string &message) {
   string result;
   cout << "-> " << message;
