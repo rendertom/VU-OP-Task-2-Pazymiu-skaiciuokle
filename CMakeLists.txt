@@ -11,6 +11,8 @@ add_executable(VU_OP_Task_2_Pazymiu_skaiciuokle
         include/Definitions.hpp
         include/File.cpp
         include/File.hpp
+        include/Grades.cpp
+        include/Grades.hpp
         include/Math.cpp
         include/Math.hpp
         include/RND.cpp
