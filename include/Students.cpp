@@ -198,8 +198,8 @@ void Students::printFormatted(vector<Student::Student> &students, const string &
 }
 
 void Students::processStudents(vector<Student::Student> &students, const string &resultType) {
-  for (auto &student : students) {
-    Student::processStudent(&student, resultType);
+  for (int i = 0, il = students.size(); i < il; i++) {
+    Student::processStudent(&students[i], resultType);
   }
 }
 
