@@ -147,12 +147,27 @@ void Data_EnterManually(vector<Student::Student> &students) {
 }
 
 void Data_GenerateRecords() {
-  const int numRecords = Console::promptForInt("How many records:", 1, 10000000);
+  vector<int> records = Console::promptForInts("How many records:", 1, 10000000);
+  if (records.empty()) {
+    return;
+  }
+
+  int numRecords = records.size();
+  cout << "Will create " << numRecords << " " << ((numRecords == 1) ? "file" : "files") << ": ";
+  for (int i = 0; i < numRecords; i++) {
+    cout << records[i] << ".txt, ";
+  }
+  cout << endl;
+  cout << std::fixed << std::setprecision(int(TIME_PRECISION));
 
   Timer timer;
-  timer.start();
-  Students::generateRecords(numRecords);
-  cout << "Total time: " << timer.elapsed() << endl;
+  for (int i = 0; i < numRecords; i++) {
+    cout << "Creating \"" << records[i] << ".txt\":" << endl;
+    timer.reset();
+    Students::generateRecords(records[i]);
+    cout << "Total time: " << timer.elapsed() << endl;
+    cout << "----------------------" << endl;
+  }
 }
 
 void Data_FilterRecords() {
