@@ -10,6 +10,7 @@
 #include "Console.hpp"
 #include "Definitions.hpp"
 #include "File.hpp"
+#include "Grades.hpp"
 #include "RND.hpp"
 #include "Student.hpp"
 #include "Table.hpp"
@@ -28,8 +29,10 @@ using std::stringstream;
 using std::vector;
 
 namespace Students {
+  void filter(const string &);
   void generateRecords(int);
   void printFormatted(vector<Student::Student> &, const string &);
+  void readFromFile(const string &, vector<Student::Student> &);
   void save(vector<Student::Student> &, const string &);
   void sortByFinalGradeDescending(vector<Student::Student> &);
   void sortByNameAscending(vector<Student::Student> &);

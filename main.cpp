@@ -7,7 +7,7 @@
 #include "include/Console.hpp"
 #include "include/Definitions.hpp"
 #include "include/File.hpp"
-#include "include/RND.hpp"  // getIntegerInRange
+#include "include/Grades.hpp"
 #include "include/Student.hpp"
 #include "include/Students.hpp"
 #include "include/Timer.hpp"
@@ -15,7 +15,6 @@
 using std::cout;
 using std::endl;
 using std::string;
-using std::stringstream;
 using std::vector;
 
 string getResultType() {
@@ -29,91 +28,6 @@ string getResultType() {
   }
 
   return resultType;
-}
-
-void printRandomGrades(Student::Student &student) {
-  const int arraySize = student.grades.size();
-  cout << "Generated " << arraySize << " random grades: ";
-  for (int i = 0; i < arraySize; i++) {
-    cout << student.grades[i] << " ";
-  }
-  cout << endl;
-  cout << "Generated random exam grade: " << student.examGrade << endl;
-}
-
-void Grades_EnterManually(bool numberOfGradesIsKnown, int numGrades, Student::Student &student) {
-  if (numberOfGradesIsKnown) {
-    if (numGrades > 0) {
-      while (student.grades.size() != numGrades) {
-        int grade = Console::promptForInt("Enter grade", GRADE_MIN, GRADE_MAX);
-        student.grades.push_back(grade);
-      }
-    }
-  } else {
-    while (true) {
-      int grade = Console::promptForInt(
-          "Enter grade (type -1 to quit)", GRADE_MIN, GRADE_MAX, -1);
-      if (grade == -1) {
-        break;
-      } else {
-        student.grades.push_back(grade);
-      }
-    }
-  }
-
-  student.examGrade = Console::promptForInt("Enter exam grade", GRADE_MIN, GRADE_MAX);
-}
-
-void Grades_GenerateRandomly(bool numberOfGradesIsKnown, int numGrades, Student::Student &student) {
-  if (numberOfGradesIsKnown) {
-    for (int i = 0; i < numGrades; i++) {
-      int grade = RND::getIntegerInRange(GRADE_MIN, GRADE_MAX);
-      student.grades.push_back(grade);
-    }
-  } else {
-    while (true) {
-      int grade = RND::getIntegerInRange(0, GRADE_MAX);
-      if (grade == 0) {
-        break;
-      } else {
-        student.grades.push_back(grade);
-      }
-    }
-  }
-  student.examGrade = RND::getIntegerInRange(GRADE_MIN, GRADE_MAX);
-  printRandomGrades(student);
-}
-
-void Grades_ReadFromFile(const string &filePath, vector<Student::Student> &students) {
-  Timer timer;
-  timer.start();
-
-  cout << "Buffering file...";
-  stringstream buffer = File::getBuffer(filePath);
-  cout << timer.elapsed() << endl;
-
-  timer.reset();
-  cout << "Processing buffer...";
-  string line;
-  getline(buffer, line);
-  while (getline(buffer, line)) {
-    Student::Student student;
-
-    stringstream iss(line);
-    iss >> student.firstName >> student.lastName;
-
-    int grade;
-    while (iss >> grade) {
-      student.grades.push_back(grade);
-    }
-
-    student.grades.pop_back();
-    student.examGrade = grade;
-
-    students.push_back(student);
-  }
-
-  cout << timer.elapsed() << endl;
 }
 
 void Data_EnterManually(vector<Student::Student> &students) {
@@ -134,9 +48,9 @@ void Data_EnterManually(vector<Student::Student> &students) {
     }
 
     if (shouldGenerateRandomGrades) {
-      Grades_GenerateRandomly(numberOfGradesIsKnown, numGrades, student);
+      Grades::generateRandomly(numberOfGradesIsKnown, numGrades, student);
     } else {
-      Grades_EnterManually(numberOfGradesIsKnown, numGrades, student);
+      Grades::enterManually(numberOfGradesIsKnown, numGrades, student);
     }
 
     students.push_back(student);
@@ -186,71 +100,11 @@ void Data_FilterRecords() {
   cout << endl;
   cout << std::fixed << std::setprecision(int(TIME_PRECISION));
 
-  for (int i = 0, il = fileNames.size(); i < il; i++) {
-    Timer timer;
-    Timer timeTotal;
-    string fileName = fileNames[i];
-    string filePath = folderPath + fileName;
-    vector<Student::Student> students;
-
-    timeTotal.reset();
+  Timer timer;
+  for (auto & fileName : fileNames) {
     timer.reset();
-    cout << "Reading data from \"" << fileName << "\"..." << endl;
-    Grades_ReadFromFile(filePath, students);
-    cout << "Reading data from \"" << fileName << "\"..." << timer.elapsed() << endl;
-
-    if (students.empty()) {
-      throw std::runtime_error("Error: file \"" + filePath + "\" contains no student data");
-    }
-
-    string resultType = RESULT_TYPE_MEAN;
-    cout << "Processing students...";
-    timer.reset();
-    Student::processStudents(students, resultType);
-    cout << timer.elapsed() << endl;
-
-    cout << "Sorting students by final grade (descending)...";
-    timer.reset();
-    Students::sortByFinalGradeDescending(students);
-    cout << timer.elapsed() << endl;
-
-    cout << "Searching for the first loser...";
-    timer.reset();
-    auto it = std::find_if(
-        students.begin(), students.end(), Student::isLoser);
-    cout << timer.elapsed() << endl;
-
-    cout << "Copying all the losers to a new vector...";
-    timer.reset();
-    vector<Student::Student> losers(students.end() - it);
-    std::copy(it, students.end(), losers.begin());
-    cout << timer.elapsed() << endl;
-
-    cout << "Resizing original vector...";
-    timer.reset();
-    students.resize(it - students.begin());
-    cout << timer.elapsed() << endl;
-
-    string baseName = File::getBaseName(fileName);
-    if (losers.empty()) {
-      cout << "Class contains no losers" << endl;
-    } else {
-      cout << "Writing losers to file..." << endl;
-      timer.reset();
-      Students::save(losers, folderPath + baseName + " losers.txt");
-      cout << "Writing losers to file..." << timer.elapsed() << endl;
-    }
-
-    if (students.empty()) {
-      cout << "Class contains no winners" << endl;
-    } else {
-      cout << "Writing winners to file..." << endl;
-      timer.reset();
-      Students::save(students, folderPath + baseName + " winners.txt");
-      cout << "Writing winners to file..." << timer.elapsed() << endl;
-    }
-
-    cout << "Total time: " << timeTotal.elapsed() << endl;
+    Students::filter(fileName);
+    cout << "Total time: " << timer.elapsed() << endl;
     cout << "----------------------" << endl;
   }
 }
@@ -272,7 +126,7 @@ void Data_ReadFromFile(vector<Student::Student> &students) {
   } else {
     filePath = folderPath + filePath;
     cout << "Reading data from \"" << filePath << "\"" << endl;
-    Grades_ReadFromFile(filePath, students);
+    Students::readFromFile(filePath, students);
   }
 }
 
