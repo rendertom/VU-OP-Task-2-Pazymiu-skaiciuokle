@@ -158,67 +158,86 @@ void Data_GenerateRecords() {
 void Data_FilterRecords() {
   string extension = "txt";
   string folderPath = DATA_FOLDER;
-  string fileName = File::selectFileInFolder(folderPath, extension);
-
-  if (fileName.empty()) {
+  vector<string> fileNames = File::selectFilesInFolder(folderPath, extension);
+  if (fileNames.empty()) {
     return;
   }
 
-  Timer timer;
-  Timer timeTotal;
-  string filePath = folderPath + fileName;
-  vector<Student::Student> students;
-
-  timeTotal.reset();
-  timer.reset();
-  cout << "Reading data from \"" << fileName << "\"..." << endl;
-  Grades_ReadFromFile(filePath, students);
-  cout << "Reading data from \"" << fileName << "\"..." << timer.elapsed() << endl;
-
-  if (students.empty()) {
-    throw std::runtime_error("Error: file \"" + filePath + "\" contains no student data");
+  int numFilenames = fileNames.size();
+  cout << "Will process " << numFilenames << " " << ((numFilenames == 1) ? "file" : "files") << ": ";
+  for (int i = 0; i < numFilenames; i++) {
+    cout << fileNames[i] << ", ";
   }
+  cout << endl;
+  cout << std::fixed << std::setprecision(int(TIME_PRECISION));
 
-  string resultType = RESULT_TYPE_MEAN;
-  cout << "Processing students...";
-  timer.reset();
-  Student::processStudents(students, resultType);
-  cout << timer.elapsed() << endl;
+  for (int i = 0, il = fileNames.size(); i < il; i++) {
+    Timer timer;
+    Timer timeTotal;
+    string fileName = fileNames[i];
+    string filePath = folderPath + fileName;
+    vector<Student::Student> students;
 
-  cout << "Sorting students by final grade (descending)...";
-  timer.reset();
-  Students::sortByFinalGradeDescending(students);
-  cout << timer.elapsed() << endl;
+    timeTotal.reset();
+    timer.reset();
+    cout << "Reading data from \"" << fileName << "\"..." << endl;
+    Grades_ReadFromFile(filePath, students);
+    cout << "Reading data from \"" << fileName << "\"..." << timer.elapsed() << endl;
 
-  cout << "Searching for the first loser...";
-  timer.reset();
-  auto it = std::find_if(
-      students.begin(), students.end(), Student::isLoser);
-  cout << timer.elapsed() << endl;
+    if (students.empty()) {
+      throw std::runtime_error("Error: file \"" + filePath + "\" contains no student data");
+    }
 
-  cout << "Copying all the losers to a new vector...";
-  timer.reset();
-  vector<Student::Student> losers(students.end() - it);
-  std::copy(it, students.end(), losers.begin());
-  cout << timer.elapsed() << endl;
+    string resultType = RESULT_TYPE_MEAN;
+    cout << "Processing students...";
+    timer.reset();
+    Student::processStudents(students, resultType);
+    cout << timer.elapsed() << endl;
 
-  cout << "Resizing original vector...";
-  timer.reset();
-  students.resize(it - students.begin());
-  cout << timer.elapsed() << endl;
+    cout << "Sorting students by final grade (descending)...";
+    timer.reset();
+    Students::sortByFinalGradeDescending(students);
+    cout << timer.elapsed() << endl;
 
-  string baseName = File::getBaseName(fileName);
-  cout << "Writing losers to file..." << endl;
-  timer.reset();
-  Students::save(losers, folderPath + baseName + " losers.txt");
-  cout << "Writing losers to file..." << timer.elapsed() << endl;
+    cout << "Searching for the first loser...";
+    timer.reset();
+    auto it = std::find_if(
+        students.begin(), students.end(), Student::isLoser);
+    cout << timer.elapsed() << endl;
 
-  cout << "Writing winners to file..." << endl;
-  timer.reset();
-  Students::save(students, folderPath + baseName + " winners.txt");
-  cout << "Writing winners to file..." << timer.elapsed() << endl;
+    cout << "Copying all the losers to a new vector...";
+    timer.reset();
+    vector<Student::Student> losers(students.end() - it);
+    std::copy(it, students.end(), losers.begin());
+    cout << timer.elapsed() << endl;
 
-  cout << "Total time: " << timeTotal.elapsed() << endl;
+    cout << "Resizing original vector...";
+    timer.reset();
+    students.resize(it - students.begin());
+    cout << timer.elapsed() << endl;
+
+    string baseName = File::getBaseName(fileName);
+    if (losers.empty()) {
+      cout << "Class contains no losers" << endl;
+    } else {
+      cout << "Writing losers to file..." << endl;
+      timer.reset();
+      Students::save(losers, folderPath + baseName + " losers.txt");
+      cout << "Writing losers to file..." << timer.elapsed() << endl;
+    }
+
+    if (students.empty()) {
+      cout << "Class contains no winners" << endl;
+    } else {
+      cout << "Writing winners to file..." << endl;
+      timer.reset();
+      Students::save(students, folderPath + baseName + " winners.txt");
+      cout << "Writing winners to file..." << timer.elapsed() << endl;
+    }
+
+    cout << "Total time: " << timeTotal.elapsed() << endl;
+    cout << "----------------------" << endl;
+  }
 }
 
 void Data_ReadFromFile(vector<Student::Student> &students) {
