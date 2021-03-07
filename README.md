@@ -14,10 +14,10 @@ Programa yra skirta apskaičiuoti pažymių vidurkį ir/arba medianą.
 -> Select: (1-4):
 ```
 
-1. [Generate new records](#📚-generate-new-records)
-2. [Filter records](#🌪️-filter-records)
-3. [Read grades from a file](#📂-read-grades-from-a-file)
-4. [Enter grades manually](#⌨️-enter-grades-manually)
+1. [Generate new records](#-generate-new-records)
+2. [Filter records](#%EF%B8%8F-filter-records)
+3. [Read grades from a file](#-read-grades-from-a-file)
+4. [Enter grades manually](#%EF%B8%8F-enter-grades-manually)
 
 ### 📚 Generate new records
 
