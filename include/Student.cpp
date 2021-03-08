@@ -4,6 +4,10 @@ double Student::findFinalGrade(double meanGrade, double examGrade) {
   return 0.4 * meanGrade + 0.6 * examGrade;
 }
 
+bool Student::isLoser(Student &student) {
+  return student.finalGrade < 5;
+}
+
 void Student::processStudent(Student *student, const string &resultType) {
   if (resultType == RESULT_TYPE_MEAN) {
     student->meanGrade = Math::findMean(student->grades);
@@ -14,11 +18,5 @@ void Student::processStudent(Student *student, const string &resultType) {
     student->meanGrade = Math::findMean(student->grades);
     student->finalGrade = findFinalGrade(student->meanGrade, student->examGrade);
     student->medianGrade = Math::findMedian(student->grades);
-  }
-}
-
-void Student::processStudents(vector<Student> &students, const string &resultType) {
-  for (int i = 0, il = students.size(); i < il; i++) {
-    processStudent(&students[i], resultType);
   }
 }
