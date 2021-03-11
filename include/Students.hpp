@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+#include "Comparator.hpp"
 #include "Console.hpp"
 #include "Definitions.hpp"
 #include "File.hpp"

@@ -291,51 +291,27 @@ void Students::save(A &students, const string &filePath) {
 }
 
 void Students::sortByFinalGradeDescending(deque<Student::Student> &students) {
-  sort(students.begin(), students.end(),
-       [](const Student::Student &a, const Student::Student &b) {
-         return a.finalGrade > b.finalGrade;
-       });
+  sort(students.begin(), students.end(), Comparator::sortByFinalGradeDescending);
 }
 
 void Students::sortByFinalGradeDescending(list<Student::Student> &students) {
-  students.sort(
-      [](const Student::Student &a, const Student::Student &b) {
-        return a.finalGrade > b.finalGrade;
-      });
+  students.sort(Comparator::sortByFinalGradeDescending);
 }
 
 void Students::sortByFinalGradeDescending(vector<Student::Student> &students) {
-  sort(students.begin(), students.end(),
-       [](const Student::Student &a, const Student::Student &b) {
-         return a.finalGrade > b.finalGrade;
-       });
+  sort(students.begin(), students.end(), Comparator::sortByFinalGradeDescending);
 }
 
 void Students::sortByNameAscending(deque<Student::Student> &students) {
-  sort(students.begin(), students.end(),
-       [](const Student::Student &a, const Student::Student &b) {
-         return a.lastName != b.lastName
-                    ? a.lastName < b.lastName
-                    : a.firstName < b.firstName;
-       });
+  sort(students.begin(), students.end(), Comparator::sortByNameAscending);
 }
 
 void Students::sortByNameAscending(list<Student::Student> &students) {
-  students.sort(
-      [](const Student::Student &a, const Student::Student &b) {
-        return a.lastName != b.lastName
-                   ? a.lastName < b.lastName
-                   : a.firstName < b.firstName;
-      });
+  students.sort(Comparator::sortByNameAscending);
 }
 
 void Students::sortByNameAscending(vector<Student::Student> &students) {
-  sort(students.begin(), students.end(),
-       [](const Student::Student &a, const Student::Student &b) {
-         return a.lastName != b.lastName
-                    ? a.lastName < b.lastName
-                    : a.firstName < b.firstName;
-       });
+  sort(students.begin(), students.end(), Comparator::sortByNameAscending);
 }
 
 // No need to call this STUDENTS_happyLinterx() function,
