@@ -9,8 +9,9 @@ using std::list;
 using std::vector;
 
 namespace Math {
-  double findMean(list<int> &);
-  double findMean(vector<int> &);
+  template <class A>
+  double findMean(A &);
+
   double findMedian(list<int> &);
   double findMedian(vector<int> &);
 }

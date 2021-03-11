@@ -1,14 +1,7 @@
 #include "Math.hpp"
 
-double Math::findMean(list<int> &array) {
-  if (array.empty()) {
-    return 0;
-  }
-
-  return std::accumulate(array.begin(), array.end(), 0.0) / array.size();
-}
-
-double Math::findMean(vector<int> &array) {
+template <class A>
+double Math::findMean(A &array) {
   if (array.empty()) {
     return 0;
   }
@@ -55,4 +48,12 @@ double Math::findMedian(vector<int> &array) {
   }
 
   return (double)(array[(arraySize - 1) / 2] + array[arraySize / 2]) / 2.0;
+}
+
+// No need to call this MATH_happyLinter() function,
+// it's just to avoid link error. Method #1
+// https://www.codeproject.com/Articles/48575/How-to-define-a-template-class-in-a-h-file-and-imp
+__unused void MATH_happyLinter() {
+  list<int> listArray;
+  Math::findMean(listArray);
 }

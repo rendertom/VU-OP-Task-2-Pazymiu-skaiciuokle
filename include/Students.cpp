@@ -185,7 +185,8 @@ void Students::generateRecords(int numStudents) {
   cout << timer.elapsed() << endl;
 }
 
-void Students::printFormatted(vector<Student::Student> &students, const string &resultType) {
+template <class A>
+void Students::printFormatted(A &students, const string &resultType) {
   stringstream buffer;
   addFormattedHeaderToBuffer(buffer, resultType);
 
@@ -193,8 +194,8 @@ void Students::printFormatted(vector<Student::Student> &students, const string &
   sortByNameAscending(students);
 
   cout << "Buffering students..." << endl;
-  for (int i = 0, il = students.size(); i < il; i++) {
-    addFormattedStudentToBuffer(&students[i], resultType, buffer);
+  for (auto &student : students) {
+    addFormattedStudentToBuffer(&student, resultType, buffer);
   }
 
   bool shouldSaveFile = Console::confirm("Print to (y)file or (n)console:");
@@ -209,19 +210,15 @@ void Students::printFormatted(vector<Student::Student> &students, const string &
   }
 }
 
-void Students::processStudents(list<Student::Student> &students, const string &resultType) {
+template <class A>
+void Students::processStudents(A &students, const string &resultType) {
   for (auto &student : students) {
     Student::processStudent(&student, resultType);
   }
 }
 
-void Students::processStudents(vector<Student::Student> &students, const string &resultType) {
-  for (int i = 0, il = students.size(); i < il; i++) {
-    Student::processStudent(&students[i], resultType);
-  }
-}
-
-void Students::readFromFile(const string &filePath, list<Student::Student> &students) {
+template <class A>
+void Students::readFromFile(const string &filePath, A &students) {
   Timer timer;
   timer.start();
 
@@ -253,39 +250,8 @@ void Students::readFromFile(const string &filePath, list<Student::Student> &stud
   cout << timer.elapsed() << endl;
 }
 
-void Students::readFromFile(const string &filePath, vector<Student::Student> &students) {
-  Timer timer;
-  timer.start();
-
-  cout << "Buffering file...";
-  stringstream buffer = File::getBuffer(filePath);
-  cout << timer.elapsed() << endl;
-
-  timer.reset();
-  cout << "Processing buffer...";
-  string line;
-  getline(buffer, line);
-  while (getline(buffer, line)) {
-    Student::Student student;
-
-    stringstream iss(line);
-    iss >> student.firstName >> student.lastName;
-
-    int grade;
-    while (iss >> grade) {
-      student.grades.push_back(grade);
-    }
-
-    student.grades.pop_back();
-    student.examGrade = grade;
-
-    students.push_back(student);
-  }
-
-  cout << timer.elapsed() << endl;
-}
-
-void Students::save(list<Student::Student> &students, const string &filePath) {
+template <class A>
+void Students::save(A &students, const string &filePath) {
   stringstream buffer;
   const int numGrades = students.front().grades.size();
 
@@ -297,25 +263,6 @@ void Students::save(list<Student::Student> &students, const string &filePath) {
     addStudentToBuffer(student, buffer);
   }
 
-  cout << timer.elapsed() << endl;
-
-  timer.reset();
-  cout << "Writing buffer to file...";
-  File::saveBuffer(filePath, buffer);
-  cout << timer.elapsed() << endl;
-}
-
-void Students::save(vector<Student::Student> &students, const string &filePath) {
-  stringstream buffer;
-  const int numGrades = students[0].grades.size();
-
-  Timer timer;
-  cout << "Buffering students...";
-  timer.reset();
-  addHeaderToBuffer(buffer, numGrades);
-  for (int i = 0, il = students.size(); i < il; i++) {
-    addStudentToBuffer(students[i], buffer);
-  }
   cout << timer.elapsed() << endl;
 
   timer.reset();
@@ -338,6 +285,15 @@ void Students::sortByFinalGradeDescending(vector<Student::Student> &students) {
        });
 }
 
+void Students::sortByNameAscending(list<Student::Student> &students) {
+  students.sort(
+      [](const Student::Student &a, const Student::Student &b) {
+        return a.lastName != b.lastName
+                   ? a.lastName < b.lastName
+                   : a.firstName < b.firstName;
+      });
+}
+
 void Students::sortByNameAscending(vector<Student::Student> &students) {
   sort(students.begin(), students.end(),
        [](const Student::Student &a, const Student::Student &b) {
@@ -345,4 +301,14 @@ void Students::sortByNameAscending(vector<Student::Student> &students) {
                     ? a.lastName < b.lastName
                     : a.firstName < b.firstName;
        });
+}
+
+// No need to call this STUDENTS_happyLinterx() function,
+// it's just to avoid link error. Method #1
+// https://www.codeproject.com/Articles/48575/How-to-define-a-template-class-in-a-h-file-and-imp
+__unused void STUDENTS_happyLinter() {
+  vector<Student::Student> vectorArray;
+  Students::printFormatted(vectorArray, "");
+  Students::processStudents(vectorArray, "");
+  Students::readFromFile("", vectorArray);
 }
