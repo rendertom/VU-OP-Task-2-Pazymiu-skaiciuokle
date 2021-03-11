@@ -5,13 +5,7 @@ double Math::findMean(vector<int> &array) {
     return 0;
   }
 
-  const int arraySize = array.size();
-  int sum = 0;
-  for (int i = 0; i < arraySize; i++) {
-    sum += array[i];
-  }
-
-  return (double)sum / arraySize;
+  return std::accumulate(array.begin(), array.end(), 0.0) / array.size();
 }
 
 double Math::findMedian(vector<int> &array) {

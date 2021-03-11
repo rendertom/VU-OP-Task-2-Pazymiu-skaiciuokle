@@ -29,3 +29,6 @@
   - pridėta
     - Galimybė generuoti naujus studentų sarašų failus.
     - Galimybė filtruoti studentus ir išsaugoti rezultatus į atskirus failus.
+- [v0.5](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases/tag/v0.5)
+  - pridėta
+    - Galimybė pasirinkti duomenų saugojimo konteinerį: `std::deque`, `std::list` arba `std::vector`.

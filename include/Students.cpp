@@ -69,8 +69,8 @@ void addStudentToBuffer(Student::Student &student, stringstream &buffer) {
   buffer << setw(width.firstName) << student.firstName
          << setw(width.lastName) << student.lastName;
 
-  for (int i = 0, il = student.grades.size(); i < il; i++) {
-    buffer << setw(5) << student.grades[i];
+  for (const int &grade : student.grades) {
+    buffer << setw(5) << grade;
   }
 
   buffer << student.examGrade << "\n";
@@ -93,10 +93,20 @@ void addRandomStudentsToBuffer(stringstream &buffer, int numStudents, int numGra
 }
 
 void Students::filter(const string &fileName) {
+#if ARRAY_TYPE == TYPE_DEQUE
+  deque<Student::Student> students;
+  deque<Student::Student> losers;
+#elif ARRAY_TYPE == TYPE_LIST
+  list<Student::Student> students;
+  list<Student::Student> losers;
+#elif ARRAY_TYPE == TYPE_VECTOR
+  vector<Student::Student> students;
+  vector<Student::Student> losers;
+#endif
+
   Timer timer;
   string folderPath = DATA_FOLDER;
   string filePath = folderPath + fileName;
-  vector<Student::Student> students;
 
   timer.reset();
   cout << "Reading data from \"" << fileName << "\"..." << endl;
@@ -126,13 +136,17 @@ void Students::filter(const string &fileName) {
 
   cout << "Copying all the losers to a new vector...";
   timer.reset();
-  vector<Student::Student> losers(students.end() - it);
+#if ARRAY_TYPE == TYPE_DEQUE || ARRAY_TYPE == TYPE_VECTOR
+  losers.resize(students.end() - it);
   std::copy(it, students.end(), losers.begin());
+#elif ARRAY_TYPE == TYPE_LIST
+  losers.assign(it, students.end());
+#endif
   cout << timer.elapsed() << endl;
 
   cout << "Resizing original vector...";
   timer.reset();
-  students.resize(it - students.begin());
+  students.resize(students.size() - losers.size());
   cout << timer.elapsed() << endl;
 
   string baseName = File::getBaseName(fileName);
@@ -173,7 +187,8 @@ void Students::generateRecords(int numStudents) {
   cout << timer.elapsed() << endl;
 }
 
-void Students::printFormatted(vector<Student::Student> &students, const string &resultType) {
+template <class A>
+void Students::printFormatted(A &students, const string &resultType) {
   stringstream buffer;
   addFormattedHeaderToBuffer(buffer, resultType);
 
@@ -181,8 +196,8 @@ void Students::printFormatted(vector<Student::Student> &students, const string &
   sortByNameAscending(students);
 
   cout << "Buffering students..." << endl;
-  for (int i = 0, il = students.size(); i < il; i++) {
-    addFormattedStudentToBuffer(&students[i], resultType, buffer);
+  for (auto &student : students) {
+    addFormattedStudentToBuffer(&student, resultType, buffer);
   }
 
   bool shouldSaveFile = Console::confirm("Print to (y)file or (n)console:");
@@ -197,13 +212,19 @@ void Students::printFormatted(vector<Student::Student> &students, const string &
   }
 }
 
-void Students::processStudents(vector<Student::Student> &students, const string &resultType) {
-  for (int i = 0, il = students.size(); i < il; i++) {
-    Student::processStudent(&students[i], resultType);
+template <class A>
+void Students::processStudents(A &students, const string &resultType) {
+  // TODO: Does not compile with -O3 flag on
+  // VSCode and CLion without cout << endl;
+  cout << endl;
+
+  for (auto &student : students) {
+    Student::processStudent(&student, resultType);
   }
 }
 
-void Students::readFromFile(const string &filePath, vector<Student::Student> &students) {
+template <class A>
+void Students::readFromFile(const string &filePath, A &students) {
   Timer timer;
   timer.start();
 
@@ -235,17 +256,19 @@ void Students::readFromFile(const string &filePath, vector<Student::Student> &st
   cout << timer.elapsed() << endl;
 }
 
-void Students::save(vector<Student::Student> &students, const string &filePath) {
+template <class A>
+void Students::save(A &students, const string &filePath) {
   stringstream buffer;
-  const int numGrades = students[0].grades.size();
+  const int numGrades = students.front().grades.size();
 
   Timer timer;
   cout << "Buffering students...";
   timer.reset();
   addHeaderToBuffer(buffer, numGrades);
-  for (int i = 0, il = students.size(); i < il; i++) {
-    addStudentToBuffer(students[i], buffer);
+  for (auto &student : students) {
+    addStudentToBuffer(student, buffer);
   }
+
   cout << timer.elapsed() << endl;
 
   timer.reset();
@@ -254,18 +277,42 @@ void Students::save(vector<Student::Student> &students, const string &filePath) 
   cout << timer.elapsed() << endl;
 }
 
-void Students::sortByFinalGradeDescending(vector<Student::Student> &students) {
-  sort(students.begin(), students.end(),
-       [](const Student::Student &a, const Student::Student &b) {
-         return a.finalGrade > b.finalGrade;
-       });
+template <class A>
+void Students::sortByFinalGradeDescending(A &students) {
+  sort(students.begin(), students.end(), Comparator::sortByFinalGradeDescending);
 }
 
-void Students::sortByNameAscending(vector<Student::Student> &students) {
-  sort(students.begin(), students.end(),
-       [](const Student::Student &a, const Student::Student &b) {
-         return a.lastName != b.lastName
-                    ? a.lastName < b.lastName
-                    : a.firstName < b.firstName;
-       });
+void Students::sortByFinalGradeDescending(list<Student::Student> &students) {
+  students.sort(Comparator::sortByFinalGradeDescending);
+}
+
+template <class A>
+void Students::sortByNameAscending(A &students) {
+  sort(students.begin(), students.end(), Comparator::sortByNameAscending);
+}
+
+void Students::sortByNameAscending(list<Student::Student> &students) {
+  students.sort(Comparator::sortByNameAscending);
+}
+
+// No need to call this STUDENTS_happyLinter() function,
+// it's just to avoid link error. Method #1
+// https://www.codeproject.com/Articles/48575/How-to-define-a-template-class-in-a-h-file-and-imp
+__unused void STUDENTS_happyLinter() {
+#if ARRAY_TYPE == TYPE_DEQUE
+  deque<Student::Student> dequeArray;
+  Students::printFormatted(dequeArray, "");
+  Students::processStudents(dequeArray, "");
+  Students::readFromFile("", dequeArray);
+#elif ARRAY_TYPE == TYPE_LIST
+  list<Student::Student> listArray;
+  Students::printFormatted(listArray, "");
+  Students::processStudents(listArray, "");
+  Students::readFromFile("", listArray);
+#elif ARRAY_TYPE == TYPE_VECTOR
+  vector<Student::Student> vectorArray;
+  Students::printFormatted(vectorArray, "");
+  Students::processStudents(vectorArray, "");
+  Students::readFromFile("", vectorArray);
+#endif
 }
