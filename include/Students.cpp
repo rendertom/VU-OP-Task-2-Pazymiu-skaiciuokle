@@ -93,10 +93,6 @@ void addRandomStudentsToBuffer(stringstream &buffer, int numStudents, int numGra
 }
 
 void Students::filter(const string &fileName) {
-  Timer timer;
-  string folderPath = DATA_FOLDER;
-  string filePath = folderPath + fileName;
-
 #if ARRAY_TYPE == TYPE_DEQUE
   deque<Student::Student> students;
   deque<Student::Student> losers;
@@ -107,6 +103,10 @@ void Students::filter(const string &fileName) {
   vector<Student::Student> students;
   vector<Student::Student> losers;
 #endif
+
+  Timer timer;
+  string folderPath = DATA_FOLDER;
+  string filePath = folderPath + fileName;
 
   timer.reset();
   cout << "Reading data from \"" << fileName << "\"..." << endl;
@@ -123,12 +123,10 @@ void Students::filter(const string &fileName) {
   Students::processStudents(students, resultType);
   cout << timer.elapsed() << endl;
 
-  cout << students.front().firstName << ":" << students.front().finalGrade << endl;
   cout << "Sorting students by final grade (descending)...";
   timer.reset();
   Students::sortByFinalGradeDescending(students);
   cout << timer.elapsed() << endl;
-  cout << students.front().firstName << ":" << students.front().finalGrade << endl;
 
   cout << "Searching for the first loser...";
   timer.reset();
@@ -136,26 +134,20 @@ void Students::filter(const string &fileName) {
       students.begin(), students.end(), Student::isLoser);
   cout << timer.elapsed() << endl;
 
-  std::cout << it->finalGrade << std::endl;
-
   cout << "Copying all the losers to a new vector...";
   timer.reset();
-
 #if ARRAY_TYPE == TYPE_DEQUE || ARRAY_TYPE == TYPE_VECTOR
   losers.resize(students.end() - it);
   std::copy(it, students.end(), losers.begin());
 #elif ARRAY_TYPE == TYPE_LIST
   losers.assign(it, students.end());
 #endif
-
   cout << timer.elapsed() << endl;
-  cout << losers.size() << endl;
 
   cout << "Resizing original vector...";
   timer.reset();
   students.resize(students.size() - losers.size());
   cout << timer.elapsed() << endl;
-  cout << students.size() << endl;
 
   string baseName = File::getBaseName(fileName);
   if (losers.empty()) {
@@ -175,7 +167,6 @@ void Students::filter(const string &fileName) {
     Students::save(students, folderPath + baseName + " winners.txt");
     cout << "Writing winners to file..." << timer.elapsed() << endl;
   }
-  std::cout << "OK" << std::endl;
 }
 
 void Students::generateRecords(int numStudents) {
