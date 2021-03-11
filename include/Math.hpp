@@ -11,10 +11,6 @@ using std::list;
 using std::vector;
 
 namespace Math {
-  template <class A>
-  double findMean(A &);
-
-  template <class A>
-  double findMedian(A &);
-  double findMedian(list<int> &);
+  double findMean(vector<int> &);
+  double findMedian(vector<int> &);
 }
