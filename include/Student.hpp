@@ -17,16 +17,9 @@ using std::vector;
 namespace Student {
 
   struct Student {
-#if ARRAY_TYPE == TYPE_DEQUE
-    deque<int> grades;
-#elif ARRAY_TYPE == TYPE_LIST
-    list<int> grades;
-#elif ARRAY_TYPE == TYPE_VECTOR
-    vector<int> grades;
-#endif
-
     string firstName;
     string lastName;
+    vector<int> grades;
     int examGrade;
     double meanGrade;
     double finalGrade;
