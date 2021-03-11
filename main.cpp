@@ -1,6 +1,8 @@
 // g++ -std=c++11 include/*.cpp 'main.cpp' -o 'main' && './main'
 
+#include <deque>
 #include <iostream>
+#include <list>
 #include <string>
 #include <vector>
 
@@ -13,7 +15,9 @@
 #include "include/Timer.hpp"
 
 using std::cout;
+using std::deque;
 using std::endl;
+using std::list;
 using std::string;
 using std::vector;
 
@@ -30,7 +34,8 @@ string getResultType() {
   return resultType;
 }
 
-void Data_EnterManually(vector<Student::Student> &students) {
+template <class A>
+void Data_EnterManually(A &students) {
   while (true) {
     Student::Student student;
     student.firstName = Console::promptForString("Please enter first name: ");
@@ -109,7 +114,8 @@ void Data_FilterRecords() {
   }
 }
 
-void Data_ReadFromFile(vector<Student::Student> &students) {
+template <class A>
+void Data_ReadFromFile(A &students) {
   string extension = "txt";
   string folderPath = DATA_FOLDER;
   string filePath = File::selectFileInFolder(folderPath, extension);
@@ -131,6 +137,14 @@ void Data_ReadFromFile(vector<Student::Student> &students) {
 }
 
 int main() {
+  if (ARRAY_TYPE == TYPE_DEQUE) {
+    cout << "(using std::deque)" << endl;
+  } else if (ARRAY_TYPE == TYPE_LIST) {
+    cout << "(using std::list)" << endl;
+  } else if (ARRAY_TYPE == TYPE_VECTOR) {
+    cout << "(using std::vector)" << endl;
+  }
+
   cout << "1. Generate new records" << endl;
   cout << "2. Filter records" << endl;
   cout << "3. Read grades from a file" << endl;
@@ -143,7 +157,14 @@ int main() {
     } else if (selection == 2) {
       Data_FilterRecords();
     } else {
+#if ARRAY_TYPE == TYPE_DEQUE
+      deque<Student::Student> students;
+#elif ARRAY_TYPE == TYPE_LIST
+      list<Student::Student> students;
+#elif ARRAY_TYPE == TYPE_VECTOR
       vector<Student::Student> students;
+#endif
+
       if (selection == 3) {
         Data_ReadFromFile(students);
       } else if (selection == 4) {

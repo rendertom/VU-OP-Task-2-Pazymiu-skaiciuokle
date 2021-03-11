@@ -214,6 +214,9 @@ void Students::printFormatted(A &students, const string &resultType) {
 
 template <class A>
 void Students::processStudents(A &students, const string &resultType) {
+  // TODO: Does not compile with -O3 flag without cout << endl;
+  cout << endl;
+
   for (auto &student : students) {
     Student::processStudent(&student, resultType);
   }
@@ -295,8 +298,20 @@ void Students::sortByNameAscending(list<Student::Student> &students) {
 // it's just to avoid link error. Method #1
 // https://www.codeproject.com/Articles/48575/How-to-define-a-template-class-in-a-h-file-and-imp
 __unused void STUDENTS_happyLinter() {
+#if ARRAY_TYPE == TYPE_DEQUE
+  deque<Student::Student> dequeArray;
+  Students::printFormatted(dequeArray, "");
+  Students::processStudents(dequeArray, "");
+  Students::readFromFile("", dequeArray);
+#elif ARRAY_TYPE == TYPE_LIST
+  list<Student::Student> listArray;
+  Students::printFormatted(listArray, "");
+  Students::processStudents(listArray, "");
+  Students::readFromFile("", listArray);
+#elif ARRAY_TYPE == TYPE_VECTOR
   vector<Student::Student> vectorArray;
   Students::printFormatted(vectorArray, "");
   Students::processStudents(vectorArray, "");
   Students::readFromFile("", vectorArray);
+#endif
 }
