@@ -1,17 +1,43 @@
 #include "Math.hpp"
 
+double Math::findMean(list<int> &array) {
+  if (array.empty()) {
+    return 0;
+  }
+
+  return std::accumulate(array.begin(), array.end(), 0.0) / array.size();
+}
+
 double Math::findMean(vector<int> &array) {
   if (array.empty()) {
     return 0;
   }
 
-  const int arraySize = array.size();
-  int sum = 0;
-  for (int i = 0; i < arraySize; i++) {
-    sum += array[i];
+  return std::accumulate(array.begin(), array.end(), 0.0) / array.size();
+}
+
+double Math::findMedian(list<int> &array) {
+  if (array.empty()) {
+    return 0;
   }
 
-  return (double)sum / arraySize;
+  array.sort();
+
+  const int arraySize = array.size();
+  const bool isOddNumber = arraySize % 2 != 0;
+
+  if (isOddNumber) {
+    list<int>::iterator middle = array.begin();
+    std::advance(middle, arraySize / 2);
+    return *middle;
+  } else {
+    list<int>::iterator right = array.begin();
+    std::advance(right, arraySize / 2);
+
+    list<int>::iterator left = array.begin();
+    std::advance(left, (arraySize - 1) / 2);
+    return (*left + *right) / 2.0;
+  }
 }
 
 double Math::findMedian(vector<int> &array) {

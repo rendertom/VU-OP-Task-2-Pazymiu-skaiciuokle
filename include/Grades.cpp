@@ -3,8 +3,8 @@
 void printRandomGrades(Student::Student &student) {
   const int arraySize = student.grades.size();
   std::cout << "Generated " << arraySize << " random grades: ";
-  for (int i = 0; i < arraySize; i++) {
-    std::cout << student.grades[i] << " ";
+  for (const int &grade : student.grades) {
+    std::cout << grade << " ";
   }
   std::cout << std::endl;
   std::cout << "Generated random exam grade: " << student.examGrade << std::endl;

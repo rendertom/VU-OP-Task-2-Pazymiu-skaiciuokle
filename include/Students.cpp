@@ -69,8 +69,8 @@ void addStudentToBuffer(Student::Student &student, stringstream &buffer) {
   buffer << setw(width.firstName) << student.firstName
          << setw(width.lastName) << student.lastName;
 
-  for (int i = 0, il = student.grades.size(); i < il; i++) {
-    buffer << setw(5) << student.grades[i];
+  for (const int &grade : student.grades) {
+    buffer << setw(5) << grade;
   }
 
   buffer << student.examGrade << "\n";
@@ -96,8 +96,9 @@ void Students::filter(const string &fileName) {
   Timer timer;
   string folderPath = DATA_FOLDER;
   string filePath = folderPath + fileName;
-  vector<Student::Student> students;
+  list<Student::Student> students;  // list
 
+  //  vector<Student::Student> students; // vector
   timer.reset();
   cout << "Reading data from \"" << fileName << "\"..." << endl;
   readFromFile(filePath, students);
@@ -113,10 +114,12 @@ void Students::filter(const string &fileName) {
   Students::processStudents(students, resultType);
   cout << timer.elapsed() << endl;
 
+  cout << students.front().firstName << ":" << students.front().finalGrade << endl;
   cout << "Sorting students by final grade (descending)...";
   timer.reset();
   Students::sortByFinalGradeDescending(students);
   cout << timer.elapsed() << endl;
+  cout << students.front().firstName << ":" << students.front().finalGrade << endl;
 
   cout << "Searching for the first loser...";
   timer.reset();
@@ -124,16 +127,24 @@ void Students::filter(const string &fileName) {
       students.begin(), students.end(), Student::isLoser);
   cout << timer.elapsed() << endl;
 
+  std::cout << it->finalGrade << std::endl;
+
   cout << "Copying all the losers to a new vector...";
   timer.reset();
-  vector<Student::Student> losers(students.end() - it);
-  std::copy(it, students.end(), losers.begin());
-  cout << timer.elapsed() << endl;
+  list<Student::Student> losers(it, students.end());  // list
 
+  //  vector<Student::Student> losers(students.end() - it); // vector
+  //  std::copy(it, students.end(), losers.begin()); // vector
+
+  cout << timer.elapsed() << endl;
+  cout << losers.size() << endl;
+
+  //
   cout << "Resizing original vector...";
   timer.reset();
-  students.resize(it - students.begin());
+  students.resize(students.size() - losers.size());
   cout << timer.elapsed() << endl;
+  cout << students.size() << endl;
 
   string baseName = File::getBaseName(fileName);
   if (losers.empty()) {
@@ -153,6 +164,7 @@ void Students::filter(const string &fileName) {
     Students::save(students, folderPath + baseName + " winners.txt");
     cout << "Writing winners to file..." << timer.elapsed() << endl;
   }
+  std::cout << "OK" << std::endl;
 }
 
 void Students::generateRecords(int numStudents) {
@@ -197,10 +209,48 @@ void Students::printFormatted(vector<Student::Student> &students, const string &
   }
 }
 
+void Students::processStudents(list<Student::Student> &students, const string &resultType) {
+  for (auto &student : students) {
+    Student::processStudent(&student, resultType);
+  }
+}
+
 void Students::processStudents(vector<Student::Student> &students, const string &resultType) {
   for (int i = 0, il = students.size(); i < il; i++) {
     Student::processStudent(&students[i], resultType);
   }
+}
+
+void Students::readFromFile(const string &filePath, list<Student::Student> &students) {
+  Timer timer;
+  timer.start();
+
+  cout << "Buffering file...";
+  stringstream buffer = File::getBuffer(filePath);
+  cout << timer.elapsed() << endl;
+
+  timer.reset();
+  cout << "Processing buffer...";
+  string line;
+  getline(buffer, line);
+  while (getline(buffer, line)) {
+    Student::Student student;
+
+    stringstream iss(line);
+    iss >> student.firstName >> student.lastName;
+
+    int grade;
+    while (iss >> grade) {
+      student.grades.push_back(grade);
+    }
+
+    student.grades.pop_back();
+    student.examGrade = grade;
+
+    students.push_back(student);
+  }
+
+  cout << timer.elapsed() << endl;
 }
 
 void Students::readFromFile(const string &filePath, vector<Student::Student> &students) {
@@ -235,6 +285,26 @@ void Students::readFromFile(const string &filePath, vector<Student::Student> &st
   cout << timer.elapsed() << endl;
 }
 
+void Students::save(list<Student::Student> &students, const string &filePath) {
+  stringstream buffer;
+  const int numGrades = students.front().grades.size();
+
+  Timer timer;
+  cout << "Buffering students...";
+  timer.reset();
+  addHeaderToBuffer(buffer, numGrades);
+  for (auto &student : students) {
+    addStudentToBuffer(student, buffer);
+  }
+
+  cout << timer.elapsed() << endl;
+
+  timer.reset();
+  cout << "Writing buffer to file...";
+  File::saveBuffer(filePath, buffer);
+  cout << timer.elapsed() << endl;
+}
+
 void Students::save(vector<Student::Student> &students, const string &filePath) {
   stringstream buffer;
   const int numGrades = students[0].grades.size();
@@ -252,6 +322,13 @@ void Students::save(vector<Student::Student> &students, const string &filePath) 
   cout << "Writing buffer to file...";
   File::saveBuffer(filePath, buffer);
   cout << timer.elapsed() << endl;
+}
+
+void Students::sortByFinalGradeDescending(list<Student::Student> &students) {
+  students.sort(
+      [](const Student::Student &a, const Student::Student &b) {
+        return a.finalGrade > b.finalGrade;
+      });
 }
 
 void Students::sortByFinalGradeDescending(vector<Student::Student> &students) {

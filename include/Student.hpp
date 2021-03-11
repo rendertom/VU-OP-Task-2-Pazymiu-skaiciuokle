@@ -1,12 +1,14 @@
 #pragma once
 
 #include <iostream>
+#include <list>
 #include <string>
 #include <vector>
 
 #include "Definitions.hpp"
 #include "Math.hpp"
 
+using std::list;
 using std::string;
 using std::vector;
 
@@ -15,7 +17,8 @@ namespace Student {
   struct Student {
     string firstName;
     string lastName;
-    vector<int> grades;
+    list<int> grades;
+    //    vector<int> grades;
     int examGrade;
     double meanGrade;
     double finalGrade;
