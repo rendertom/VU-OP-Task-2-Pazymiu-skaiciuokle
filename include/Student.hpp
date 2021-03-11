@@ -1,5 +1,6 @@
 #pragma once
 
+#include <deque>
 #include <iostream>
 #include <list>
 #include <string>
@@ -8,6 +9,7 @@
 #include "Definitions.hpp"
 #include "Math.hpp"
 
+using std::deque;
 using std::list;
 using std::string;
 using std::vector;
