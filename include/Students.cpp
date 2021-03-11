@@ -214,7 +214,8 @@ void Students::printFormatted(A &students, const string &resultType) {
 
 template <class A>
 void Students::processStudents(A &students, const string &resultType) {
-  // TODO: Does not compile with -O3 flag without cout << endl;
+  // TODO: Does not compile with -O3 flag on
+  // VSCode and CLion without cout << endl;
   cout << endl;
 
   for (auto &student : students) {
