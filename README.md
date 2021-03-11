@@ -181,6 +181,28 @@ Jurga       Spurga          4.63           5.00
 
 Galutinis vidurkis yra apskaičiuojamas pagal formulę `galutinis = 0.4 * vidurkis + 0.6 * egzaminas`.
 
+## Spartos analizė
+
+Programos spartos analizė (duomenų, nuskaitymas iš failo, apdorijimas ir rūšiavimas į kategorijas) atlikta duomenis saugant į skirtingus konteinerius: `std::deque`, `std::list` ir `std::vector`.
+
+Analizė atlikta su MacBook Pro, 2.3 GHz Dual-Core Intel Core i5, 8 GB 2133 MHz LPDDR3.
+
+### Duomenų apdorojimas
+
+| Container   | 10.000 | 100.000 | 1.000.000 | 10.000.000 |
+| :---------- | :----- | :------ | :-------- | :--------- |
+| std::deque  |        |         |           |            |
+| std::list   |        |         |           |            |
+| std::vector |        |         |           |            |
+
+### Duomenų rūšiavimas
+
+| Container   | 10.000 | 100.000 | 1.000.000 | 10.000.000 |
+| :---------- | :----- | :------ | :-------- | :--------- |
+| std::deque  |        |         |           |            |
+| std::list   |        |         |           |            |
+| std::vector |        |         |           |            |
+
 ## 🚀 Programos diegimas ir paleidimas
 
 - Atsisiųskite programos versiją iš [Releases](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases) aplanko ir ją išsiarchyvuokite,
