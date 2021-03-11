@@ -56,4 +56,7 @@ double Math::findMedian(vector<int> &array) {
 __unused void MATH_happyLinter() {
   list<int> listArray;
   Math::findMean(listArray);
+
+  vector<int> vectorArray;
+  Math::findMean(vectorArray);
 }

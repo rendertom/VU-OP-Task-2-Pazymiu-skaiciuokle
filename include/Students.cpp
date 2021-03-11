@@ -96,9 +96,15 @@ void Students::filter(const string &fileName) {
   Timer timer;
   string folderPath = DATA_FOLDER;
   string filePath = folderPath + fileName;
-  list<Student::Student> students;  // list
 
-  //  vector<Student::Student> students; // vector
+#ifdef ARRAY_TYPE_LIST
+  list<Student::Student> students;
+#endif
+
+#ifdef ARRAY_TYPE_VECTOR
+  vector<Student::Student> students;
+#endif
+
   timer.reset();
   cout << "Reading data from \"" << fileName << "\"..." << endl;
   readFromFile(filePath, students);
@@ -131,15 +137,19 @@ void Students::filter(const string &fileName) {
 
   cout << "Copying all the losers to a new vector...";
   timer.reset();
-  list<Student::Student> losers(it, students.end());  // list
 
-  //  vector<Student::Student> losers(students.end() - it); // vector
-  //  std::copy(it, students.end(), losers.begin()); // vector
+#ifdef ARRAY_TYPE_LIST
+  list<Student::Student> losers(it, students.end());
+#endif
+
+#ifdef ARRAY_TYPE_VECTOR
+  vector<Student::Student> losers(students.end() - it);
+  std::copy(it, students.end(), losers.begin());
+#endif
 
   cout << timer.elapsed() << endl;
   cout << losers.size() << endl;
 
-  //
   cout << "Resizing original vector...";
   timer.reset();
   students.resize(students.size() - losers.size());

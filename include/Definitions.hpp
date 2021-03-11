@@ -1,5 +1,7 @@
 #pragma once
 
+#define ARRAY_TYPE_VECTOR  // ARRAY_TYPE_LIST, ARRAY_TYPE_VECTOR
+
 #define DATA_FOLDER "./data/"
 #define GRADE_MIN 1
 #define GRADE_MAX 10

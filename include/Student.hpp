@@ -15,10 +15,16 @@ using std::vector;
 namespace Student {
 
   struct Student {
+#ifdef ARRAY_TYPE_LIST
+    list<int> grades;
+#endif
+
+#ifdef ARRAY_TYPE_VECTOR
+    vector<int> grades;
+#endif
+
     string firstName;
     string lastName;
-    list<int> grades;
-    //    vector<int> grades;
     int examGrade;
     double meanGrade;
     double finalGrade;
