@@ -49,11 +49,11 @@ namespace Students {
   template <class A>
   void save(A &, const string &);
 
-  void sortByFinalGradeDescending(deque<Student::Student> &);
+  template <class A>
+  void sortByFinalGradeDescending(A &);
   void sortByFinalGradeDescending(list<Student::Student> &);
-  void sortByFinalGradeDescending(vector<Student::Student> &);
 
-  void sortByNameAscending(deque<Student::Student> &);
+  template <class A>
+  void sortByNameAscending(A &);
   void sortByNameAscending(list<Student::Student> &);
-  void sortByNameAscending(vector<Student::Student> &);
 }

@@ -290,7 +290,8 @@ void Students::save(A &students, const string &filePath) {
   cout << timer.elapsed() << endl;
 }
 
-void Students::sortByFinalGradeDescending(deque<Student::Student> &students) {
+template <class A>
+void Students::sortByFinalGradeDescending(A &students) {
   sort(students.begin(), students.end(), Comparator::sortByFinalGradeDescending);
 }
 
@@ -298,20 +299,13 @@ void Students::sortByFinalGradeDescending(list<Student::Student> &students) {
   students.sort(Comparator::sortByFinalGradeDescending);
 }
 
-void Students::sortByFinalGradeDescending(vector<Student::Student> &students) {
-  sort(students.begin(), students.end(), Comparator::sortByFinalGradeDescending);
-}
-
-void Students::sortByNameAscending(deque<Student::Student> &students) {
+template <class A>
+void Students::sortByNameAscending(A &students) {
   sort(students.begin(), students.end(), Comparator::sortByNameAscending);
 }
 
 void Students::sortByNameAscending(list<Student::Student> &students) {
   students.sort(Comparator::sortByNameAscending);
-}
-
-void Students::sortByNameAscending(vector<Student::Student> &students) {
-  sort(students.begin(), students.end(), Comparator::sortByNameAscending);
 }
 
 // No need to call this STUDENTS_happyLinterx() function,
