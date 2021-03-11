@@ -181,27 +181,31 @@ Jurga       Spurga          4.63           5.00
 
 Galutinis vidurkis yra apskaičiuojamas pagal formulę `galutinis = 0.4 * vidurkis + 0.6 * egzaminas`.
 
-## Spartos analizė
+## 📈 Spartos analizė
 
 Programos spartos analizė (duomenų, nuskaitymas iš failo, apdorijimas ir rūšiavimas į kategorijas) atlikta duomenis saugant į skirtingus konteinerius: `std::deque`, `std::list` ir `std::vector`.
 
 Analizė atlikta su MacBook Pro, 2.3 GHz Dual-Core Intel Core i5, 8 GB 2133 MHz LPDDR3.
 
-### Duomenų apdorojimas
+### 🧰 Duomenų apdorojimas
 
-| Container   | 10.000 | 100.000 | 1.000.000 | 10.000.000 |
-| :---------- | :----- | :------ | :-------- | :--------- |
-| std::deque  |        |         |           |            |
-| std::list   |        |         |           |            |
-| std::vector |        |         |           |            |
+| Container   | 10.000  | 100.000 | 1.000.000 | 10.000.000 |
+| :---------- | :------ | :------ | :-------- | :--------- |
+| std::deque  | 0.06061 | 0.70649 | 3.52166   | 35.0777    |
+| std::list   | 0.06191 | 0.73367 | 3.59739   | 35.95377   |
+| std::vector | 0.05895 | 0.71480 | 3.52165   | 36.03642   |
 
-### Duomenų rūšiavimas
+---
 
-| Container   | 10.000 | 100.000 | 1.000.000 | 10.000.000 |
-| :---------- | :----- | :------ | :-------- | :--------- |
-| std::deque  |        |         |           |            |
-| std::list   |        |         |           |            |
-| std::vector |        |         |           |            |
+### ⚖️ Duomenų rūšiavimas
+
+| Container   | 10.000  | 100.000 | 1.000.000 | 10.000.000 |
+| :---------- | :------ | :------ | :-------- | :--------- |
+| std::deque  | 0.0024  | 0.03438 | 0.31071   | 3.44917    |
+| std::list   | 0.00338 | 0.0919  | 1.1708    | 16.56225   |
+| std::vector | 0.00202 | 0.03528 | 0.29249   | 3.30253    |
+
+---
 
 ## 🚀 Programos diegimas ir paleidimas
 
