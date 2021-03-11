@@ -97,16 +97,15 @@ void Students::filter(const string &fileName) {
   string folderPath = DATA_FOLDER;
   string filePath = folderPath + fileName;
 
-#ifdef ARRAY_TYPE_DEQUE
+#if ARRAY_TYPE == TYPE_DEQUE
   deque<Student::Student> students;
-#endif
-
-#ifdef ARRAY_TYPE_LIST
+  deque<Student::Student> losers;
+#elif ARRAY_TYPE == TYPE_LIST
   list<Student::Student> students;
-#endif
-
-#ifdef ARRAY_TYPE_VECTOR
+  list<Student::Student> losers;
+#elif ARRAY_TYPE == TYPE_VECTOR
   vector<Student::Student> students;
+  vector<Student::Student> losers;
 #endif
 
   timer.reset();
@@ -142,18 +141,11 @@ void Students::filter(const string &fileName) {
   cout << "Copying all the losers to a new vector...";
   timer.reset();
 
-#ifdef ARRAY_TYPE_DEQUE
-  deque<Student::Student> losers(students.end() - it);
+#if ARRAY_TYPE == TYPE_DEQUE || ARRAY_TYPE == TYPE_VECTOR
+  losers.resize(students.end() - it);
   std::copy(it, students.end(), losers.begin());
-#endif
-
-#ifdef ARRAY_TYPE_LIST
-  list<Student::Student> losers(it, students.end());
-#endif
-
-#ifdef ARRAY_TYPE_VECTOR
-  vector<Student::Student> losers(students.end() - it);
-  std::copy(it, students.end(), losers.begin());
+#elif ARRAY_TYPE == TYPE_LIST
+  losers.assign(it, students.end());
 #endif
 
   cout << timer.elapsed() << endl;
@@ -308,7 +300,7 @@ void Students::sortByNameAscending(list<Student::Student> &students) {
   students.sort(Comparator::sortByNameAscending);
 }
 
-// No need to call this STUDENTS_happyLinterx() function,
+// No need to call this STUDENTS_happyLinter() function,
 // it's just to avoid link error. Method #1
 // https://www.codeproject.com/Articles/48575/How-to-define-a-template-class-in-a-h-file-and-imp
 __unused void STUDENTS_happyLinter() {
