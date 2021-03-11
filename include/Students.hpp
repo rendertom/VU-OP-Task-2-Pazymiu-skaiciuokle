@@ -1,7 +1,8 @@
 #pragma once
 
 #include <algorithm>  // std::sort, copy
-#include <iomanip>    // std::fixed, left,setprecision, setw
+#include <deque>
+#include <iomanip>  // std::fixed, left,setprecision, setw
 #include <iostream>
 #include <list>
 #include <sstream>  // std:: stringstream,
@@ -19,6 +20,7 @@
 #include "Utils.hpp"
 
 using std::cout;
+using std::deque;
 using std::endl;
 using std::fixed;
 using std::left;
@@ -46,8 +48,11 @@ namespace Students {
   template <class A>
   void save(A &, const string &);
 
+  void sortByFinalGradeDescending(deque<Student::Student> &);
   void sortByFinalGradeDescending(list<Student::Student> &);
   void sortByFinalGradeDescending(vector<Student::Student> &);
+
+  void sortByNameAscending(deque<Student::Student> &);
   void sortByNameAscending(list<Student::Student> &);
   void sortByNameAscending(vector<Student::Student> &);
 }

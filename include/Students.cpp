@@ -97,6 +97,10 @@ void Students::filter(const string &fileName) {
   string folderPath = DATA_FOLDER;
   string filePath = folderPath + fileName;
 
+#ifdef ARRAY_TYPE_DEQUE
+  deque<Student::Student> students;
+#endif
+
 #ifdef ARRAY_TYPE_LIST
   list<Student::Student> students;
 #endif
@@ -137,6 +141,11 @@ void Students::filter(const string &fileName) {
 
   cout << "Copying all the losers to a new vector...";
   timer.reset();
+
+#ifdef ARRAY_TYPE_DEQUE
+  deque<Student::Student> losers(students.end() - it);
+  std::copy(it, students.end(), losers.begin());
+#endif
 
 #ifdef ARRAY_TYPE_LIST
   list<Student::Student> losers(it, students.end());
@@ -281,6 +290,13 @@ void Students::save(A &students, const string &filePath) {
   cout << timer.elapsed() << endl;
 }
 
+void Students::sortByFinalGradeDescending(deque<Student::Student> &students) {
+  sort(students.begin(), students.end(),
+       [](const Student::Student &a, const Student::Student &b) {
+         return a.finalGrade > b.finalGrade;
+       });
+}
+
 void Students::sortByFinalGradeDescending(list<Student::Student> &students) {
   students.sort(
       [](const Student::Student &a, const Student::Student &b) {
@@ -292,6 +308,15 @@ void Students::sortByFinalGradeDescending(vector<Student::Student> &students) {
   sort(students.begin(), students.end(),
        [](const Student::Student &a, const Student::Student &b) {
          return a.finalGrade > b.finalGrade;
+       });
+}
+
+void Students::sortByNameAscending(deque<Student::Student> &students) {
+  sort(students.begin(), students.end(),
+       [](const Student::Student &a, const Student::Student &b) {
+         return a.lastName != b.lastName
+                    ? a.lastName < b.lastName
+                    : a.firstName < b.firstName;
        });
 }
 

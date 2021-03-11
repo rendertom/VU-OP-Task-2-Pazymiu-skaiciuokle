@@ -15,6 +15,10 @@ using std::vector;
 namespace Student {
 
   struct Student {
+#ifdef ARRAY_TYPE_DEQUE
+    deque<int> grades;
+#endif
+
 #ifdef ARRAY_TYPE_LIST
     list<int> grades;
 #endif
