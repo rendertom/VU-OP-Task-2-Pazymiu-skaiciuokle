@@ -89,7 +89,7 @@ void Data_GenerateRecords() {
   }
 }
 
-void Data_FilterRecords() {
+void Data_FilterRecords(const string &containerType) {
   string extension = "txt";
   string folderPath = DATA_FOLDER;
   vector<string> fileNames = File::selectFilesInFolder(folderPath, extension);
@@ -108,7 +108,7 @@ void Data_FilterRecords() {
   Timer timer;
   for (int i = 0; i < numFilenames; i++) {
     timer.reset();
-    Students::filter(fileNames[i]);
+    Students::filter(fileNames[i], containerType);
     cout << "Total time: " << timer.elapsed() << endl;
     cout << "----------------------" << endl;
   }
@@ -136,45 +136,70 @@ void Data_ReadFromFile(A &students) {
   }
 }
 
-int main() {
-  if (ARRAY_TYPE == TYPE_DEQUE) {
-    cout << "(using std::deque)" << endl;
-  } else if (ARRAY_TYPE == TYPE_LIST) {
-    cout << "(using std::list)" << endl;
-  } else if (ARRAY_TYPE == TYPE_VECTOR) {
-    cout << "(using std::vector)" << endl;
+template <class A>
+void Data_ReadFromFile_or_EnterManually(int taskIndex, A &students) {
+  if (taskIndex == 3) {
+    Data_ReadFromFile(students);
+  } else if (taskIndex == 4) {
+    Data_EnterManually(students);
   }
 
+  if (!students.empty()) {
+    string resultType = getResultType();
+    Students::processStudents(students, resultType);
+    Students::printFormatted(students, resultType);
+  }
+}
+
+string selectContainerType() {
+  cout << "Select container:" << endl;
+  cout << "1. std::deque" << endl;
+  cout << "2. std::list" << endl;
+  cout << "3. std::vector" << endl;
+  int selection = Console::promptForInt("Select:", 1, 3);
+
+  if (selection == 1) {
+    return CONTAINER_DEQUE;
+  } else if (selection == 2) {
+    return CONTAINER_LIST;
+  } else if (selection == 3) {
+    return CONTAINER_VECTOR;
+  }
+
+  return "";
+}
+
+int selectTaskIndex() {
+  cout << "Select task index:" << endl;
   cout << "1. Generate new records" << endl;
   cout << "2. Filter records" << endl;
   cout << "3. Read grades from a file" << endl;
   cout << "4. Enter grades manually" << endl;
-  int selection = Console::promptForInt("Select:", 1, 4);
+  return Console::promptForInt("Select:", 1, 4);
+}
+
+int main() {
+  int taskIndex = selectTaskIndex();
 
   try {
-    if (selection == 1) {
+    if (taskIndex == 1) {
       Data_GenerateRecords();
-    } else if (selection == 2) {
-      Data_FilterRecords();
     } else {
-#if ARRAY_TYPE == TYPE_DEQUE
-      deque<Student::Student> students;
-#elif ARRAY_TYPE == TYPE_LIST
-      list<Student::Student> students;
-#elif ARRAY_TYPE == TYPE_VECTOR
-      vector<Student::Student> students;
-#endif
+      string containerType = selectContainerType();
 
-      if (selection == 3) {
-        Data_ReadFromFile(students);
-      } else if (selection == 4) {
-        Data_EnterManually(students);
-      }
-
-      if (!students.empty()) {
-        string resultType = getResultType();
-        Students::processStudents(students, resultType);
-        Students::printFormatted(students, resultType);
+      if (taskIndex == 2) {
+        Data_FilterRecords(containerType);
+      } else {
+        if (containerType == CONTAINER_DEQUE) {
+          deque<Student::Student> students;
+          Data_ReadFromFile_or_EnterManually(taskIndex, students);
+        } else if (containerType == CONTAINER_LIST) {
+          list<Student::Student> students;
+          Data_ReadFromFile_or_EnterManually(taskIndex, students);
+        } else if (containerType == CONTAINER_VECTOR) {
+          vector<Student::Student> students;
+          Data_ReadFromFile_or_EnterManually(taskIndex, students);
+        }
       }
     }
 

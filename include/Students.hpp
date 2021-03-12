@@ -34,7 +34,7 @@ using std::stringstream;
 using std::vector;
 
 namespace Students {
-  void filter(const string &);
+  void filter(const string &, const string &);
   void generateRecords(int);
 
   template <class A>

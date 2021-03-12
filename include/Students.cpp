@@ -92,25 +92,27 @@ void addRandomStudentsToBuffer(stringstream &buffer, int numStudents, int numGra
   }
 }
 
-void Students::filter(const string &fileName) {
-#if ARRAY_TYPE == TYPE_DEQUE
-  deque<Student::Student> students;
-  deque<Student::Student> losers;
-#elif ARRAY_TYPE == TYPE_LIST
-  list<Student::Student> students;
-  list<Student::Student> losers;
-#elif ARRAY_TYPE == TYPE_VECTOR
-  vector<Student::Student> students;
-  vector<Student::Student> losers;
-#endif
+template <class A>
+void copyStudents(A &students, A &losers, typename A::iterator &it) {
+  losers.resize(students.end() - it);
+  std::copy(it, students.end(), losers.begin());
+}
 
+void copyStudents(list<Student::Student> &students,
+                  list<Student::Student> &losers,
+                  list<Student::Student>::iterator &it) {
+  losers.assign(it, students.end());
+}
+
+template <class A>
+void doFiltering(A &students, A &losers, const string &fileName) {
   Timer timer;
   string folderPath = DATA_FOLDER;
   string filePath = folderPath + fileName;
 
   timer.reset();
   cout << "Reading data from \"" << fileName << "\"..." << endl;
-  readFromFile(filePath, students);
+  Students::readFromFile(filePath, students);
   cout << "Reading data from \"" << fileName << "\"..." << timer.elapsed() << endl;
 
   if (students.empty()) {
@@ -130,18 +132,13 @@ void Students::filter(const string &fileName) {
 
   cout << "Searching for the first loser...";
   timer.reset();
-  auto it = std::find_if(
+  typename A::iterator it = std::find_if(
       students.begin(), students.end(), Student::isLoser);
   cout << timer.elapsed() << endl;
 
   cout << "Copying all the losers to a new vector...";
   timer.reset();
-#if ARRAY_TYPE == TYPE_DEQUE || ARRAY_TYPE == TYPE_VECTOR
-  losers.resize(students.end() - it);
-  std::copy(it, students.end(), losers.begin());
-#elif ARRAY_TYPE == TYPE_LIST
-  losers.assign(it, students.end());
-#endif
+  copyStudents(students, losers, it);
   cout << timer.elapsed() << endl;
 
   cout << "Resizing original vector...";
@@ -166,6 +163,22 @@ void Students::filter(const string &fileName) {
     timer.reset();
     Students::save(students, folderPath + baseName + " winners.txt");
     cout << "Writing winners to file..." << timer.elapsed() << endl;
+  }
+}
+
+void Students::filter(const string &fileName, const string &containerType) {
+  if (containerType == CONTAINER_DEQUE) {
+    deque<Student::Student> students;
+    deque<Student::Student> losers;
+    doFiltering(students, losers, fileName);
+  } else if (containerType == CONTAINER_LIST) {
+    list<Student::Student> students;
+    list<Student::Student> losers;
+    doFiltering(students, losers, fileName);
+  } else if (containerType == CONTAINER_VECTOR) {
+    vector<Student::Student> students;
+    vector<Student::Student> losers;
+    doFiltering(students, losers, fileName);
   }
 }
 
@@ -299,20 +312,18 @@ void Students::sortByNameAscending(list<Student::Student> &students) {
 // it's just to avoid link error. Method #1
 // https://www.codeproject.com/Articles/48575/How-to-define-a-template-class-in-a-h-file-and-imp
 __unused void STUDENTS_happyLinter() {
-#if ARRAY_TYPE == TYPE_DEQUE
   deque<Student::Student> dequeArray;
   Students::printFormatted(dequeArray, "");
   Students::processStudents(dequeArray, "");
   Students::readFromFile("", dequeArray);
-#elif ARRAY_TYPE == TYPE_LIST
+
   list<Student::Student> listArray;
   Students::printFormatted(listArray, "");
   Students::processStudents(listArray, "");
   Students::readFromFile("", listArray);
-#elif ARRAY_TYPE == TYPE_VECTOR
+
   vector<Student::Student> vectorArray;
   Students::printFormatted(vectorArray, "");
   Students::processStudents(vectorArray, "");
   Students::readFromFile("", vectorArray);
-#endif
 }
