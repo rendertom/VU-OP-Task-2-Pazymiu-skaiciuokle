@@ -4,15 +4,15 @@ Programa yra skirta apskaičiuoti pažymių vidurkį ir/arba medianą.
 
 ## Turinys
 
-- [🥤 Veikimo principas](#veikimo-principas)
+- [🥤 Veikimo principas](#-veikimo-principas)
   - [📚 Generate new records](#-generate-new-records)
   - [🌪️ Filter records](#%EF%B8%8F-filter-records)
   - [📂 Read grades from a file](#-read-grades-from-a-file)
   - [✍️ Enter grades manually](#%EF%B8%8F-enter-grades-manually)
-- [📈 Spartos analizė](#spartos-analizė)
-  - [🛠️ Duomenų apdorojimas](#duomenų-apdorojimas)
-  - [⚖️ Duomenų rūšiavimas](#duomenų-rūšiavimas)
-- [🚀 Programos diegimas ir paleidimas](#programos-diegimas-ir-paleidimas)
+- [📈 Spartos analizė](#-spartos-analizė)
+  - [🛠️ Duomenų apdorojimas](#%EF%B8%8F-duomenų-apdorojimas)
+  - [⚖️ Duomenų rūšiavimas](#%EF%B8%8F-duomenų-rūšiavimas)
+- [🚀 Programos diegimas ir paleidimas](#-programos-diegimas-ir-paleidimas)
 
 ---
 
