@@ -1,9 +1,8 @@
 #pragma once
 
-#define ARRAY_TYPE TYPE_VECTOR
-#define TYPE_DEQUE 1
-#define TYPE_LIST 2
-#define TYPE_VECTOR 3
+#define CONTAINER_DEQUE "CONTAINER_DEQUE"
+#define CONTAINER_LIST "CONTAINER_LIST"
+#define CONTAINER_VECTOR "CONTAINER_VECTOR"
 
 #define DATA_FOLDER "./data/"
 #define GRADE_MIN 1

@@ -2,6 +2,20 @@
 
 Programa yra skirta apskaičiuoti pažymių vidurkį ir/arba medianą.
 
+## Turinys
+
+- [🥤 Veikimo principas](#-veikimo-principas)
+  - [📚 Generate new records](#-generate-new-records)
+  - [🌪️ Filter records](#%EF%B8%8F-filter-records)
+  - [📂 Read grades from a file](#-read-grades-from-a-file)
+  - [✍️ Enter grades manually](#%EF%B8%8F-enter-grades-manually)
+- [📈 Spartos analizė](#-spartos-analizė)
+  - [🛠️ Duomenų apdorojimas](#%EF%B8%8F-duomenų-apdorojimas)
+  - [⚖️ Duomenų rūšiavimas](#%EF%B8%8F-duomenų-rūšiavimas)
+- [🚀 Programos diegimas ir paleidimas](#-programos-diegimas-ir-paleidimas)
+
+---
+
 ## 🥤 Veikimo principas
 
 > Paleidus programą, prašome sekti komandinėje eilutėje nurodytas instrukcijas.
@@ -18,6 +32,8 @@ Programa yra skirta apskaičiuoti pažymių vidurkį ir/arba medianą.
 2. [Filter records](#%EF%B8%8F-filter-records)
 3. [Read grades from a file](#-read-grades-from-a-file)
 4. [Enter grades manually](#%EF%B8%8F-enter-grades-manually)
+
+---
 
 ### 📚 Generate new records
 
@@ -126,7 +142,7 @@ VardasXXX  PavardeXXX  6.45            7.00
 
 ---
 
-### ⌨️ Enter grades manually
+### ✍️ Enter grades manually
 
 Metodas skirtas studento duomenims suvesti rankiniu būdų. Programa siūlo sekančius pasirinkimus:
 
@@ -181,29 +197,48 @@ Jurga       Spurga          4.63           5.00
 
 Galutinis vidurkis yra apskaičiuojamas pagal formulę `galutinis = 0.4 * vidurkis + 0.6 * egzaminas`.
 
+---
+
 ## 📈 Spartos analizė
 
 Programos spartos analizė (duomenų, nuskaitymas iš failo, apdorijimas ir rūšiavimas į kategorijas) atlikta duomenis saugant į skirtingus konteinerius: `std::deque`, `std::list` ir `std::vector`.
 
 Analizė atlikta su MacBook Pro, 2.3 GHz Dual-Core Intel Core i5, 8 GB 2133 MHz LPDDR3.
 
-### 🧰 Duomenų apdorojimas
+---
+
+### 🛠️ Duomenų apdorojimas
 
 | Container   | 10.000  | 100.000 | 1.000.000 | 10.000.000 |
 | :---------- | :------ | :------ | :-------- | :--------- |
-| std::deque  | 0.06061 | 0.70649 | 3.52166   | 35.0777    |
-| std::list   | 0.06191 | 0.73367 | 3.59739   | 35.95377   |
-| std::vector | 0.05895 | 0.71480 | 3.52165   | 36.03642   |
+| std::deque  | 0.06121 | 0.71367 | 3.53594   | 35.27019   |
+| std::list   | 0.06223 | 0.71956 | 3.62151   | 35.82814   |
+| std::vector | 0.06038 | 0.71421 | 3.52655   | 36.21650   |
 
 ---
 
 ### ⚖️ Duomenų rūšiavimas
 
-| Container   | 10.000  | 100.000 | 1.000.000 | 10.000.000 |
-| :---------- | :------ | :------ | :-------- | :--------- |
-| std::deque  | 0.0024  | 0.03438 | 0.31071   | 3.44917    |
-| std::list   | 0.00338 | 0.0919  | 1.1708    | 16.56225   |
-| std::vector | 0.00202 | 0.03528 | 0.29249   | 3.30253    |
+| Container / Task               | 10.000  | 100.000 | 1.000.000 | 10.000.000 |
+| :----------------------------- | :------ | :------ | :-------- | :--------- |
+| std::deque                     |
+| Sorting students (descending)  | 0.00110 | 0.01302 | 0.10790   | 1.12506    |
+| Searching for the first loser  | 0.00003 | 0.00045 | 0.00404   | 0.04759    |
+| Copying losers to a new vector | 0.00052 | 0.01091 | 0.08988   | 0.91767    |
+| Resizing original vector       | 0.00037 | 0.01114 | 0.10823   | 1.34660    |
+| **Total**                      | 0.00202 | 0.03552 | 0.31005   | 3.43692    |
+| std::list                      |
+| Sorting students (descending)  | 0.00167 | 0.05243 | 0.74777   | 11.87566   |
+| Searching for the first loser  | 0.00009 | 0.00419 | 0.06602   | 0.62471    |
+| Copying losers to a new vector | 0.00073 | 0.01167 | 0.12417   | 1.31286    |
+| Resizing original vector       | 0.00089 | 0.02170 | 0.22703   | 2.81853    |
+| **Total**                      | 0.00338 | 0.08999 | 1.16499   | 16.63176   |
+| std::vector                    |
+| Sorting students (descending)  | 0.00087 | 0.01300 | 0.10440   | 1.05385    |
+| Searching for the first loser  | 0.00002 | 0.00036 | 0.00354   | 0.04925    |
+| Copying losers to a new vector | 0.00053 | 0.01058 | 0.07346   | 0.92085    |
+| Resizing original vector       | 0.00036 | 0.01487 | 0.09988   | 1.26714    |
+| **Total**                      | 0.00178 | 0.03881 | 0.28128   | 3.29109    |
 
 ---
 

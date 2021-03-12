@@ -32,3 +32,6 @@
 - [v0.5](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases/tag/v0.5)
   - pridėta
     - Galimybė pasirinkti duomenų saugojimo konteinerį: `std::deque`, `std::list` arba `std::vector`.
+- [v0.5.1](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases/tag/v0.5.1)
+  - pakeista
+    - Konteinerių kūrimo principas.
