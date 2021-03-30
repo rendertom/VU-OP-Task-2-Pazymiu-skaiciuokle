@@ -12,6 +12,9 @@ Programa yra skirta apskaičiuoti pažymių vidurkį ir/arba medianą.
 - [📈 Spartos analizė](#-spartos-analizė)
   - [🛠️ Duomenų apdorojimas](#%EF%B8%8F-duomenų-apdorojimas)
   - [⚖️ Duomenų rūšiavimas](#%EF%B8%8F-duomenų-rūšiavimas)
+    - [Strategija 1](#strategija-1)
+    - [Strategija 2](#strategija-2)
+    - [Strategija 3](#strategija-3)
 - [🚀 Programos diegimas ir paleidimas](#-programos-diegimas-ir-paleidimas)
 
 ---
@@ -219,6 +222,39 @@ Analizė atlikta su MacBook Pro, 2.3 GHz Dual-Core Intel Core i5, 8 GB 2133 MHz 
 
 ### ⚖️ Duomenų rūšiavimas
 
+#### Strategija 1
+
+Konteinerio (`vector`, `list` ir `deque`) skaidymas į **du naujus to paties tipo konteinerius**: _losers_ ir _winners_. Šiuo būdu tas pats studentas yra dviejuose masyvuose: pagrindiniame ir viename iš suskaidytų.
+
+| Container / Task              | 10.000  | 100.000 | 1.000.000 | 10.000.000 |
+| :---------------------------- | :------ | :------ | :-------- | :--------- |
+| std::deque: Sorting students  | 0.00087 | 0.01414 | 0.12721   | 1.25897    |
+| std::list: Sorting students   | 0.00172 | 0.02298 | 0.17643   | 1.77439    |
+| std::vector: Sorting students | 0.00109 | 0.01884 | 0.21413   | 1.98630    |
+
+---
+
+#### Strategija 2
+
+Konteinerio (`vector`, `list` ir `deque`) skaidymas panaudojant **tik vieną naują konteinerį**: _losers_. Tokiu būdu, jei studentas yra _loser'is_, jį perkeliame į naująjį _losers_ masyvą ir ištriname iš bendro masyvo. Po šio žingsnio pagrindiniame masyve lieka tik _winner'isi_.
+
+| Container / Task                 | 10.000  | 100.000 | 1.000.000  | 10.000.000 |
+| :------------------------------- | :------ | :------ | :--------- | :--------- |
+| std::deque: Sorting and erasing  | 0.05147 | 5.16963 | 617.121 💩 | ---        |
+| std::list: Sorting and erasing   | 0.00095 | 0.01309 | 0.11558    | 1.07584    |
+| std::vector: Sorting and erasing | 0.12405 | 14.4877 | 2095.87 💩 | ---        |
+
+---
+
+#### Strategija 3
+
+Konteinerio (`vector`, `list` ir `deque`) skaidymas panaudojant **tik vieną naują konteinerį**: _losers_. Ši strategija yra imlesnė darbui, o jos veikimo principas yra sekantis:
+
+1. Išrūšiuoti studentų masyvą pagal galutinį pažymį mažėjimo tvarka,
+2. Rasti indeksą, nuo kurio studentų balai yra mažesni nei `5`,
+3. Perkopijuoti elementus nuo rasto indekso iki masyvo pabaigos į naująjį masyvą,
+4. Sumažinti pagrindinio masyvo dydį nuo `0` iki rasto indekso.
+
 | Container / Task               | 10.000  | 100.000 | 1.000.000 | 10.000.000 |
 | :----------------------------- | :------ | :------ | :-------- | :--------- |
 | std::deque                     |
@@ -249,6 +285,6 @@ Analizė atlikta su MacBook Pro, 2.3 GHz Dual-Core Intel Core i5, 8 GB 2133 MHz 
 
 ```shell
 cd nuoroda_į_programos_aplanką
-g++ -std=c++11 include/*.cpp 'main.cpp' -o 'main' && './main'
+g++ -std=c++11 -O3 include/*.cpp 'main.cpp' -o 'main'
 ./main
 ```
