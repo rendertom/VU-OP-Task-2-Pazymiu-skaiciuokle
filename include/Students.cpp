@@ -105,10 +105,26 @@ void copyStudents(list<Student::Student> &students,
 }
 
 template <class A>
-void doFiltering(A &students, A &losers, const string &fileName) {
+void writeToFile(A &array, const string &name, const string &baseName) {
+  if (array.empty()) {
+    cout << "Class contains no " << name << endl;
+  } else {
+    string folderPath = DATA_FOLDER;
+    Timer timer;
+
+    cout << "Writing " << name << " to file..." << endl;
+    timer.reset();
+    Students::save(array, folderPath + baseName + " " + name + ".txt");
+    cout << "Writing " << name << " to file..." << timer.elapsed() << endl;
+  }
+}
+
+template <class A>
+void doFiltering(A &students, A &losers, A &winners, const string &fileName, const int &filteringIndex) {
   Timer timer;
   string folderPath = DATA_FOLDER;
   string filePath = folderPath + fileName;
+  string baseName = File::getBaseName(fileName);
 
   timer.reset();
   cout << "Reading data from \"" << fileName << "\"..." << endl;
@@ -125,60 +141,84 @@ void doFiltering(A &students, A &losers, const string &fileName) {
   Students::processStudents(students, resultType);
   cout << timer.elapsed() << endl;
 
-  cout << "Sorting students by final grade (descending)...";
-  timer.reset();
-  Students::sortByFinalGradeDescending(students);
-  cout << timer.elapsed() << endl;
+  cout << "Using filtering strategy #" << filteringIndex << endl;
 
-  cout << "Searching for the first loser...";
-  timer.reset();
-  typename A::iterator it = std::find_if(
-      students.begin(), students.end(), Student::isLoser);
-  cout << timer.elapsed() << endl;
-
-  cout << "Copying all the losers to a new vector...";
-  timer.reset();
-  copyStudents(students, losers, it);
-  cout << timer.elapsed() << endl;
-
-  cout << "Resizing original vector...";
-  timer.reset();
-  students.resize(students.size() - losers.size());
-  cout << timer.elapsed() << endl;
-
-  string baseName = File::getBaseName(fileName);
-  if (losers.empty()) {
-    cout << "Class contains no losers" << endl;
-  } else {
-    cout << "Writing losers to file..." << endl;
+  if (filteringIndex == 1) {
+    cout << "Sorting students into 2 containers...";
     timer.reset();
-    Students::save(losers, folderPath + baseName + " losers.txt");
-    cout << "Writing losers to file..." << timer.elapsed() << endl;
-  }
+    for (auto &student : students) {
+      if (Student::isLoser(student)) {
+        losers.push_back(student);
+      } else {
+        winners.push_back(student);
+      }
+    }
+    cout << timer.elapsed() << endl;
 
-  if (students.empty()) {
-    cout << "Class contains no winners" << endl;
-  } else {
-    cout << "Writing winners to file..." << endl;
+    writeToFile(losers, "losers", baseName);
+    writeToFile(winners, "winners", baseName);
+  } else if (filteringIndex == 2) {
+    cout << "Sorting students and erasing...";
     timer.reset();
-    Students::save(students, folderPath + baseName + " winners.txt");
-    cout << "Writing winners to file..." << timer.elapsed() << endl;
+    typename A::iterator it = students.begin();
+    while (it != students.end()) {
+      if (Student::isLoser(*it)) {
+        losers.push_back(*it);
+        it = students.erase(it);
+      } else {
+        ++it;
+      }
+    }
+    cout << timer.elapsed() << endl;
+
+    writeToFile(losers, "losers", baseName);
+    writeToFile(students, "winners", baseName);
+  } else if (filteringIndex == 3) {
+    cout << "Sorting students by final grade (descending)...";
+    timer.reset();
+    Students::sortByFinalGradeDescending(students);
+    cout << timer.elapsed() << endl;
+
+    cout << "Searching for the first loser...";
+    timer.reset();
+    typename A::iterator it = std::find_if(
+        students.begin(), students.end(), Student::isLoser);
+    cout << timer.elapsed() << endl;
+
+    cout << "Copying all the losers to a new vector...";
+    timer.reset();
+    copyStudents(students, losers, it);
+    cout << timer.elapsed() << endl;
+
+    cout << "Resizing original vector...";
+    timer.reset();
+    students.resize(students.size() - losers.size());
+    cout << timer.elapsed() << endl;
+
+    writeToFile(losers, "losers", baseName);
+    writeToFile(students, "winners", baseName);
+  } else {
+    cout << "Filtering strategy #" << filteringIndex << " not implemented" << endl;
+    exit(1);
   }
 }
 
-void Students::filter(const string &fileName, const string &containerType) {
+void Students::filter(const string &fileName, const string &containerType, const int &filteringStrategy) {
   if (containerType == CONTAINER_DEQUE) {
     deque<Student::Student> students;
     deque<Student::Student> losers;
-    doFiltering(students, losers, fileName);
+    deque<Student::Student> winners;
+    doFiltering(students, losers, winners, fileName, filteringStrategy);
   } else if (containerType == CONTAINER_LIST) {
     list<Student::Student> students;
     list<Student::Student> losers;
-    doFiltering(students, losers, fileName);
+    list<Student::Student> winners;
+    doFiltering(students, losers, winners, fileName, filteringStrategy);
   } else if (containerType == CONTAINER_VECTOR) {
     vector<Student::Student> students;
     vector<Student::Student> losers;
-    doFiltering(students, losers, fileName);
+    vector<Student::Student> winners;
+    doFiltering(students, losers, winners, fileName, filteringStrategy);
   }
 }
 

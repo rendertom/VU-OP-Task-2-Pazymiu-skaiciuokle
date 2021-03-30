@@ -89,7 +89,7 @@ void Data_GenerateRecords() {
   }
 }
 
-void Data_FilterRecords(const string &containerType) {
+void Data_FilterRecords(const string &containerType, const int &filteringStrategy) {
   string extension = "txt";
   string folderPath = DATA_FOLDER;
   vector<string> fileNames = File::selectFilesInFolder(folderPath, extension);
@@ -108,7 +108,7 @@ void Data_FilterRecords(const string &containerType) {
   Timer timer;
   for (int i = 0; i < numFilenames; i++) {
     timer.reset();
-    Students::filter(fileNames[i], containerType);
+    Students::filter(fileNames[i], containerType, filteringStrategy);
     cout << "Total time: " << timer.elapsed() << endl;
     cout << "----------------------" << endl;
   }
@@ -169,6 +169,14 @@ string selectContainerType() {
   return "";
 }
 
+int selectFilteringIndex() {
+  cout << "Select filtering strategy:" << endl;
+  cout << "1. Push into 2 containers" << endl;
+  cout << "2. Push into 1 container and remove from source" << endl;
+  cout << "3. Copy into 1 container and resize source" << endl;
+  return Console::promptForInt("Select:", 1, 3);
+}
+
 int selectTaskIndex() {
   cout << "Select task index:" << endl;
   cout << "1. Generate new records" << endl;
@@ -188,7 +196,8 @@ int main() {
       string containerType = selectContainerType();
 
       if (taskIndex == 2) {
-        Data_FilterRecords(containerType);
+        int filteringIndex = selectFilteringIndex();
+        Data_FilterRecords(containerType, filteringIndex);
       } else {
         if (containerType == CONTAINER_DEQUE) {
           deque<Student::Student> students;
