@@ -35,3 +35,6 @@
 - [v0.5.1](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases/tag/v0.5.1)
   - pakeista
     - Konteinerių kūrimo principas.
+- [v1.0](https://github.com/rendertom/VU-OP-Task-2-Pazymiu-skaiciuokle/releases/tag/v1.0)
+  - pridėta
+    - Galimybė pasirinkti filtravimo strategiją.
